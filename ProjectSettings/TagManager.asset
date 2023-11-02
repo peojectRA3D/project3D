@@ -4,7 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Folder
+  - Door
+  - target
   layers:
   - Default
   - TransparentFX
@@ -16,7 +17,7 @@ TagManager:
   - 
   - 
   - 
-  - 
+  - cellings
   - 
   - 
   - 
