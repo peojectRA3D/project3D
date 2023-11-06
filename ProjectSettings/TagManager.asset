@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Door
   - target
+  - bullet
   layers:
   - Default
   - TransparentFX
