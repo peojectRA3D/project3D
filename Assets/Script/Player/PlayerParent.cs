@@ -42,6 +42,8 @@ public class PlayerParent : MonoBehaviour
 
     Vector3 dodgeVec; // 회피하는 동안 움직임 방지를 위한 변수
     float fireDelay;
+     public GameObject  gunpos;
+
 
     // Start is called before the first frame update
     void Start()
@@ -70,11 +72,7 @@ public class PlayerParent : MonoBehaviour
         Grenade();
         Reload();
         */
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            aniter.SetBool("atttack",!aniter.GetBool("atttack"));
-            
-        }
+        
 
       
       
@@ -96,7 +94,7 @@ public class PlayerParent : MonoBehaviour
             //aniter.SetInteger("vecterval", 1);
             
         }
-
+       
         
 
         if (dir.Equals(Vector3.zero))
@@ -141,18 +139,15 @@ public class PlayerParent : MonoBehaviour
         if (isDodge)
             dir = dodgeVec;
 
-        if (isSwap || isReload || !isFireReady)
+        if (isSwap || isReload )
             dir = Vector3.zero;
 
         if (!isBorder)
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // 걷기 0.3f 속도
+            aniter.SetInteger("vecterval", 5);
 
-        //이거 수정 
-        aniter.SetFloat("speed", dir.magnitude);
 
-        aniter.SetBool("isRun", dir != Vector3.zero);
-        aniter.SetBool("isWalk", walkDown);
-        //
+
     }
     void Turn()
     {
@@ -179,18 +174,41 @@ public class PlayerParent : MonoBehaviour
     {
        
         fireDelay += Time.deltaTime;
-        isFireReady = 0.2 < fireDelay;  // equipWeapon.rate < fireDelay;
-       
+        isFireReady = 0.33 < fireDelay;  // equipWeapon.rate < fireDelay;
+        int s = 1;
+        if (fireDown)
+        {
+            aniter.SetBool("atttack", true);
+        }
         if (fireDown && isFireReady && !isDodge && !isSwap)
         {
-            particles[0].Simulate(1.01f);
-            particles[0].Play();
-          
-            Debug.Log("발사아아");
-            //발사 한줄 추가  equipWeapon.Use();
-            //발사 애니메이션 추가  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-            fireDelay = 0;
-           
+            if (s == 0 ) {
+                particles[0].Simulate(1.01f);
+                particles[0].Play();
+
+                Debug.Log("발사아아");
+
+
+                aniter.Play("Shoot_SingleShot_AR");
+                //발사 한줄 추가  equipWeapon.Use();
+                //발사 애니메이션 추가  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+
+            }
+            else if (s == 1)
+            {
+               
+                ParticleSystem temp =  Instantiate(particles[1]);
+                temp.GetComponent<movebullet>().getvec(Mousepo.getMousePosition(),gunpos.transform.position);
+                aniter.SetBool("atttack", true);
+                aniter.Play("Shoot_SingleShot_AR");
+                fireDelay = 0;
+               
+            }
+
+        }
+        if (!fireDown)
+        {
+            aniter.SetBool("atttack", false);
         }
     }
     void Dodge()
@@ -211,4 +229,5 @@ public class PlayerParent : MonoBehaviour
         speed *= 0.5f;
         isDodge = false;
     }
+
 }
