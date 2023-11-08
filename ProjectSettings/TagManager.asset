@@ -7,6 +7,9 @@ TagManager:
   - Door
   - target
   - bullet
+  - Enemy
+  - EnemyHitbox
+  - Floor
   layers:
   - Default
   - TransparentFX
@@ -14,7 +17,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Player
   - 
   - 
   - 
