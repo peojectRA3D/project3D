@@ -5,15 +5,15 @@ using UnityEngine;
 public class PlayerParent : MonoBehaviour
 {
 
-    public Transform tr;
-    public Rigidbody rid;
+    Transform tr;
+    Rigidbody rid;
     public  GetYZeroInCamera Mousepo;
     public float speed = 5f;
     public float humppower = 5f;
     public float dash = 5f;
     private Vector3 dir = Vector3.zero;
     private Animator aniter;
-
+    public int  attacktype;
     public ParticleSystem[] particles;
     // 이동
     float hAxis;
@@ -21,7 +21,8 @@ public class PlayerParent : MonoBehaviour
     float jumpPower = 15.0f;
 
     // 키다운
-    bool walkDown;
+    bool RunDown;
+    bool RunUp;
     bool jumpDown;
     bool fireDown;
     bool fireUP;
@@ -37,6 +38,7 @@ public class PlayerParent : MonoBehaviour
     bool isDodge;
     bool isSwap;
     bool isReload;
+    bool isRun = false;
     bool isFireReady = true;
     bool isBorder; // 벽 충돌 플래그 bool 변수
     bool isDamage; // 무적 타임을 위한 변수
@@ -44,86 +46,63 @@ public class PlayerParent : MonoBehaviour
     Vector3 dodgeVec; // 회피하는 동안 움직임 방지를 위한 변수
     float fireDelay;
      public GameObject  gunpos;
-
-
     // Start is called before the first frame update
     void Start()
     {
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
-
     }
-
     // Update is called once per frame
     void Update()
     {
-        
         GetInput();
+        Runcheck();
         Move();
         Turn();
-        Jump();
-       
+
         Attack();
-       
+
+        //Jump();       
+        Swap();
         Dodge();
         /*
         Interation();
-        Swap();
         Grenade();
         Reload();
         */
-        
-
-      
-      
-
-        if (Vector3.Angle(dir, transform.forward) <= 45.0f)
-        {
-            aniter.SetInteger("vecterval", 0);
-        }
-        else if  (Vector3.Angle(dir, transform.forward) >= 135.0f) {
-            aniter.SetInteger("vecterval",1);
-            dir = dir / 2;
-        }  
-        else
-        {
-            dir = dir / 1.3f;
-
-            aniter.SetInteger("vecterval", 2);
-          
-            //aniter.SetInteger("vecterval", 1);
-            
-        }
-       
-        
-
-        if (dir.Equals(Vector3.zero))
-        {
-            aniter.SetInteger("vecterval", 5);
-        }
-
-
-
-
-
-
-
     }
     void GetInput()
     {
         dir.x = Input.GetAxisRaw("Horizontal");
         dir.z = Input.GetAxisRaw("Vertical");
-        //walkDown = Input.GetButton("Walk");
+        RunDown = Input.GetButtonDown("Run");
+        RunUp = Input.GetButtonUp("Run");
         jumpDown = Input.GetButtonDown("Jump");
         fireDown = Input.GetButton("Fire1");
         fireUP = Input.GetButtonUp("Fire1");
         grenDown = Input.GetButton("Fire2");
         //reloadDown = Input.GetButtonDown("Reload");
         //itemDown = Input.GetButtonDown("Interation");
-       // swapDown1 = Input.GetButtonDown("Swap1");
-       // swapDown2 = Input.GetButtonDown("Swap2");
-       // swapDown3 = Input.GetButtonDown("Swap3");
+        // swapDown1 = Input.GetButtonDown("Swap1");
+        // swapDown2 = Input.GetButtonDown("Swap2");
+        // swapDown3 = Input.GetButtonDown("Swap3");
+    }
+    void Runcheck()
+    {
+        if (RunDown)
+        {
+            if (!isRun)
+            {
+                speed = 10.0f;
+
+            }
+            else
+            {
+                speed = 5.0f;
+            }
+            isRun = !isRun;
+        }    
     }
     void Move()
     {
@@ -134,22 +113,20 @@ public class PlayerParent : MonoBehaviour
         dir = Quaternion.AngleAxis(45, Vector3.up) * dir;
         dir = dir.normalized;
 
-        tr.position += dir * speed * Time.deltaTime;
-
-        // moveVec = new Vector3( dir.x, 0,  dir.z ).normalized; // normalized - 방향 값이 1로 보정된 벡터
-
         if (isDodge)
+        {
+           
             dir = dodgeVec;
-        /*
+        }
         if (isSwap || isReload )
             dir = Vector3.zero;
-        */
+        /*
         if (!isBorder)
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // 걷기 0.3f 속도
             aniter.SetInteger("vecterval", 5);
-
-
-
+        */
+        Debug.Log(dir);
+        tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
     {
@@ -165,7 +142,73 @@ public class PlayerParent : MonoBehaviour
         {
             transform.LookAt(transform.position + dir);
         }
+
+        if (Vector3.Angle(dir, transform.forward) <= 45.0f)
+        {
+            aniter.SetInteger("vecterval", 0);
+        }
+        else if (Vector3.Angle(dir, transform.forward) >= 135.0f)
+        {
+            aniter.SetInteger("vecterval", 1);
+            dir = dir / 2;
+        }
+        else
+        {
+            dir = dir / 1.3f;
+
+            aniter.SetInteger("vecterval", 2);
+
+            //aniter.SetInteger("vecterval", 1);
+
+        }
+
+        if (dir.Equals(Vector3.zero))
+        {
+            aniter.SetInteger("vecterval", 5);
+        }
     }
+
+    void Swap()
+    {
+      /*  
+        if (swapDown1 && (!particles[0] || equipWeaponIndex == 0))
+            return;
+        if (swapDown2 && (!hasWeapons[1] || equipWeaponIndex == 1))
+            return;
+        if (swapDown3 && (!hasWeapons[2] || equipWeaponIndex == 2))
+            return;
+        */
+        int weaponIndex = -1;
+        if (swapDown1) weaponIndex = 0;
+        if (swapDown2) weaponIndex = 1;
+        if (swapDown3) weaponIndex = 2;
+
+        /*
+        if ((swapDown1 || swapDown2 || swapDown3) && !isJump && !isDodge)
+        {
+            if (equipWeapon != null)
+                equipWeapon.gameObject.SetActive(false);
+
+            equipWeaponIndex = weaponIndex;
+            equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
+            equipWeapon.gameObject.SetActive(true);
+
+            anim.SetTrigger("doSwap");
+
+            isSwap = true;
+
+            Invoke("SwapOut", 0.4f);
+        }*/
+    }
+
+    void SwapOut()
+    {
+        isSwap = false;
+    }
+
+
+
+    /*
     void Jump()
     {
         if (jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
@@ -175,20 +218,17 @@ public class PlayerParent : MonoBehaviour
             aniter.SetTrigger("doJump");
             isJump = true;
         }
-    }
+    }*/
     void Attack()
     {
        
         fireDelay += Time.deltaTime;
         isFireReady = 0.33< fireDelay;  // equipWeapon.rate < fireDelay;
-        int s = 0;
-        if (fireDown)
-        {
-            aniter.SetBool("atttack", true);
-        }
+        
+       
         if (fireDown && isFireReady && !isDodge && !isSwap)
         {
-            if (s == 0 ) {
+            if (attacktype == 0 ) {
                 particles[0].Simulate(1.01f);
                 particles[0].Play();
 
@@ -201,7 +241,7 @@ public class PlayerParent : MonoBehaviour
                 fireDelay = 0;
 
             }
-            else if (s == 1)
+            else if (attacktype == 1)
             {
                
                 ParticleSystem temp =  Instantiate(particles[1]);
@@ -209,7 +249,11 @@ public class PlayerParent : MonoBehaviour
                 
                 aniter.SetBool("onattack", true);
                 fireDelay = 0;
-               
+
+            }
+            else
+            {
+                Debug.Log("error 무기 공격 시스템 ");
             }
 
         }
@@ -217,28 +261,30 @@ public class PlayerParent : MonoBehaviour
         {
             aniter.SetBool("onattack", false);
         }
-        if (!fireDown)
-        {
-            aniter.SetBool("atttack", false);
-        }
+  
     }
     void Dodge()
     {
+     
+
         if (jumpDown && dir != Vector3.zero && !isJump && !isDodge && !isSwap)
         {
             dodgeVec = dir;
-            speed *= 2;
-            aniter.SetTrigger("doDodge");
+            speed = 5.0f;
+            speed *= 3f;
+            aniter.SetTrigger("isroll");
             isDodge = true;
 
-            Invoke("DodgeOut", 0.4f);
+            Invoke("DodgeOut", 0.67f);
         }
     }
 
     void DodgeOut()
     {
-        speed *= 0.5f;
+        speed = 5.0f;
         isDodge = false;
+        isJump = false;
+        isSwap = false;
     }
-
+    
 }
