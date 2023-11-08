@@ -24,6 +24,7 @@ public class PlayerParent : MonoBehaviour
     bool walkDown;
     bool jumpDown;
     bool fireDown;
+    bool fireUP;
     bool grenDown;
     bool reloadDown;
     bool itemDown;
@@ -42,6 +43,8 @@ public class PlayerParent : MonoBehaviour
 
     Vector3 dodgeVec; // 회피하는 동안 움직임 방지를 위한 변수
     float fireDelay;
+     public GameObject  gunpos;
+
 
     // Start is called before the first frame update
     void Start()
@@ -70,11 +73,7 @@ public class PlayerParent : MonoBehaviour
         Grenade();
         Reload();
         */
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            aniter.SetBool("atttack",!aniter.GetBool("atttack"));
-            
-        }
+        
 
       
       
@@ -96,7 +95,7 @@ public class PlayerParent : MonoBehaviour
             //aniter.SetInteger("vecterval", 1);
             
         }
-
+       
         
 
         if (dir.Equals(Vector3.zero))
@@ -118,6 +117,7 @@ public class PlayerParent : MonoBehaviour
         //walkDown = Input.GetButton("Walk");
         jumpDown = Input.GetButtonDown("Jump");
         fireDown = Input.GetButton("Fire1");
+        fireUP = Input.GetButtonUp("Fire1");
         grenDown = Input.GetButton("Fire2");
         //reloadDown = Input.GetButtonDown("Reload");
         //itemDown = Input.GetButtonDown("Interation");
@@ -140,29 +140,30 @@ public class PlayerParent : MonoBehaviour
 
         if (isDodge)
             dir = dodgeVec;
-
-        if (isSwap || isReload || !isFireReady)
+        /*
+        if (isSwap || isReload )
             dir = Vector3.zero;
-
+        */
         if (!isBorder)
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // 걷기 0.3f 속도
+            aniter.SetInteger("vecterval", 5);
 
-        //이거 수정 
-        aniter.SetFloat("speed", dir.magnitude);
 
-        aniter.SetBool("isRun", dir != Vector3.zero);
-        aniter.SetBool("isWalk", walkDown);
-        //
+
     }
     void Turn()
     {
         // # 1. 키보드에 의한 회전
-        transform.LookAt(transform.position + dir); // LookAt() - 지정된 벡터를 향해서 회전시켜주는 함수
+        // LookAt() - 지정된 벡터를 향해서 회전시켜주는 함수
 
         // # 2. 마우스에 의한 회전
         if (fireDown) // 마우스 클릭 했을 때만 화전하도록 조건 추가
         {
             transform.forward = Vector3.Lerp(transform.forward, Mousepo.getMousePosition() - transform.position, Time.deltaTime * speed);
+        }
+        else
+        {
+            transform.LookAt(transform.position + dir);
         }
     }
     void Jump()
@@ -179,18 +180,46 @@ public class PlayerParent : MonoBehaviour
     {
        
         fireDelay += Time.deltaTime;
-        isFireReady = 0.2 < fireDelay;  // equipWeapon.rate < fireDelay;
-       
+        isFireReady = 0.33< fireDelay;  // equipWeapon.rate < fireDelay;
+        int s = 0;
+        if (fireDown)
+        {
+            aniter.SetBool("atttack", true);
+        }
         if (fireDown && isFireReady && !isDodge && !isSwap)
         {
-            particles[0].Simulate(1.01f);
-            particles[0].Play();
-          
-            Debug.Log("발사아아");
-            //발사 한줄 추가  equipWeapon.Use();
-            //발사 애니메이션 추가  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-            fireDelay = 0;
-           
+            if (s == 0 ) {
+                particles[0].Simulate(1.01f);
+                particles[0].Play();
+
+                Debug.Log("발사아아");
+
+
+                aniter.SetBool("onattack", true);
+                //발사 한줄 추가  equipWeapon.Use();
+                //발사 애니메이션 추가  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                fireDelay = 0;
+
+            }
+            else if (s == 1)
+            {
+               
+                ParticleSystem temp =  Instantiate(particles[1]);
+                temp.GetComponent<movebullet>().getvec(Mousepo.getMousePosition(),gunpos.transform.position);
+                
+                aniter.SetBool("onattack", true);
+                fireDelay = 0;
+               
+            }
+
+        }
+        else
+        {
+            aniter.SetBool("onattack", false);
+        }
+        if (!fireDown)
+        {
+            aniter.SetBool("atttack", false);
         }
     }
     void Dodge()
@@ -211,4 +240,5 @@ public class PlayerParent : MonoBehaviour
         speed *= 0.5f;
         isDodge = false;
     }
+
 }
