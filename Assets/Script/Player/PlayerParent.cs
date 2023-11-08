@@ -24,6 +24,7 @@ public class PlayerParent : MonoBehaviour
     bool walkDown;
     bool jumpDown;
     bool fireDown;
+    bool fireUP;
     bool grenDown;
     bool reloadDown;
     bool itemDown;
@@ -116,6 +117,7 @@ public class PlayerParent : MonoBehaviour
         //walkDown = Input.GetButton("Walk");
         jumpDown = Input.GetButtonDown("Jump");
         fireDown = Input.GetButton("Fire1");
+        fireUP = Input.GetButtonUp("Fire1");
         grenDown = Input.GetButton("Fire2");
         //reloadDown = Input.GetButtonDown("Reload");
         //itemDown = Input.GetButtonDown("Interation");
@@ -138,10 +140,10 @@ public class PlayerParent : MonoBehaviour
 
         if (isDodge)
             dir = dodgeVec;
-
+        /*
         if (isSwap || isReload )
             dir = Vector3.zero;
-
+        */
         if (!isBorder)
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // 걷기 0.3f 속도
             aniter.SetInteger("vecterval", 5);
@@ -152,12 +154,16 @@ public class PlayerParent : MonoBehaviour
     void Turn()
     {
         // # 1. 키보드에 의한 회전
-        transform.LookAt(transform.position + dir); // LookAt() - 지정된 벡터를 향해서 회전시켜주는 함수
+        // LookAt() - 지정된 벡터를 향해서 회전시켜주는 함수
 
         // # 2. 마우스에 의한 회전
         if (fireDown) // 마우스 클릭 했을 때만 화전하도록 조건 추가
         {
             transform.forward = Vector3.Lerp(transform.forward, Mousepo.getMousePosition() - transform.position, Time.deltaTime * speed);
+        }
+        else
+        {
+            transform.LookAt(transform.position + dir);
         }
     }
     void Jump()
@@ -174,8 +180,8 @@ public class PlayerParent : MonoBehaviour
     {
        
         fireDelay += Time.deltaTime;
-        isFireReady = 0.33 < fireDelay;  // equipWeapon.rate < fireDelay;
-        int s = 1;
+        isFireReady = 0.33< fireDelay;  // equipWeapon.rate < fireDelay;
+        int s = 0;
         if (fireDown)
         {
             aniter.SetBool("atttack", true);
@@ -189,9 +195,10 @@ public class PlayerParent : MonoBehaviour
                 Debug.Log("발사아아");
 
 
-                aniter.Play("Shoot_SingleShot_AR");
+                aniter.SetBool("onattack", true);
                 //발사 한줄 추가  equipWeapon.Use();
                 //발사 애니메이션 추가  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                fireDelay = 0;
 
             }
             else if (s == 1)
@@ -199,12 +206,16 @@ public class PlayerParent : MonoBehaviour
                
                 ParticleSystem temp =  Instantiate(particles[1]);
                 temp.GetComponent<movebullet>().getvec(Mousepo.getMousePosition(),gunpos.transform.position);
-                aniter.SetBool("atttack", true);
-                aniter.Play("Shoot_SingleShot_AR");
+                
+                aniter.SetBool("onattack", true);
                 fireDelay = 0;
                
             }
 
+        }
+        else
+        {
+            aniter.SetBool("onattack", false);
         }
         if (!fireDown)
         {
