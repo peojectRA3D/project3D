@@ -1,7 +1,12 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:Assets/Exports/particle/Dragon Particle/FlameThrower.prefab.meta
+guid: d3bceb960b55be7409dddb24ec393078
+PrefabImporter:
+========
 guid: 60d423205f95cd04dadff6bf3982196a
 folderAsset: yes
 DefaultImporter:
+>>>>>>>> 160998e6b099d128b63562f06a4353d29284e81e:Assets/UF Creator LITE/Prefabs/Bandits, Camps/Boats, Ships, Docks/Quays, Docks.meta
   externalObjects: {}
   userData: 
   assetBundleName: 
