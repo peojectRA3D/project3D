@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +19,7 @@ public class PlayerParent : MonoBehaviour
     // 이동
     float hAxis;
     float vAxis;
-    float jumpPower = 15.0f;
+    float jumpPower = 50.0f;
 
     // 키다운
     bool RunDown;
@@ -38,14 +39,24 @@ public class PlayerParent : MonoBehaviour
     bool isDodge;
     bool isSwap;
     bool isReload;
+    bool isJumpReady = true;
     bool isRun = false;
     bool isFireReady = true;
+    bool isSkillReady= true;
+    bool isdogeReady = true;
     bool isBorder; // 벽 충돌 플래그 bool 변수
     bool isDamage; // 무적 타임을 위한 변수
 
     Vector3 dodgeVec; // 회피하는 동안 움직임 방지를 위한 변수
     float fireDelay;
-     public GameObject  gunpos;
+    float jumpDelay = 6f;
+    float dogeDelay = 6f;
+    float skillDelay = 6f;
+    float dogespeed;
+    int[] magcount = {20,5};
+    int equipWeaponIndex = 0;
+    int weaponIndex = 0;
+    public GameObject  gunpos;
     // Start is called before the first frame update
     void Start()
     {
@@ -60,10 +71,10 @@ public class PlayerParent : MonoBehaviour
         Runcheck();
         Move();
         Turn();
-
+        //reload();
         Attack();
 
-        //Jump();       
+        Jump();       
         Swap();
         Dodge();
         /*
@@ -78,28 +89,33 @@ public class PlayerParent : MonoBehaviour
         dir.z = Input.GetAxisRaw("Vertical");
         RunDown = Input.GetButtonDown("Run");
         RunUp = Input.GetButtonUp("Run");
-        jumpDown = Input.GetButtonDown("Jump");
+        jumpDown = Input.GetButton("Jump");
+        //reloadDown = Input.GetButtonDown("reload");
         fireDown = Input.GetButton("Fire1");
         fireUP = Input.GetButtonUp("Fire1");
         grenDown = Input.GetButton("Fire2");
         //reloadDown = Input.GetButtonDown("Reload");
         //itemDown = Input.GetButtonDown("Interation");
-        // swapDown1 = Input.GetButtonDown("Swap1");
-        // swapDown2 = Input.GetButtonDown("Swap2");
+        swapDown1 = Input.GetButtonDown("Swap1");
+        swapDown2 = Input.GetButtonDown("Swap2");
         // swapDown3 = Input.GetButtonDown("Swap3");
     }
     void Runcheck()
     {
+        
         if (RunDown)
         {
+
             if (!isRun)
             {
                 speed = 10.0f;
+                aniter.SetBool("isrun", true);
 
             }
             else
             {
                 speed = 5.0f;
+                aniter.SetBool("isrun", false);
             }
             isRun = !isRun;
         }    
@@ -115,17 +131,19 @@ public class PlayerParent : MonoBehaviour
 
         if (isDodge)
         {
-           
+          
             dir = dodgeVec;
         }
-        if (isSwap || isReload )
+        if (isJump)
+        {
             dir = Vector3.zero;
+        }
         /*
         if (!isBorder)
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // 걷기 0.3f 속도
             aniter.SetInteger("vecterval", 5);
         */
-        Debug.Log(dir);
+      
         tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
@@ -134,9 +152,10 @@ public class PlayerParent : MonoBehaviour
         // LookAt() - 지정된 벡터를 향해서 회전시켜주는 함수
 
         // # 2. 마우스에 의한 회전
-        if (fireDown) // 마우스 클릭 했을 때만 화전하도록 조건 추가
+        if (fireDown && !isDodge) // 마우스 클릭 했을 때만 화전하도록 조건 추가
         {
-            transform.forward = Vector3.Lerp(transform.forward, Mousepo.getMousePosition() - transform.position, Time.deltaTime * speed);
+            transform.forward = Vector3.Lerp(transform.forward, Mousepo.getMousePosition() - transform.position, Time.deltaTime *30f);
+       
         }
         else
         {
@@ -170,15 +189,15 @@ public class PlayerParent : MonoBehaviour
 
     void Swap()
     {
-      /*  
-        if (swapDown1 && (!particles[0] || equipWeaponIndex == 0))
+        
+        if (swapDown1 && (!particles[0] || weaponIndex == 0))
             return;
-        if (swapDown2 && (!hasWeapons[1] || equipWeaponIndex == 1))
+        if (swapDown2 && (!particles[1] || weaponIndex == 1))
             return;
-        if (swapDown3 && (!hasWeapons[2] || equipWeaponIndex == 2))
+        if (swapDown3 && (!particles[2] || weaponIndex == 2))
             return;
-        */
-        int weaponIndex = -1;
+        
+        
         if (swapDown1) weaponIndex = 0;
         if (swapDown2) weaponIndex = 1;
         if (swapDown3) weaponIndex = 2;
@@ -186,14 +205,14 @@ public class PlayerParent : MonoBehaviour
         /*
         if ((swapDown1 || swapDown2 || swapDown3) && !isJump && !isDodge)
         {
-            if (equipWeapon != null)
+            if (equipWeaponIndex != null)
                 equipWeapon.gameObject.SetActive(false);
 
             equipWeaponIndex = weaponIndex;
             equipWeapon = weapons[weaponIndex].GetComponent<Weapon>();
             equipWeapon.gameObject.SetActive(true);
 
-            anim.SetTrigger("doSwap");
+            aniter.SetTrigger("doSwap");
 
             isSwap = true;
 
@@ -208,31 +227,48 @@ public class PlayerParent : MonoBehaviour
 
 
 
-    /*
+    
     void Jump()
     {
-        if (jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
+        jumpDelay += Time.deltaTime;
+        isJumpReady = 1.0 < jumpDelay;
+       
+        if (isJumpReady &&jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
         {
+            Debug.Log("점프작동 ");
             rid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
-            aniter.SetBool("isJump", true);
-            aniter.SetTrigger("doJump");
+            //aniter.SetBool("isjump", true);
+            aniter.SetTrigger("isjump");
             isJump = true;
+            jumpDelay = 0f;
+            StartCoroutine(endaniWithDelay("jump", 0.6f));
         }
-    }*/
+    }
     void Attack()
     {
        
         fireDelay += Time.deltaTime;
         isFireReady = 0.33< fireDelay;  // equipWeapon.rate < fireDelay;
-        
-       
+      
+        skillDelay += Time.deltaTime;
+        isSkillReady = 5.0f < skillDelay;
         if (fireDown && isFireReady && !isDodge && !isSwap)
         {
-            if (attacktype == 0 ) {
+            RunDown = true;
+            isRun = true;
+            Runcheck();
+            if (0 == weaponIndex) {
+                /*
+                if (magcount[0] == 0)
+                {
+                    return;
+                }
+               
+                magcount[0]--;
+                */
                 particles[0].Simulate(1.01f);
                 particles[0].Play();
 
-                Debug.Log("발사아아");
 
 
                 aniter.SetBool("onattack", true);
@@ -240,16 +276,28 @@ public class PlayerParent : MonoBehaviour
                 //발사 애니메이션 추가  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
                 fireDelay = 0;
 
-            }
-            else if (attacktype == 1)
-            {
-               
-                ParticleSystem temp =  Instantiate(particles[1]);
-                temp.GetComponent<movebullet>().getvec(Mousepo.getMousePosition(),gunpos.transform.position);
-                
-                aniter.SetBool("onattack", true);
-                fireDelay = 0;
+                StartCoroutine(endaniWithDelay("onattack", 0.33f));
 
+            }
+            else if (1 == weaponIndex )
+            {
+                if (isSkillReady)
+                {
+
+                    ParticleSystem temp = Instantiate(particles[1]);
+                    temp.GetComponent<movebullet>().getvec(Mousepo.getMousePosition(), gunpos.transform.position);
+                    aniter.speed = 0.25f;
+                    aniter.SetBool("onattack", true);
+                    skillDelay = 0;
+                    weaponIndex = 0;
+                    fireDelay = 0;
+                    StartCoroutine(endaniWithDelay("onattack", 1.0f));
+                }
+                else
+                {
+                    aniter.SetBool("onattack", true);
+                    StartCoroutine(endaniWithDelay("onattack", 0.33f));
+                }
             }
             else
             {
@@ -257,34 +305,62 @@ public class PlayerParent : MonoBehaviour
             }
 
         }
-        else
-        {
-            aniter.SetBool("onattack", false);
+       
+    }
+    void reload()
+    {
+        if (reloadDown) {
+
+            StartCoroutine(endaniWithDelay("reload",0.67f));
+         
         }
-  
     }
     void Dodge()
     {
-     
-
-        if (jumpDown && dir != Vector3.zero && !isJump && !isDodge && !isSwap)
+       
+        dogeDelay += Time.deltaTime;
+        isdogeReady = 5.0 < dogeDelay;
+        if (isdogeReady && jumpDown && dir != Vector3.zero && !isJump && !isDodge && !isSwap)
         {
+        
             dodgeVec = dir;
-            speed = 5.0f;
-            speed *= 3f;
+            dogespeed = speed;
+            speed = 15f;
             aniter.SetTrigger("isroll");
             isDodge = true;
-
-            Invoke("DodgeOut", 0.67f);
+            dogeDelay = 0f;
+            StartCoroutine(endaniWithDelay("doge", 0.67f));
         }
     }
-
-    void DodgeOut()
+    IEnumerator endaniWithDelay(string aniname, float delay)
     {
-        speed = 5.0f;
-        isDodge = false;
-        isJump = false;
-        isSwap = false;
+        yield return new WaitForSeconds(delay);
+       
+       
+       
+        switch (aniname)
+        {
+            case "doge":
+                isDodge = false;
+                speed = dogespeed;
+                break;
+            case "onattack":
+                aniter.SetBool("onattack", false);
+                aniter.speed = 1;
+                break;
+            case "jump":
+
+                isJump = false;
+                break;
+            case "reload":
+                isSwap = false;
+                magcount[0] = 20;
+                break;
+            default:
+                // 어떤 경우에도 위의 조건에 해당하지 않을 때의 처리
+                break;
+        }
     }
+  
     
 }
