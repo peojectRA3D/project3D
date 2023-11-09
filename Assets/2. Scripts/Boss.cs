@@ -10,10 +10,15 @@ public class Boss : MonoBehaviour
     public Transform target;            // 추적 대상
     public BoxCollider attackArea;      // 근접 공격
     public GameObject earthquake;       // 지진 공격
+    public GameObject fireBreath;       // 불 공격
     public bool isChase;                // 추적 여부
     public bool isAttack;               // 공격 여부
-    public bool isCooldown;
-    private float coodownTime = 6f;
+
+    bool isCooldownA;
+    bool isCooldownB;
+    float cooldownTimeA = 5f;
+    float cooldownTimeB = 8f;
+
 
     Rigidbody rigid;
     NavMeshAgent nav;
@@ -79,7 +84,7 @@ public class Boss : MonoBehaviour
         }
 
         // 공격 3
-        if (!isCooldown)
+        if (!isCooldownA)
         {
             targetRadius = 9f;
             targetRange = 9f;    
@@ -97,6 +102,22 @@ public class Boss : MonoBehaviour
         }
 
         // 공격 4
+        if (!isCooldownB)
+        {
+            targetRadius = 10f;
+            targetRange = 12f;
+
+            rayHits = Physics.SphereCastAll(transform.position,
+                                                            targetRadius,
+                                                            transform.forward,
+                                                            targetRange,
+                                                            LayerMask.GetMask("Player"));
+
+            if (rayHits.Length > 0 && !isAttack)
+            {
+                StartCoroutine(Attack4());
+            }
+        }
     }
 
     IEnumerator Attack()
@@ -153,9 +174,36 @@ public class Boss : MonoBehaviour
 
         anim.SetBool("isAttack3", false);
 
-        isCooldown = true;
-        yield return new WaitForSeconds(coodownTime);
-        isCooldown = false;
+        isCooldownA = true;
+        yield return new WaitForSeconds(cooldownTimeA);
+        isCooldownA = false;
+    }
+
+    IEnumerator Attack4()
+    {
+        isChase = false;
+        isAttack = true;
+        anim.SetBool("isAttack4", true);
+
+        yield return new WaitForSeconds(0.5f);
+        audioSource.clip = attack4;
+        audioSource.volume = 0.4f;
+        audioSource.Play();
+
+        yield return new WaitForSeconds(0.7f);
+        fireBreath.SetActive(true);
+
+        yield return new WaitForSeconds(1.5f);
+        fireBreath.SetActive(false);
+
+        isChase = true;
+        isAttack = false;
+
+        anim.SetBool("isAttack4", false);
+
+        isCooldownB = true;
+        yield return new WaitForSeconds(cooldownTimeB);
+        isCooldownB = false;
     }
 
     void FixedUpdate()
