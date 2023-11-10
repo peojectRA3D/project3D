@@ -5,12 +5,16 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public int maxHealth;       // 최대 체력
-    public int curHealth;       // 현재 체력
-    public Transform target;    // 추적 대상
-    public BoxCollider attackArea; // 공격 범위
-    public bool isChase;        // 추적 여부
-    public bool isAttack;       // 공격 여부
+    public enum Type { A, B, C }; // 몬스터 A, B, C 구역
+    public Type enemyType;
+
+    public int maxHealth;           // 최대 체력
+    public int curHealth;           // 현재 체력
+    public Transform target;        // 추적 대상
+    public float distance = 20f;    // 감지 범위
+    public BoxCollider attackArea;  // 공격 범위
+    public bool isChase;            // 추적 여부
+    public bool isAttack;           // 공격 여부
 
     Rigidbody rigid;
     NavMeshAgent nav;
@@ -28,25 +32,33 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
-        Invoke("ChaseStart", 2);
+        Invoke("ChaseStart", 1);
     }
 
     void ChaseStart()
     {
+        isChase = false;
+        anim.SetBool("isRun", false);
+
+        /*
         audioSource.clip = response;
         audioSource.volume = 0.1f;
         audioSource.Play();
-
-        isChase = true; // 추적 상태로 변경
-        anim.SetBool("isRun", true);
+        */
     }
- 
+
     void Update()
     {
         if (nav.enabled)
         {
-            nav.SetDestination(target.position); // 대상의 위치로 이동 목표 설정
-            nav.isStopped = !isChase;            // 추적 중이 아닐 때 이동 중지
+            if (target != null && Vector3.Distance(transform.position, target.position) < distance)
+            {
+                isChase = true;
+                anim.SetBool("isRun", true);
+
+                nav.SetDestination(target.position); // 대상의 위치로 이동 목표 설정
+                nav.isStopped = !isChase;            // 추적 중이 아닐 때 이동 중지
+            }
         }
     }
 
