@@ -21,7 +21,7 @@ public class testcol : MonoBehaviour
         Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier) ;
         if (other.tag == "bullet")
         {
-
+            Debug.Log("¾Æ¾ß");
         }
     }
     private void OnTriggerEnter(Collider other)
