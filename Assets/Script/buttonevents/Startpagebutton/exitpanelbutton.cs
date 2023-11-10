@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class exitpanelbutton : MonoBehaviour
 {
-    
+    public mainpanelbutton mainpanel;
     public void yesbuttonclick()
     {
         Application.Quit();
@@ -13,5 +13,13 @@ public class exitpanelbutton : MonoBehaviour
     {
         gameObject.SetActive(false);
     
+    }
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            mainpanel.butttononoff(true);
+            nobuttonclick();
+        }
     }
 }
