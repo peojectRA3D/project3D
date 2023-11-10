@@ -16,11 +16,11 @@ public class GetYZeroInCamera : MonoBehaviour
 
         // 스크린 좌표를 레이로 변환
         Ray ray = mainCamera.ScreenPointToRay(mousePosition);
-       
-        // 카메라 시선과 마우스 레이 간의 교차점을 찾습니다.
-        Plane groundPlane = new Plane(Vector3.up, Vector3.zero); // 지면을 나타내는 평면 (y=0)
-        float rayDistance;
 
+        // 카메라 시선과 마우스 레이 간의 교차점을 찾습니다.
+        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, gameObject.transform.position.y, 0f)); // 지면을 나타내는 평면 (y=0)
+        float rayDistance;
+        Debug.Log(groundPlane);
         if (groundPlane.Raycast(ray, out rayDistance))
         {
             // 교차 지점의 월드 좌표를 계산합니다.
