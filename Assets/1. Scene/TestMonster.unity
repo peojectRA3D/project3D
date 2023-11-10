@@ -133,7 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 26771314}
   m_Layer: 5
-  m_Name: Score Group
+  m_Name: Score
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -528,7 +528,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &126042954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,7 +605,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1328465170}
-  - {fileID: 2082692880}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -5945,7 +5944,7 @@ GameObject:
   m_Component:
   - component: {fileID: 570454773}
   m_Layer: 5
-  m_Name: Status Group
+  m_Name: Status
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6841,7 +6840,7 @@ GameObject:
   m_Component:
   - component: {fileID: 741100178}
   m_Layer: 5
-  m_Name: 'Stage Group '
+  m_Name: Stage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6886,12 +6885,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d42e792c78091e4eb8b8a2c05edb567, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tr: {fileID: 0}
-  rid: {fileID: 0}
   Mousepo: {fileID: 741970619}
   speed: 5
   humppower: 5
   dash: 5
+  attacktype: 0
   particles:
   - {fileID: 1886106438}
   - {fileID: 5081496018342536525, guid: 772b561e50569204b9ecf538b15ddba8, type: 3}
@@ -6978,7 +6976,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: 2c6e42d8da011fb4ba04996ff764c24e, type: 2}
+  m_NavMeshData: {fileID: 0}
   m_BuildHeightMesh: 0
 --- !u!1 &817189723
 GameObject:
@@ -7193,7 +7191,7 @@ GameObject:
   m_Component:
   - component: {fileID: 853608108}
   m_Layer: 5
-  m_Name: Boss Group
+  m_Name: Boss
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7585,7 +7583,7 @@ PrefabInstance:
     - target: {fileID: 3155058319838657794, guid: 176299a76ecfc7544b22a66fae200ac7,
         type: 3}
       propertyPath: m_TagString
-      value: Enemy
+      value: Monster
       objectReference: {fileID: 0}
     - target: {fileID: 3312486801664689943, guid: 176299a76ecfc7544b22a66fae200ac7,
         type: 3}
@@ -7680,17 +7678,17 @@ PrefabInstance:
     - target: {fileID: 5304911586177118974, guid: 176299a76ecfc7544b22a66fae200ac7,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.9
+      value: -59.51
       objectReference: {fileID: 0}
     - target: {fileID: 5304911586177118974, guid: 176299a76ecfc7544b22a66fae200ac7,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2.27
       objectReference: {fileID: 0}
     - target: {fileID: 5304911586177118974, guid: 176299a76ecfc7544b22a66fae200ac7,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -8.16
       objectReference: {fileID: 0}
     - target: {fileID: 5304911586177118974, guid: 176299a76ecfc7544b22a66fae200ac7,
         type: 3}
@@ -8510,7 +8508,7 @@ GameObject:
   - component: {fileID: 1208858233}
   - component: {fileID: 1208858232}
   m_Layer: 5
-  m_Name: Victoty Image
+  m_Name: Victory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8769,6 +8767,7 @@ RectTransform:
   - {fileID: 570454773}
   - {fileID: 1936130791}
   - {fileID: 853608108}
+  - {fileID: 2082692880}
   m_Father: {fileID: 126042957}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -9763,7 +9762,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1936130791}
   m_Layer: 5
-  m_Name: Bullet Group
+  m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9941,7 +9940,7 @@ PrefabInstance:
     - target: {fileID: 1424896658647565073, guid: 708801fe922c45f4a80e1e71904bd37e,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1476465046142329126, guid: 708801fe922c45f4a80e1e71904bd37e,
         type: 3}
@@ -10001,7 +10000,7 @@ PrefabInstance:
     - target: {fileID: 7328644380510460543, guid: 708801fe922c45f4a80e1e71904bd37e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9.023803
+      value: -13.4
       objectReference: {fileID: 0}
     - target: {fileID: 7328644380510460543, guid: 708801fe922c45f4a80e1e71904bd37e,
         type: 3}
@@ -10149,13 +10148,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2082692879}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1208858231}
-  m_Father: {fileID: 126042957}
+  m_Father: {fileID: 1328465170}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
