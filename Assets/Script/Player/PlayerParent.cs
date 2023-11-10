@@ -58,6 +58,7 @@ public class PlayerParent : MonoBehaviour
     int weaponIndex = 0;
     public GameObject  gunpos;
     // Start is called before the first frame update
+
     void Start()
     {
         aniter = GetComponent<Animator>();
@@ -361,6 +362,4 @@ public class PlayerParent : MonoBehaviour
                 break;
         }
     }
-  
-    
 }
