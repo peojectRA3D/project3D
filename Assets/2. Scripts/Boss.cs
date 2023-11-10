@@ -8,6 +8,7 @@ public class Boss : MonoBehaviour
     public int maxHealth;               // 최대 체력
     public int curHealth;               // 현재 체력
     public Transform target;            // 추적 대상
+    public float distance = 20f;        // 감지 범위
     public BoxCollider attackArea;      // 근접 공격
     public GameObject earthquake;       // 지진 공격
     public GameObject fireBreath;       // 불 공격
@@ -54,10 +55,11 @@ public class Boss : MonoBehaviour
     void Update()
     {
         if (nav.enabled)
-        {
-            nav.SetDestination(target.position); // 대상의 위치로 이동 목표 설정
-            nav.isStopped = !isChase;            // 추적 중이 아닐 때 이동 중지
-        }
+            if (target != null && Vector3.Distance(transform.position, target.position) < distance)
+            {
+                nav.SetDestination(target.position); // 대상의 위치로 이동 목표 설정
+                nav.isStopped = !isChase;            // 추적 중이 아닐 때 이동 중지
+            }
     }
 
     void FreezeVelocity() // 물리력이 NavAgent 이동을 방해하지 않는 메서드

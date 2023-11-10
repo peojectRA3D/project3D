@@ -44,10 +44,12 @@ public class PlayerParent : MonoBehaviour
     bool isFireReady = true;
     bool isSkillReady= true;
     bool isdogeReady = true;
+    bool isdead;
     bool isBorder; // 벽 충돌 플래그 bool 변수
     bool isDamage; // 무적 타임을 위한 변수
 
     Vector3 dodgeVec; // 회피하는 동안 움직임 방지를 위한 변수
+    public float PlayerHp = 100.0f;
     float fireDelay;
     float jumpDelay = 6f;
     float dogeDelay = 6f;
@@ -58,6 +60,7 @@ public class PlayerParent : MonoBehaviour
     int weaponIndex = 0;
     public GameObject  gunpos;
     // Start is called before the first frame update
+
     void Start()
     {
         aniter = GetComponent<Animator>();
@@ -67,13 +70,17 @@ public class PlayerParent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isdead) {
+            return;
+        }
         GetInput();
+        HpCheck();
         Runcheck();
         Move();
         Turn();
         //reload();
         Attack();
-
+        
         Jump();       
         Swap();
         Dodge();
@@ -99,6 +106,25 @@ public class PlayerParent : MonoBehaviour
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
         // swapDown3 = Input.GetButtonDown("Swap3");
+    }
+    void HpCheck()
+    {
+        if (PlayerHp <= 0)
+        {
+            aniter.SetBool("isdie",true);
+            isdead = true;
+
+        }
+    }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "EnemyHitbox" && !isDamage)
+        {
+            Debug.Log("접촉");
+            PlayerHp -= 5;
+            isDamage = true;
+            StartCoroutine(endaniWithDelay("damage", 0.5f));
+        }
     }
     void Runcheck()
     {
@@ -186,7 +212,6 @@ public class PlayerParent : MonoBehaviour
             aniter.SetInteger("vecterval", 5);
         }
     }
-
     void Swap()
     {
         
@@ -219,15 +244,10 @@ public class PlayerParent : MonoBehaviour
             Invoke("SwapOut", 0.4f);
         }*/
     }
-
     void SwapOut()
     {
         isSwap = false;
     }
-
-
-
-    
     void Jump()
     {
         jumpDelay += Time.deltaTime;
@@ -356,11 +376,14 @@ public class PlayerParent : MonoBehaviour
                 isSwap = false;
                 magcount[0] = 20;
                 break;
+
+
+            case "damage":
+                isDamage = false;
+                break;
             default:
                 // 어떤 경우에도 위의 조건에 해당하지 않을 때의 처리
                 break;
         }
     }
-  
-    
 }
