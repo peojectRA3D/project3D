@@ -32,19 +32,19 @@ public class Enemy : MonoBehaviour
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
-        Invoke("ChaseStart", 1);
+        ChaseStart();
     }
 
     void ChaseStart()
     {
-        isChase = false;
-        anim.SetBool("isRun", false);
-
         /*
         audioSource.clip = response;
         audioSource.volume = 0.1f;
         audioSource.Play();
         */
+
+        isChase = true; // 추적 상태로 변경
+        anim.SetBool("isRun", false);
     }
 
     void Update()
@@ -53,11 +53,10 @@ public class Enemy : MonoBehaviour
         {
             if (target != null && Vector3.Distance(transform.position, target.position) < distance)
             {
-                isChase = true;
                 anim.SetBool("isRun", true);
 
-                nav.SetDestination(target.position); // 대상의 위치로 이동 목표 설정
-                nav.isStopped = !isChase;            // 추적 중이 아닐 때 이동 중지
+                nav.SetDestination(target.position);
+                nav.isStopped = !isChase;
             }
         }
     }

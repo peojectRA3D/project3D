@@ -40,26 +40,32 @@ public class Boss : MonoBehaviour
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
-        Invoke("ChaseStart", 2);
+        ChaseStart();
     }
 
     void ChaseStart()
     {
+        /*
         audioSource.clip = response;
         audioSource.Play();
 
         isChase = true; // 추적 상태로 변경
-        anim.SetBool("isRun", true);
+        anim.SetBool("isRun", false);
+        */
     }
 
     void Update()
     {
         if (nav.enabled)
+        {
             if (target != null && Vector3.Distance(transform.position, target.position) < distance)
             {
-                nav.SetDestination(target.position); // 대상의 위치로 이동 목표 설정
-                nav.isStopped = !isChase;            // 추적 중이 아닐 때 이동 중지
+                anim.SetBool("isRun", true);
+
+                nav.SetDestination(target.position);
+                nav.isStopped = !isChase; 
             }
+        }
     }
 
     void FreezeVelocity() // 물리력이 NavAgent 이동을 방해하지 않는 메서드
