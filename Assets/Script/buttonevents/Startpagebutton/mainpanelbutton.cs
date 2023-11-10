@@ -12,6 +12,7 @@ public class mainpanelbutton: MonoBehaviour
     public Button[] buttons;
     public Text title;
     public Image titleimage;
+    public Image[] imgesbar;
     public void startbuttonclick()
     {
         SceneManager.LoadScene("Stage1(JSH)");
@@ -42,13 +43,17 @@ public class mainpanelbutton: MonoBehaviour
         }
         else
         {
-            titleimage.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 200f / 255f);
+            titleimage.color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 100f / 255f);
         }
         for (int index  = 0; index < buttons.Length;index++)
         {
             buttons[index].gameObject.SetActive(tufal);
         }
 
+        for (int index = 0; index < imgesbar.Length; index++)
+        {
+            imgesbar[index].gameObject.SetActive(tufal);
+        }
     }
  
     

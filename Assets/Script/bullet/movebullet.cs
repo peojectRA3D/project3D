@@ -19,11 +19,11 @@ public class movebullet : MonoBehaviour
 
     public void getvec(Vector3 vec, Vector3 playerpos)
     {
-        Debug.Log(playerpos);
-        vec += new Vector3(0, 1.5f, 0);
+        Debug.Log(vec);
+        //vec += new Vector3(0, 1.5f, 0);
         transform.position = playerpos;
         thisplayerpos = vec;
-         forword = vec-playerpos ;
+         forword = vec-playerpos;
     }
     public void Awake()
     {
