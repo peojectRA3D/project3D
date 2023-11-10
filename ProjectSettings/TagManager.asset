@@ -11,6 +11,7 @@ TagManager:
   - EnemyHitbox
   - Floor
   - Monster
+  - Terrain
   layers:
   - Default
   - TransparentFX
