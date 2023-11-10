@@ -8,8 +8,8 @@ public class Enemy : MonoBehaviour
     public enum Type { A, B, C }; // 몬스터 A, B, C 구역
     public Type enemyType;
 
-    public int maxHealth;           // 최대 체력
-    public int curHealth;           // 현재 체력
+    public float maxHealth;           // 최대 체력
+    public float curHealth;           // 현재 체력
     public Transform target;        // 추적 대상
     public float distance = 20f;    // 감지 범위
     public BoxCollider attackArea;  // 공격 범위
@@ -109,5 +109,26 @@ public class Enemy : MonoBehaviour
     {
         Targeting();
         FreezeVelocity();
+    }
+
+    private void OnParticleCollision(GameObject other)
+    {
+        Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier);
+        if (other.tag == "bullet")
+        {
+            curHealth -= other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier;
+
+            if (curHealth <= 0)
+            {
+                isChase = false;
+                anim.SetTrigger("doDie");
+            }
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.transform.rotation.eulerAngles.y);
+        // 2번 탄환 - 몬스터 피격
     }
 }
