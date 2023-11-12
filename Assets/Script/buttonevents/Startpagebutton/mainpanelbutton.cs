@@ -14,7 +14,7 @@ public class mainpanelbutton: MonoBehaviour
     public Image titleimage;
     public void startbuttonclick()
     {
-        SceneManager.LoadScene("Stage1(JSH)");
+        SceneManager.LoadScene("MainStroyPage");
     }
     public void howtoplaybuttononclick()
     {
