@@ -47,6 +47,8 @@ public class PlayerParent : MonoBehaviour
     bool isdead;
     bool isBorder; // 벽 충돌 플래그 bool 변수
     bool isDamage; // 무적 타임을 위한 변수
+    bool ispause;
+    bool pausedown;
 
     Vector3 dodgeVec; // 회피하는 동안 움직임 방지를 위한 변수
     public float PlayerHp = 100.0f;
@@ -59,6 +61,7 @@ public class PlayerParent : MonoBehaviour
     int equipWeaponIndex = 0;
     int weaponIndex = 0;
     public GameObject  gunpos;
+    public GameObject[] canvas;
     // Start is called before the first frame update
 
     void Start()
@@ -73,6 +76,7 @@ public class PlayerParent : MonoBehaviour
         if (isdead) {
             return;
         }
+       
         GetInput();
         HpCheck();
         Runcheck();
@@ -84,6 +88,7 @@ public class PlayerParent : MonoBehaviour
         Jump();       
         Swap();
         Dodge();
+        pause();
         /*
         Interation();
         Grenade();
@@ -105,7 +110,25 @@ public class PlayerParent : MonoBehaviour
         //itemDown = Input.GetButtonDown("Interation");
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
+        pausedown = Input.GetButtonDown("Cancel");
         // swapDown3 = Input.GetButtonDown("Swap3");
+    }
+    void pause()
+    {
+        if (pausedown)
+        {
+            if (!ispause)
+            {
+                Time.timeScale = 0;
+               
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+            ispause = !ispause;
+            canvas[0].SetActive(ispause);
+        }
     }
     void HpCheck()
     {
@@ -176,7 +199,10 @@ public class PlayerParent : MonoBehaviour
     {
         // # 1. 키보드에 의한 회전
         // LookAt() - 지정된 벡터를 향해서 회전시켜주는 함수
-
+        if (ispause)
+        {
+            return;
+        }
         // # 2. 마우스에 의한 회전
         if (fireDown && !isDodge) // 마우스 클릭 했을 때만 화전하도록 조건 추가
         {
