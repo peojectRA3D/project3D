@@ -15,6 +15,12 @@ EditorBuildSettings:
     path: Assets/1. Scene/Default_Scene.unity
     guid: 6f1a04b3a0587dd40bd05f5381cb4627
   - enabled: 1
+    path: Assets/1. Scene/MainStroyPage.unity
+    guid: a4a80b34347772e429a913b838720dbd
+  - enabled: 1
     path: Assets/1. Scene/Lobby.unity
     guid: 0c08f655f17a6464c8646b9bde9f1327
+  - enabled: 1
+    path: Assets/1. Scene/Stage1(JSH).unity
+    guid: 93bb104228ad4924fa8095cd7b6a1225
   m_configObjects: {}
