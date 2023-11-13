@@ -251,7 +251,7 @@ public class PlayerParent : MonoBehaviour
     void Jump()
     {
         jumpDelay += Time.deltaTime;
-        isJumpReady = 1.0 < jumpDelay;
+        isJumpReady = 5.0 < jumpDelay;
        
         if (isJumpReady &&jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
         {
