@@ -4,68 +4,31 @@ using UnityEngine;
 
 public class MonsterHpBar : MonoBehaviour
 {
-    public Transform monsterHead; // 몬스터 머리의 위치를 가리키는 Transform
-    public GameObject hpBarPrefab; // Hp 프리팹
+    [SerializeField] GameObject m_goPrefab = null;
 
-    private GameObject hpBarInstance; // 생성된 HP 바 인스턴스
+    List<Transform> m_objectList = new List<Transform>();
+    List<GameObject> m_hpBarList = new List<GameObject>();
 
-    private void Start()
+    Camera m_camera = null;
+
+    void Start()
     {
-        // Hp 프리팹을 인스턴스화하여 HP 바를 생성
-        hpBarInstance = Instantiate(hpBarPrefab, transform);
-        // 아래에 위치 조정 및 초기화 로직 추가
-    }
+        m_camera = Camera.main;
 
-    private void Update()
-    {
-        if (monsterHead == null)
+        GameObject[] t_objects = GameObject.FindGameObjectsWithTag("Enemy");
+        for(int i = 0; i < t_objects.Length; i++)
         {
-            // 몬스터 머리가 없거나 몬스터가 파괴된 경우 HP 바도 비활성화
-            hpBarInstance.SetActive(false);
-            return;
+            m_objectList.Add(t_objects[i].transform);
+            GameObject t_hpbar = Instantiate(m_goPrefab, t_objects[i].transform.position, Quaternion.identity, transform);
+            m_hpBarList.Add(t_hpbar);
         }
+    }
 
-        // 몬스터 머리의 월드 좌표를 스크린 좌표로 변환
-        Vector3 screenPosition = Camera.main.WorldToScreenPoint(monsterHead.position);
-
-        // HP 바 위치 업데이트
-        hpBarInstance.transform.position = screenPosition;
+    void Update()
+    {
+        for(int i = 0; i < m_objectList.Count; i++)
+        {
+            m_hpBarList[i].transform.position = m_camera.WorldToScreenPoint(m_objectList[i].position + new Vector3(0, 1.15f, 0));
+        }
     }
 }
-
-
-
-
-/*
-private Camera uiCamera;
-private Canvas canvas;
-private RectTransform rectParent;
-private RectTransform rectHp;
-
-[HideInInspector] public Vector3 offset = Vector3.zero;
-[HideInInspector] public Transform targetTR; 
-
-void Start()
-{
-    canvas = GetComponentInParent<Canvas>();
-    uiCamera = canvas.worldCamera;
-    rectParent = canvas.GetComponent<RectTransform>();
-    rectHp = this.gameObject.GetComponent<RectTransform>();
-}
-
-void Update()
-{
-
-}
-
-void LateUpdate()
-{
-    var screenPos = Camera.main.WorldToScreenPoint(targetTR.position + offset);
-
-    if(screenPos.z < 0.0f){
-        screenPos *= -1.0f;
-    }
-}
-}
-
-*/
