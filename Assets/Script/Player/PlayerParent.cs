@@ -19,7 +19,7 @@ public class PlayerParent : MonoBehaviour
     // 이동
     float hAxis;
     float vAxis;
-    float jumpPower = 50.0f;
+    float jumpPower = 5.0f;
 
     // 키다운
     bool RunDown;
@@ -251,7 +251,7 @@ public class PlayerParent : MonoBehaviour
     void Jump()
     {
         jumpDelay += Time.deltaTime;
-        isJumpReady = 1.0 < jumpDelay;
+        isJumpReady = 5.0 < jumpDelay;
        
         if (isJumpReady &&jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
         {
@@ -287,8 +287,10 @@ public class PlayerParent : MonoBehaviour
                 magcount[0]--;
                 */
                 particles[0].Simulate(1.01f);
+                particles[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                particles[0].gameObject.transform.Rotate(Vector3.up, -90f);
                 particles[0].Play();
-
+                
 
 
                 aniter.SetBool("onattack", true);
@@ -305,7 +307,7 @@ public class PlayerParent : MonoBehaviour
                 {
 
                     ParticleSystem temp = Instantiate(particles[1]);
-                    temp.GetComponent<movebullet>().getvec(Mousepo.getMousePosition(), gunpos.transform.position);
+                    temp.GetComponent<movebullet>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
                     aniter.speed = 0.25f;
                     aniter.SetBool("onattack", true);
                     skillDelay = 0;
