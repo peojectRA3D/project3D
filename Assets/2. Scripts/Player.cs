@@ -14,7 +14,7 @@ public class Player : MonoBehaviour
     // Åº¾à, µ¿Àü, Ã¼·Â, ¼ö·ùÅº
     public int ammo;
     public int coin;
-    public int health;
+    public float health;
     public int hasGrenade;
 
     public int maxAmmo;
