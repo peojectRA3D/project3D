@@ -33,7 +33,7 @@ public class PlayerParent : MonoBehaviour
     bool swapDown1;
     bool swapDown2;
     bool swapDown3;
-
+    bool heal;
     // 애니
     bool isJump;
     bool isDodge;
@@ -48,7 +48,10 @@ public class PlayerParent : MonoBehaviour
     bool isBorder; // 벽 충돌 플래그 bool 변수
     bool isDamage; // 무적 타임을 위한 변수
     bool ispause;
+    bool healReady;
+
     bool pausedown;
+
 
     Vector3 dodgeVec; // 회피하는 동안 움직임 방지를 위한 변수
     public float PlayerHp = 100.0f;
@@ -56,6 +59,7 @@ public class PlayerParent : MonoBehaviour
     float jumpDelay = 6f;
     float dogeDelay = 6f;
     float skillDelay = 6f;
+    float healDelay = 31f;
     float dogespeed;
     int[] magcount = {20,5};
     int equipWeaponIndex = 0;
@@ -84,7 +88,7 @@ public class PlayerParent : MonoBehaviour
         Turn();
         //reload();
         Attack();
-        
+        healplayer();
         Jump();       
         Swap();
         Dodge();
@@ -95,6 +99,7 @@ public class PlayerParent : MonoBehaviour
         Reload();
         */
     }
+ 
     void GetInput()
     {
         dir.x = Input.GetAxisRaw("Horizontal");
@@ -111,8 +116,25 @@ public class PlayerParent : MonoBehaviour
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
         pausedown = Input.GetButtonDown("Cancel");
+        heal = Input.GetButtonDown("heal");
         // swapDown3 = Input.GetButtonDown("Swap3");
     }
+    void healplayer()
+    {
+        healDelay += Time.deltaTime;
+        healReady = healDelay > 30f;
+        if (healReady && heal)
+        {
+            PlayerHp += 30;
+            if (PlayerHp >= 100)
+            {
+                PlayerHp = 100;
+            }
+            healDelay = 0;
+            particles[2].Play();
+        }
+    }
+    
     void pause()
     {
         if (pausedown)
@@ -146,7 +168,7 @@ public class PlayerParent : MonoBehaviour
             Debug.Log("접촉");
             PlayerHp -= 5;
             isDamage = true;
-            StartCoroutine(endaniWithDelay("damage", 0.5f));
+            StartCoroutine(endaniWithDelay("damage", 0.3f));
         }
     }
     void Runcheck()
@@ -182,6 +204,12 @@ public class PlayerParent : MonoBehaviour
         {
           
             dir = dodgeVec;
+          
+            return;
+        }
+        else
+        {
+
         }
         if (isJump)
         {
@@ -373,11 +401,14 @@ public class PlayerParent : MonoBehaviour
         
             dodgeVec = dir;
             dogespeed = speed;
+            
             speed = 15f;
             aniter.SetTrigger("isroll");
             isDodge = true;
             dogeDelay = 0f;
+            rid.AddForce(dir * speed * Time.deltaTime * 200, ForceMode.VelocityChange);
             StartCoroutine(endaniWithDelay("doge", 0.67f));
+
         }
     }
     IEnumerator endaniWithDelay(string aniname, float delay)
@@ -391,6 +422,8 @@ public class PlayerParent : MonoBehaviour
             case "doge":
                 isDodge = false;
                 speed = dogespeed;
+                float dampingFactor =0f; // 조절 가능한 상수
+                rid.velocity *= dampingFactor;
                 break;
             case "onattack":
                 aniter.SetBool("onattack", false);
