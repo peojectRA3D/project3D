@@ -91,6 +91,9 @@ public class PlayerParent : MonoBehaviour
 
     int bcout;
     int mcount;
+
+    private bool isSwitching = false;
+
     void Start()
     {
         aniter = GetComponent<Animator>();
@@ -111,27 +114,35 @@ public class PlayerParent : MonoBehaviour
         if (isdead) {
             return;
         }
-       
-        GetInput();
-        HpCheck();
-        Runcheck();
-        Move();
-        Turn();
-        //reload();
-        Attack();
-        healplayer();
-        Jump();       
-        Swap();
-        Dodge();
-        pause();
-        skilldamaged();
-        /*
-        Interation();
-        Grenade();
-        Reload();
-        */
+        if (!isSwitching)
+        {
+            GetInput();
+            HpCheck();
+            Runcheck();
+            Move();
+            Turn();
+            //reload();
+            Attack();
+            healplayer();
+            Jump();
+            Swap();
+            Dodge();
+            pause();
+            skilldamaged();
+            /*
+            Interation();
+            Grenade();
+            Reload();
+            */
+        }
     }
- 
+
+    public void SetSwitching(bool value)
+    {
+        // 카메라 전환 중인지 여부를 설정하는 메소드
+        isSwitching = value;
+    }
+
     void skilldamaged()
     {
         for (int index = 0; index < isSkillDamagein.Length; index++)
@@ -278,6 +289,7 @@ public class PlayerParent : MonoBehaviour
     }
     void Move()
     {
+
 
         float angle = -45.0f;
         angle = Mathf.Deg2Rad * angle;
