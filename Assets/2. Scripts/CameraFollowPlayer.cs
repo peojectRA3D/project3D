@@ -13,7 +13,7 @@ public class CameraFollowPlayer : MonoBehaviour
 
     private void Start()
     {
-        if()
+        //if()
         offset = offset.normalized * maxZoom;
     }
     private void Update()
