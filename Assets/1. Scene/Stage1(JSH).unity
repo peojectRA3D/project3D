@@ -3015,7 +3015,7 @@ GameObject:
   - component: {fileID: 150354974}
   - component: {fileID: 150354977}
   m_Layer: 5
-  m_Name: Lobby
+  m_Name: Move Robby
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3086,7 +3086,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 150354977}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: UI_ResultButton, Assembly-CSharp
         m_MethodName: OnClickLobbyButton
         m_Mode: 1
         m_Arguments:
@@ -3144,14 +3144,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 150354972}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d616db2bccdaa2d4f85c2cf4e899cc46, type: 3}
+  m_Script: {fileID: 11500000, guid: cc5a7e504fd46b54b9a16e11082ad3c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boss: {fileID: 0}
-  bossHealth: {fileID: 0}
-  bossHealthBar: {fileID: 0}
-  victory: {fileID: 0}
-  defeat: {fileID: 0}
 --- !u!4 &156476079 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2565658775809503455, guid: 301ddf2d4faa7f1429d6b976cb2060ba,
@@ -3427,19 +3422,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 60
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 3
-    m_MaxSize: 60
+    m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Restart
+  m_Text: "\uB2E4\uC2DC\uD558\uAE30"
 --- !u!222 &184877277
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3506,19 +3501,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 60
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 60
+    m_MaxSize: 50
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Lobby
+  m_Text: "\uB85C\uBE44\uB85C \uC774\uB3D9"
 --- !u!222 &187407298
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -19333,19 +19328,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 140
-    m_FontStyle: 0
+    m_Font: {fileID: 12800000, guid: 891a6c9f9a43113459703ca4cf2ff470, type: 3}
+    m_FontSize: 120
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 140
+    m_MaxSize: 120
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Stage1 Clear
+  m_Text: "\uC2A4\uD14C\uC774\uC9C0 \uC2B9\uB9AC!"
 --- !u!222 &838373312
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -23624,7 +23619,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1018892623}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: UI_ResultButton, Assembly-CSharp
         m_MethodName: OnClickStage2Button
         m_Mode: 1
         m_Arguments:
@@ -23682,14 +23677,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1018892618}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d616db2bccdaa2d4f85c2cf4e899cc46, type: 3}
+  m_Script: {fileID: 11500000, guid: cc5a7e504fd46b54b9a16e11082ad3c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boss: {fileID: 0}
-  bossHealth: {fileID: 0}
-  bossHealthBar: {fileID: 0}
-  victory: {fileID: 0}
-  defeat: {fileID: 0}
 --- !u!1 &1025975510 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3155058319838657794, guid: 176299a76ecfc7544b22a66fae200ac7,
@@ -25201,19 +25191,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 140
-    m_FontStyle: 0
+    m_Font: {fileID: 12800000, guid: 891a6c9f9a43113459703ca4cf2ff470, type: 3}
+    m_FontSize: 120
+    m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 1
-    m_MaxSize: 140
+    m_MaxSize: 120
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Defeat
+  m_Text: "\uD50C\uB808\uC774\uC5B4 \uC0AC\uB9DD!"
 --- !u!222 &1075194989
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -26518,9 +26508,8 @@ GameObject:
   - component: {fileID: 1092742126}
   - component: {fileID: 1092742125}
   - component: {fileID: 1092742124}
-  - component: {fileID: 1092742127}
   m_Layer: 5
-  m_Name: Restart
+  m_Name: Move Robby
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26589,19 +26578,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1092742125}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1092742127}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnClickStage1Button
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1092742125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -26640,23 +26617,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1092742122}
   m_CullTransparentMesh: 1
---- !u!114 &1092742127
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1092742122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d616db2bccdaa2d4f85c2cf4e899cc46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boss: {fileID: 0}
-  bossHealth: {fileID: 0}
-  bossHealthBar: {fileID: 0}
-  victory: {fileID: 0}
-  defeat: {fileID: 0}
 --- !u!1 &1092909398
 GameObject:
   m_ObjectHideFlags: 0
@@ -28099,7 +28059,6 @@ MonoBehaviour:
   fireBreath: {fileID: 589554643}
   isChase: 0
   isAttack: 0
-  Victory: {fileID: 0}
   response: {fileID: 8300000, guid: 105b47675ec284e4fb96700dcef831d8, type: 3}
   attack1: {fileID: 8300000, guid: 2d236273bb88a61499b0375215180a14, type: 3}
   attack2: {fileID: 8300000, guid: 5c9f6e2ea67c1494c82767942c47668f, type: 3}
@@ -33676,19 +33635,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 60
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 3
-    m_MaxSize: 60
+    m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Next Stage
+  m_Text: "\uB2E4\uC74C \uC2A4\uD14C\uC774\uC9C0"
 --- !u!222 &1341875550
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -34374,7 +34333,6 @@ MonoBehaviour:
   fireBreath: {fileID: 1352076371}
   isChase: 0
   isAttack: 0
-  Victory: {fileID: 1208858232}
   response: {fileID: 8300000, guid: 105b47675ec284e4fb96700dcef831d8, type: 3}
   attack1: {fileID: 8300000, guid: 2d236273bb88a61499b0375215180a14, type: 3}
   attack2: {fileID: 8300000, guid: 5c9f6e2ea67c1494c82767942c47668f, type: 3}
@@ -39466,55 +39424,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 3, y: 3, z: 13}
   m_Center: {x: 0.99, y: 1.15, z: 5}
---- !u!1 &1575966579
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1575966581}
-  - component: {fileID: 1575966580}
-  m_Layer: 0
-  m_Name: GameObject
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1575966580
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1575966579}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d616db2bccdaa2d4f85c2cf4e899cc46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boss: {fileID: 1352076374}
-  bossHealth: {fileID: 1421599881}
-  bossHealthBar: {fileID: 1387647338}
-  victory: {fileID: 1208858232}
-  defeat: {fileID: 245817659}
---- !u!4 &1575966581
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1575966579}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.216517, y: -12.289182, z: -8.889773}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1586474045 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3155058319838657794, guid: 176299a76ecfc7544b22a66fae200ac7,
@@ -42193,9 +42102,8 @@ GameObject:
   - component: {fileID: 1664545546}
   - component: {fileID: 1664545545}
   - component: {fileID: 1664545544}
-  - component: {fileID: 1664545547}
   m_Layer: 5
-  m_Name: Lobby
+  m_Name: Next Stage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -42264,19 +42172,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1664545545}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1664545547}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
-        m_MethodName: OnClickLobbyButton
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1664545545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -42315,23 +42211,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664545542}
   m_CullTransparentMesh: 1
---- !u!114 &1664545547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1664545542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d616db2bccdaa2d4f85c2cf4e899cc46, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  boss: {fileID: 0}
-  bossHealth: {fileID: 0}
-  bossHealthBar: {fileID: 0}
-  victory: {fileID: 0}
-  defeat: {fileID: 0}
 --- !u!1 &1665781918
 GameObject:
   m_ObjectHideFlags: 0
@@ -45317,19 +45196,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 7cb2912222469634ba17a77055919ea8, type: 3}
-    m_FontSize: 60
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 40
     m_FontStyle: 1
     m_BestFit: 0
     m_MinSize: 0
-    m_MaxSize: 60
+    m_MaxSize: 50
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Lobby
+  m_Text: "\uB85C\uBE44\uB85C \uC774\uB3D9"
 --- !u!222 &1732881458
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -50439,7 +50318,6 @@ GameObject:
   - component: {fileID: 1993341248}
   - component: {fileID: 1993341249}
   - component: {fileID: 1993341250}
-  - component: {fileID: 1993341251}
   m_Layer: 8
   m_Name: EnemyHitbox
   m_TagString: EnemyHitbox
@@ -50495,19 +50373,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b7b53ab5ba08e143be6d67d88a2b6e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1993341251
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1993341247}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bf7df6d7e5b6f341868b3556b49514d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damage: 0
 --- !u!1 &2001745769 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 369535597007869698, guid: 176299a76ecfc7544b22a66fae200ac7,
@@ -55416,4 +55281,3 @@ SceneRoots:
   - {fileID: 689358986}
   - {fileID: 914856083}
   - {fileID: 41262341}
-  - {fileID: 1575966581}
