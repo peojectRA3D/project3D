@@ -68,7 +68,7 @@ public class Boss : MonoBehaviour
             if (target != null && Vector3.Distance(transform.position, target.position) < distance || curHealth < maxHealth)
             {
                 nav.SetDestination(target.position);
-                nav.isStopped = !isChase; 
+                nav.isStopped = !isChase;
 
                 anim.SetBool("isRun", true);
             }
@@ -253,6 +253,8 @@ public class Boss : MonoBehaviour
 
             if (curHealth <= 0)
             {
+                curHealth = 0;
+
                 if (isDead)
                     return;
 
