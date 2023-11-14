@@ -99,6 +99,7 @@ public class PlayerParent : MonoBehaviour
         Reload();
         */
     }
+ 
     void GetInput()
     {
         dir.x = Input.GetAxisRaw("Horizontal");
@@ -167,7 +168,7 @@ public class PlayerParent : MonoBehaviour
             Debug.Log("접촉");
             PlayerHp -= 5;
             isDamage = true;
-            StartCoroutine(endaniWithDelay("damage", 0.5f));
+            StartCoroutine(endaniWithDelay("damage", 0.3f));
         }
     }
     void Runcheck()
@@ -203,6 +204,12 @@ public class PlayerParent : MonoBehaviour
         {
           
             dir = dodgeVec;
+          
+            return;
+        }
+        else
+        {
+
         }
         if (isJump)
         {
@@ -394,11 +401,14 @@ public class PlayerParent : MonoBehaviour
         
             dodgeVec = dir;
             dogespeed = speed;
+            
             speed = 15f;
             aniter.SetTrigger("isroll");
             isDodge = true;
             dogeDelay = 0f;
+            rid.AddForce(dir * speed * Time.deltaTime * 200, ForceMode.VelocityChange);
             StartCoroutine(endaniWithDelay("doge", 0.67f));
+
         }
     }
     IEnumerator endaniWithDelay(string aniname, float delay)
@@ -412,6 +422,8 @@ public class PlayerParent : MonoBehaviour
             case "doge":
                 isDodge = false;
                 speed = dogespeed;
+                float dampingFactor =0f; // 조절 가능한 상수
+                rid.velocity *= dampingFactor;
                 break;
             case "onattack":
                 aniter.SetBool("onattack", false);
