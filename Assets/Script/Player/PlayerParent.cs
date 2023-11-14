@@ -68,11 +68,23 @@ public class PlayerParent : MonoBehaviour
     public GameObject[] canvas;
     // Start is called before the first frame update
 
+    //효과음
+    AudioSource audioSource;
+    public AudioClip dead;
+    public AudioClip hit;
+    public AudioClip roll;
+    public AudioClip walk;
+    public AudioClip run;
+    public AudioClip heal_sfx;
+    public AudioClip swap;
+    public AudioClip rifle1;
+
     void Start()
     {
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
+        audioSource = GetComponent<AudioSource>();
     }
     // Update is called once per frame
     void Update()
@@ -132,6 +144,12 @@ public class PlayerParent : MonoBehaviour
             }
             healDelay = 0;
             particles[2].Play();
+
+            audioSource.Stop();
+            audioSource.clip = heal_sfx;
+            audioSource.volume = 0.3f;
+            audioSource.loop = false;
+            audioSource.Play();
         }
     }
     
@@ -169,6 +187,12 @@ public class PlayerParent : MonoBehaviour
             PlayerHp -= 5;
             isDamage = true;
             StartCoroutine(endaniWithDelay("damage", 0.3f));
+
+            audioSource.Stop();
+            audioSource.clip = hit;
+            audioSource.volume = 0.3f;
+            audioSource.loop = false;
+            audioSource.Play();
         }
     }
     void Runcheck()
@@ -215,12 +239,42 @@ public class PlayerParent : MonoBehaviour
         {
             dir = Vector3.zero;
         }
+
+        // Walk 상태에서 소리를 재생합니다.
+        /* if (!isRun && dir != Vector3.zero)
+         {
+             if (!audioSource.isPlaying || audioSource.clip != walk)
+             {
+                 audioSource.Stop();
+                 audioSource.clip = walk;
+                 audioSource.volume = 0.2f;
+                 audioSource.loop = true;
+                 audioSource.Play();
+             }
+         }
+         else if (isRun && dir != Vector3.zero)
+         {
+             if (!audioSource.isPlaying || audioSource.clip != run)
+             {
+                 audioSource.Stop();
+                 audioSource.clip = run;
+                 audioSource.volume = 0.2f;
+                 audioSource.loop = true;
+                 audioSource.Play();
+             }
+         }
+         else
+         {
+             // Walk 상태가 아니거나 dir이 zero인 경우에는 소리를 중지합니다.
+             audioSource.Stop();
+         }*/
+
         /*
         if (!isBorder)
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // 걷기 0.3f 속도
             aniter.SetInteger("vecterval", 5);
         */
-      
+
         tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
@@ -268,7 +322,10 @@ public class PlayerParent : MonoBehaviour
     }
     void Swap()
     {
-        
+        // 이전 무기 인덱스
+        int previousWeaponIndex = weaponIndex;
+
+
         if (swapDown1 && (!particles[0] || weaponIndex == 0))
             return;
         if (swapDown2 && (!particles[1] || weaponIndex == 1))
@@ -280,6 +337,14 @@ public class PlayerParent : MonoBehaviour
         if (swapDown1) weaponIndex = 0;
         if (swapDown2) weaponIndex = 1;
         if (swapDown3) weaponIndex = 2;
+
+        // 이전 무기와 현재 무기가 다를 때만 소리 재생
+        if (previousWeaponIndex != weaponIndex)
+        {
+            PlayWeaponSwapSound();
+        }
+
+
 
         /*
         if ((swapDown1 || swapDown2 || swapDown3) && !isJump && !isDodge)
@@ -297,6 +362,15 @@ public class PlayerParent : MonoBehaviour
 
             Invoke("SwapOut", 0.4f);
         }*/
+    }
+    void PlayWeaponSwapSound()
+    {
+        // 여기에 무기를 바꿀 때 재생할 소리 재생 코드 추가
+        audioSource.Stop();
+        audioSource.clip = swap;
+        audioSource.volume = 0.3f;
+        audioSource.loop = false;
+        audioSource.Play();
     }
     void SwapOut()
     {
@@ -344,7 +418,13 @@ public class PlayerParent : MonoBehaviour
                 particles[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
                 particles[0].gameObject.transform.Rotate(Vector3.up, -90f);
                 particles[0].Play();
-                
+
+
+                audioSource.Stop();
+                audioSource.clip = rifle1;
+                audioSource.volume = 0.3f;
+                audioSource.loop = false;
+                audioSource.Play();
 
 
                 aniter.SetBool("onattack", true);
@@ -408,6 +488,12 @@ public class PlayerParent : MonoBehaviour
             dogeDelay = 0f;
             rid.AddForce(dir * speed * Time.deltaTime * 200, ForceMode.VelocityChange);
             StartCoroutine(endaniWithDelay("doge", 0.67f));
+
+            audioSource.Stop();
+            audioSource.clip = roll;
+            audioSource.volume = 0.3f;
+            audioSource.loop = false;
+            audioSource.Play();
 
         }
     }
