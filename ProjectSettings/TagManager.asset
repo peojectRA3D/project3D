@@ -7,10 +7,10 @@ TagManager:
   - Door
   - target
   - bullet
-  - Enemy
   - EnemyHitbox
   - Floor
   - Monster
+  - Boss
   layers:
   - Default
   - TransparentFX
@@ -19,9 +19,9 @@ TagManager:
   - Water
   - UI
   - Player
-  - 
-  - 
-  - 
+  - Wall
+  - Monster
+  - Boss
   - cellings
   - 
   - 

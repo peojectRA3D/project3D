@@ -2,11 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
-    public int maxHealth;               // 최대 체력
-    public int curHealth;               // 현재 체력
+    public float maxHealth;               // 최대 체력
+    public float curHealth;               // 현재 체력
     public Transform target;            // 추적 대상
     public float distance = 20f;        // 감지 범위
     public BoxCollider attackArea;      // 근접 공격
@@ -14,10 +15,14 @@ public class Boss : MonoBehaviour
     public GameObject fireBreath;       // 불 공격
     public bool isChase;                // 추적 여부
     public bool isAttack;               // 공격 여부
+    private bool isDead;
+
+    [SerializeField]
+    private Image Victory;
 
     bool isCooldownA;
     bool isCooldownB;
-    float cooldownTimeA = 5f;
+    float cooldownTimeA = 6f;
     float cooldownTimeB = 8f;
 
 
@@ -32,6 +37,7 @@ public class Boss : MonoBehaviour
     public AudioClip attack2;
     public AudioClip attack3;
     public AudioClip attack4;
+    public AudioClip die;
 
     void Awake()
     {
@@ -39,6 +45,7 @@ public class Boss : MonoBehaviour
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        isDead = false;
 
         ChaseStart();
     }
@@ -48,23 +55,28 @@ public class Boss : MonoBehaviour
         /*
         audioSource.clip = response;
         audioSource.Play();
+        */
 
         isChase = true; // 추적 상태로 변경
         anim.SetBool("isRun", false);
-        */
     }
 
     void Update()
     {
         if (nav.enabled)
         {
-            if (target != null && Vector3.Distance(transform.position, target.position) < distance)
+            if (target != null && Vector3.Distance(transform.position, target.position) < distance || curHealth < maxHealth)
             {
-                anim.SetBool("isRun", true);
-
                 nav.SetDestination(target.position);
-                nav.isStopped = !isChase; 
+                nav.isStopped = !isChase;
+
+                anim.SetBool("isRun", true);
             }
+        }
+
+        if (isDead)
+        {
+            StopChasing();
         }
     }
 
@@ -130,6 +142,9 @@ public class Boss : MonoBehaviour
 
     IEnumerator Attack()
     {
+        if (isDead)
+            yield break;
+
         isChase = false;         // 추적 중지
         isAttack = true;         // 공격 상태로 설정
 
@@ -164,6 +179,9 @@ public class Boss : MonoBehaviour
 
     IEnumerator Attack3()
     {
+        if (isDead)
+            yield break;
+
         isChase = false;
         isAttack = true;
         anim.SetBool("isAttack3", true);
@@ -184,11 +202,14 @@ public class Boss : MonoBehaviour
 
         isCooldownA = true;
         yield return new WaitForSeconds(cooldownTimeA);
-        isCooldownA = false;
+        isCooldownA = false;    
     }
 
     IEnumerator Attack4()
     {
+        if (isDead)
+            yield break;
+
         isChase = false;
         isAttack = true;
         anim.SetBool("isAttack4", true);
@@ -216,7 +237,46 @@ public class Boss : MonoBehaviour
 
     void FixedUpdate()
     {
-        Targeting();
+        if (isChase && !isDead)
+        {
+            Targeting();
+        }
         FreezeVelocity();
+    }
+
+    void OnParticleCollision(GameObject other)
+    {
+        Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier);
+        if (other.tag == "bullet")
+        {
+            curHealth -= other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier;
+
+            if (curHealth <= 0)
+            {
+                curHealth = 0;
+
+                if (isDead)
+                    return;
+
+                isChase = false;
+                isDead = true;
+                anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 1f;
+                audioSource.Play();
+
+                Victory.gameObject.SetActive(true);
+            }
+        }
+    }
+    void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.transform.rotation.eulerAngles.y);
+        // 2번 탄환 - 몬스터 피격
+    }
+    void StopChasing()
+    {
+        isChase = false;
     }
 }
