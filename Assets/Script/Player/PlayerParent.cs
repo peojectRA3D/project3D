@@ -61,11 +61,22 @@ public class PlayerParent : MonoBehaviour
     public GameObject  gunpos;
     // Start is called before the first frame update
 
+    //효과음
+    AudioSource audioSource;
+    public AudioClip dead;
+    public AudioClip hit;
+    public AudioClip roll;
+    public AudioClip walk;
+    public AudioClip run;
+    public AudioClip swap;
+    public AudioClip rifle1;
+
     void Start()
     {
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
+        audioSource = GetComponent<AudioSource>();
     }
     // Update is called once per frame
     void Update()
@@ -124,6 +135,21 @@ public class PlayerParent : MonoBehaviour
             PlayerHp -= 5;
             isDamage = true;
             StartCoroutine(endaniWithDelay("damage", 0.5f));
+
+            audioSource.clip = hit;
+            audioSource.volume = 0.4f;
+            audioSource.Play();
+        }
+
+        Debug.Log("Collision Detected");
+
+        if (collision.gameObject.CompareTag("CameraSwitch"))
+        {
+            CameraSwitch cameraSwitch = collision.gameObject.GetComponent<CameraSwitch>();
+            if (cameraSwitch != null)
+            {
+                cameraSwitch.SwitchCamera();
+            }
         }
     }
     void Runcheck()
@@ -131,19 +157,17 @@ public class PlayerParent : MonoBehaviour
         
         if (RunDown)
         {
-
-            if (!isRun)
-            {
-                speed = 10.0f;
-                aniter.SetBool("isrun", true);
-
-            }
-            else
-            {
-                speed = 5.0f;
-                aniter.SetBool("isrun", false);
-            }
-            isRun = !isRun;
+                if (!isRun)
+                {
+                    speed = 10.0f;
+                    aniter.SetBool("isrun", true);
+                }
+                else
+                {
+                    speed = 5.0f;
+                    aniter.SetBool("isrun", false);
+                }
+                isRun = !isRun;
         }    
     }
     void Move()
@@ -164,12 +188,44 @@ public class PlayerParent : MonoBehaviour
         {
             dir = Vector3.zero;
         }
+
+
+        // Walk 상태에서 소리를 재생합니다.
+       /* if (!isRun && dir != Vector3.zero)
+        {
+            if (!audioSource.isPlaying || audioSource.clip != walk)
+            {
+                audioSource.Stop();
+                audioSource.clip = walk;
+                audioSource.volume = 0.2f;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+        }
+        else if (isRun && dir != Vector3.zero)
+        {
+            if (!audioSource.isPlaying || audioSource.clip != run)
+            {
+                audioSource.Stop();
+                audioSource.clip = run;
+                audioSource.volume = 0.2f;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+        }
+        else
+        {
+            // Walk 상태가 아니거나 dir이 zero인 경우에는 소리를 중지합니다.
+            audioSource.Stop();
+        }*/
+
+
         /*
         if (!isBorder)
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // 걷기 0.3f 속도
             aniter.SetInteger("vecterval", 5);
         */
-      
+
         tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
@@ -290,7 +346,13 @@ public class PlayerParent : MonoBehaviour
                 particles[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
                 particles[0].gameObject.transform.Rotate(Vector3.up, -90f);
                 particles[0].Play();
-                
+
+
+                audioSource.Stop();
+                audioSource.clip = rifle1;
+                audioSource.volume = 0.3f;
+                audioSource.loop = false;
+                audioSource.Play();
 
 
                 aniter.SetBool("onattack", true);
@@ -352,6 +414,13 @@ public class PlayerParent : MonoBehaviour
             isDodge = true;
             dogeDelay = 0f;
             StartCoroutine(endaniWithDelay("doge", 0.67f));
+
+            audioSource.Stop();
+            audioSource.clip = roll;
+            audioSource.volume = 0.3f;
+            audioSource.loop = false;
+            audioSource.Play();
+
         }
     }
     IEnumerator endaniWithDelay(string aniname, float delay)
@@ -364,7 +433,7 @@ public class PlayerParent : MonoBehaviour
         {
             case "doge":
                 isDodge = false;
-                speed = dogespeed;
+                speed = dogespeed;  
                 break;
             case "onattack":
                 aniter.SetBool("onattack", false);

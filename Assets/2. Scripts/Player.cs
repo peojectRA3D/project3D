@@ -32,6 +32,14 @@ public class Player : MonoBehaviour
     Rigidbody rigid;
     Animator anim;
 
+    // È¿°úÀ½
+    /*AudioSource audioSource;
+    public AudioClip dead;
+    public AudioClip hit;
+    public AudioClip roll;
+    public AudioClip walk;
+    public AudioClip run;*/
+
     void Awake()
     {
         rigid = GetComponent<Rigidbody>();

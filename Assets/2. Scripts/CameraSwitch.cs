@@ -11,10 +11,10 @@ public class CameraSwitch : MonoBehaviour
     public Animator animator; // Animator 컴포넌트 추가
     public PlayableDirector timelineDirector; // PlayableDirector 컴포넌트 추가
 
-    private bool isSwitching = false;
-    private float switchTimer = 0f;
+    public bool isSwitching = false;
+    public float switchTimer = 0f;
 
-    void Start()
+    public void Start()
     {
         mainCamera.enabled = true;
         otherCamera.enabled = false;
@@ -22,13 +22,8 @@ public class CameraSwitch : MonoBehaviour
         timelineDirector.enabled = false; // PlayableDirector 비활성화
     }
 
-    void Update()
+    public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F1) && !isSwitching)
-        {
-            SwitchCamera();
-        }
-
         if (isSwitching)
         {
             switchTimer += Time.deltaTime;
@@ -37,6 +32,15 @@ public class CameraSwitch : MonoBehaviour
             {
                 SwitchCamera();
             }
+        }
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {     
+        if (other.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("asdfasdfasdfasdfasdfasdf");
+            SwitchCamera();
         }
     }
 
