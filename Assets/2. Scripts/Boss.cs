@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
@@ -15,6 +16,9 @@ public class Boss : MonoBehaviour
     public bool isChase;                // 추적 여부
     public bool isAttack;               // 공격 여부
     private bool isDead;
+
+    [SerializeField]
+    private Image Victory;
 
     bool isCooldownA;
     bool isCooldownB;
@@ -64,7 +68,7 @@ public class Boss : MonoBehaviour
             if (target != null && Vector3.Distance(transform.position, target.position) < distance || curHealth < maxHealth)
             {
                 nav.SetDestination(target.position);
-                nav.isStopped = !isChase; 
+                nav.isStopped = !isChase;
 
                 anim.SetBool("isRun", true);
             }
@@ -249,6 +253,8 @@ public class Boss : MonoBehaviour
 
             if (curHealth <= 0)
             {
+                curHealth = 0;
+
                 if (isDead)
                     return;
 
@@ -259,6 +265,8 @@ public class Boss : MonoBehaviour
                 audioSource.clip = die;
                 audioSource.volume = 1f;
                 audioSource.Play();
+
+                Victory.gameObject.SetActive(true);
             }
         }
     }
