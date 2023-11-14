@@ -18,7 +18,7 @@ public class Boss : MonoBehaviour
 
     bool isCooldownA;
     bool isCooldownB;
-    float cooldownTimeA = 5f;
+    float cooldownTimeA = 6f;
     float cooldownTimeB = 8f;
 
 
@@ -33,6 +33,7 @@ public class Boss : MonoBehaviour
     public AudioClip attack2;
     public AudioClip attack3;
     public AudioClip attack4;
+    public AudioClip die;
 
     void Awake()
     {
@@ -60,7 +61,7 @@ public class Boss : MonoBehaviour
     {
         if (nav.enabled)
         {
-            if (target != null && Vector3.Distance(transform.position, target.position) < distance)
+            if (target != null && Vector3.Distance(transform.position, target.position) < distance || curHealth < maxHealth)
             {
                 nav.SetDestination(target.position);
                 nav.isStopped = !isChase; 
@@ -137,6 +138,9 @@ public class Boss : MonoBehaviour
 
     IEnumerator Attack()
     {
+        if (isDead)
+            yield break;
+
         isChase = false;         // 추적 중지
         isAttack = true;         // 공격 상태로 설정
 
@@ -171,6 +175,9 @@ public class Boss : MonoBehaviour
 
     IEnumerator Attack3()
     {
+        if (isDead)
+            yield break;
+
         isChase = false;
         isAttack = true;
         anim.SetBool("isAttack3", true);
@@ -191,11 +198,14 @@ public class Boss : MonoBehaviour
 
         isCooldownA = true;
         yield return new WaitForSeconds(cooldownTimeA);
-        isCooldownA = false;
+        isCooldownA = false;    
     }
 
     IEnumerator Attack4()
     {
+        if (isDead)
+            yield break;
+
         isChase = false;
         isAttack = true;
         anim.SetBool("isAttack4", true);
@@ -230,7 +240,7 @@ public class Boss : MonoBehaviour
         FreezeVelocity();
     }
 
-    private void OnParticleCollision(GameObject other)
+    void OnParticleCollision(GameObject other)
     {
         Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier);
         if (other.tag == "bullet")
@@ -245,6 +255,10 @@ public class Boss : MonoBehaviour
                 isChase = false;
                 isDead = true;
                 anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 1f;
+                audioSource.Play();
             }
         }
     }

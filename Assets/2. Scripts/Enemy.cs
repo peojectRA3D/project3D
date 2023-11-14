@@ -5,17 +5,20 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { A, B, C }; // 몬스터 A, B, C 구역
+    public enum Type { A, B }; // 몬스터 A, B
     public Type enemyType;
 
     public float maxHealth;           // 최대 체력
     public float curHealth;           // 현재 체력
     public Transform target;        // 추적 대상
-    public float distance = 20f;    // 감지 범위
+    public float distance = 25f;    // 감지 범위
     public BoxCollider attackArea;  // 공격 범위
     public bool isChase;            // 추적 여부
     public bool isAttack;           // 공격 여부
     private bool isDead;
+
+    float targetRadius;     // 타겟을 찾을 스피어 캐스트 반지름
+    float targetRange;      // 스피어 캐스트의 범위
 
     Rigidbody rigid;
     NavMeshAgent nav;
@@ -25,6 +28,7 @@ public class Enemy : MonoBehaviour
     AudioSource audioSource;
     public AudioClip response;
     public AudioClip attack1;
+    public AudioClip die;
 
     void Awake()
     {
@@ -53,7 +57,7 @@ public class Enemy : MonoBehaviour
     {
         if (nav.enabled)
         {
-            if (target != null && Vector3.Distance(transform.position, target.position) < distance)
+            if (target != null && Vector3.Distance(transform.position, target.position) < distance || curHealth < maxHealth)
             {
                 nav.SetDestination(target.position);
                 nav.isStopped = !isChase;
@@ -77,8 +81,16 @@ public class Enemy : MonoBehaviour
     void Targeting() // 타겟을 찾는 메서드
     {
 
-        float targetRadius = 1.5f; // 타겟을 찾을 스피어 캐스트 반지름
-        float targetRange = 1f;    // 스피어 캐스트의 범위
+
+        if(enemyType == Type.A)
+        {
+            targetRadius = 1.5f;
+            targetRange = 1.3f;
+        } else if (enemyType == Type.B)
+        {
+            targetRadius = 2.5f;
+            targetRange = 2.5f;
+        }
 
         // 플레이어를 탐지하기 위한 스피어 캐스트를 수행
         RaycastHit[] rayHits = Physics.SphereCastAll(transform.position,
@@ -136,18 +148,21 @@ public class Enemy : MonoBehaviour
                 isChase = false;
                 isDead = true;
                 anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 0.1f;
+                audioSource.Play();
             }
         }
-    }
-
-    void StopChasing()
-    {
-        isChase = false;
     }
 
     void OnTriggerEnter(Collider other)
     {
         Debug.Log(other.transform.rotation.eulerAngles.y);
         // 2번 탄환 - 몬스터 피격
+    }
+    void StopChasing()
+    {
+        isChase = false;
     }
 }
