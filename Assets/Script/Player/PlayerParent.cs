@@ -50,6 +50,10 @@ public class PlayerParent : MonoBehaviour
     bool ispause;
     bool healReady;
 
+    bool[] isSkillDamagein= {false ,false };
+    bool[] SkillDamageReady= {false, false };
+    float[] skillDamageDelay = {0f,0f };
+    float[] damagedelayatskill = { 0.5f, 0.1f };
     bool pausedown;
 
 
@@ -79,12 +83,27 @@ public class PlayerParent : MonoBehaviour
     public AudioClip swap;
     public AudioClip rifle1;
 
+
+    //메테리얼
+
+    public Material[] maters;
+    public SkinnedMeshRenderer[] skins;
+
+    int bcout;
+    int mcount;
     void Start()
     {
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
         audioSource = GetComponent<AudioSource>();
+        /*
+        for (int index = 0; index < skins.Length; index++)
+        {
+            skins[index].material = maters[2];
+            Debug.Log("도색도색도색!");
+        }
+        */
     }
     // Update is called once per frame
     void Update()
@@ -105,6 +124,7 @@ public class PlayerParent : MonoBehaviour
         Swap();
         Dodge();
         pause();
+        skilldamaged();
         /*
         Interation();
         Grenade();
@@ -112,6 +132,18 @@ public class PlayerParent : MonoBehaviour
         */
     }
  
+    void skilldamaged()
+    {
+        for (int index = 0; index < isSkillDamagein.Length; index++)
+        {
+            if (isSkillDamagein[index])
+            {
+                skillDamageDelay[index] = Time.deltaTime;
+            }
+            SkillDamageReady[index] = skillDamageDelay[index] > damagedelayatskill[index];
+        }
+    }
+
     void GetInput()
     {
         dir.x = Input.GetAxisRaw("Horizontal");
@@ -179,21 +211,50 @@ public class PlayerParent : MonoBehaviour
 
         }
     }
-    private void OnCollisionEnter(Collision collision)
+    void OnParticleCollision(GameObject other)
     {
-        if (collision.transform.tag == "EnemyHitbox" && !isDamage)
+        
+        if (other.tag == "Breath")
         {
-            Debug.Log("접촉");
-            PlayerHp -= 5;
-            isDamage = true;
-            StartCoroutine(endaniWithDelay("damage", 0.3f));
-
-            audioSource.Stop();
-            audioSource.clip = hit;
-            audioSource.volume = 0.3f;
-            audioSource.loop = false;
-            audioSource.Play();
+           
+          
+                takedamge(0.3f);
+            
         }
+        else if (other.tag == "EnemyMagic"&& !isDamage)
+        {
+            takedamge(20);
+           
+           
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "EnemyHitbox" && !isDamage)
+        {
+            try
+            {
+                takedamge(other.GetComponent<Bullet>().damage);
+            }
+            catch
+            {
+                Debug.LogError("불릿 없어");
+            }
+        }
+       
+    }
+    private void takedamge(float damage)
+    {
+
+        PlayerHp -= damage;
+        isDamage = true;
+        StartCoroutine(endaniWithDelay("damage", 0.3f));
+
+        audioSource.Stop();
+        audioSource.clip = hit;
+        audioSource.volume = 0.3f;
+        audioSource.loop = false;
+        audioSource.Play();
     }
     void Runcheck()
     {
@@ -482,11 +543,11 @@ public class PlayerParent : MonoBehaviour
             dodgeVec = dir;
             dogespeed = speed;
             
-            speed = 15f;
+          
             aniter.SetTrigger("isroll");
             isDodge = true;
             dogeDelay = 0f;
-            rid.AddForce(dir * speed * Time.deltaTime * 200, ForceMode.VelocityChange);
+            rid.AddForce(dir * Time.deltaTime * 500f, ForceMode.VelocityChange);
             StartCoroutine(endaniWithDelay("doge", 0.67f));
 
             audioSource.Stop();
