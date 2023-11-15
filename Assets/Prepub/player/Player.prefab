@@ -2849,7 +2849,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 32
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!136 &1450029237707450808
 CapsuleCollider:
@@ -2894,6 +2894,7 @@ MonoBehaviour:
   particles:
   - {fileID: 6103685958230945886}
   - {fileID: 5081496018342536525, guid: 772b561e50569204b9ecf538b15ddba8, type: 3}
+  - {fileID: 6918694332686659952, guid: 3f684978dfd6e514e8b458917ca090fa, type: 3}
   PlayerHp: 100
   gunpos: {fileID: 5711691584295504424}
   canvas:
