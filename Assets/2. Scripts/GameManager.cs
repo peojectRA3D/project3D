@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     public void OnClickLobbyButton()
     {
-        // "Lobby" 씬으로 이동
+        // "Lobby" 로비로 이동
         SceneManager.LoadScene("Lobby");
     }
 

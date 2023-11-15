@@ -14,7 +14,7 @@ public class UI_ResultButton : MonoBehaviour
     public void OnClickStage1Button()
     {
         // "Stage1" æ¿¿∏∑Œ ¿Ãµø
-        SceneManager.LoadScene("Stage1");
+        SceneManager.LoadScene("Stage1(JSH)");
     }
 
     public void OnClickStage2Button()
