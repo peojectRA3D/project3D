@@ -8,10 +8,12 @@ public class CameraSwitch : MonoBehaviour
     public Camera mainCamera;
     public Camera otherCamera;
     public float switchDuration = 10f;
-    public Animator animator; // Animator ÄÄÆ÷³ÍÆ® Ãß°¡
-    public PlayableDirector timelineDirector; // PlayableDirector ÄÄÆ÷³ÍÆ® Ãß°¡
+    public Animator animator; // Animator ì»´í¬ë„ŒíŠ¸ ì¶”ê°€
+    public PlayableDirector timelineDirector; // PlayableDirector ì»´í¬ë„ŒíŠ¸ ì¶”ê°€
 
     public bool isSwitching = false;
+    private bool isSwitched = false; // ì¶”ê°€ëœ ë³€ìˆ˜
+
     public float switchTimer = 0f;
 
     PlayerParent playerParent;
@@ -20,8 +22,8 @@ public class CameraSwitch : MonoBehaviour
     {
         mainCamera.enabled = true;
         otherCamera.enabled = false;
-        animator.enabled = false; // ¾Ö´Ï¸ŞÀÌÅÍ ºñÈ°¼ºÈ­
-        timelineDirector.enabled = false; // PlayableDirector ºñÈ°¼ºÈ­
+        animator.enabled = false; // ì• ë‹ˆë©”ì´í„° ë¹„í™œì„±í™”
+        timelineDirector.enabled = false; // PlayableDirector ë¹„í™œì„±í™”
     }
 
     public void Update()
@@ -32,17 +34,16 @@ public class CameraSwitch : MonoBehaviour
 
             if (switchTimer >= switchDuration)
             {
-                SwitchCamera();
+                FinishSwitching();
             }
         }
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player") && !isSwitching && !isSwitched)
         {
             SwitchCamera();
-            GetComponent<Collider>().enabled = false;
         }
     }
 
@@ -55,27 +56,29 @@ public class CameraSwitch : MonoBehaviour
             isSwitching = true;
             switchTimer = 0f;
 
-            // ¾Ö´Ï¸ŞÀÌ¼Ç ½ÃÀÛ
+            // ì• ë‹ˆë©”ì´ì…˜ ì‹œì‘
             animator.enabled = true;
-            animator.SetTrigger("isSwitching"); // "isSwitching"´Â ¾Ö´Ï¸ŞÀÌ¼Ç Å¬¸³¿¡ Á¤ÀÇÇÑ Æ®¸®°Å ÀÌ¸§
+            animator.SetTrigger("isSwitching"); // "isSwitching"ëŠ” ì• ë‹ˆë©”ì´ì…˜ í´ë¦½ì— ì •ì˜í•œ íŠ¸ë¦¬ê±° ì´ë¦„
 
-            // Å¸ÀÓ¶óÀÎ Àç»ı
+            // íƒ€ì„ë¼ì¸ ì¬ìƒ
             timelineDirector.enabled = true;
             timelineDirector.Play();
 
-            // ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓÀ» Á¦¾î (¿òÁ÷ÀÌÁö ¾Ê°Ô ¼³Á¤)
+            // í”Œë ˆì´ì–´ì˜ ì›€ì§ì„ì„ ì œì–´ (ì›€ì§ì´ì§€ ì•Šê²Œ ì„¤ì •)
             playerParent.SetSwitching(true);
         }
-        else
-        {
-            mainCamera.enabled = true;
-            otherCamera.enabled = false;
-            isSwitching = false;
-            animator.enabled = false; // ¾Ö´Ï¸ŞÀÌÅÍ ºñÈ°¼ºÈ­
-            timelineDirector.enabled = false; // PlayableDirector ºñÈ°¼ºÈ­
+    }
 
-            // ÇÃ·¹ÀÌ¾îÀÇ ¿òÁ÷ÀÓ Á¦¾î ÇØÁ¦ (´Ù½Ã ¿òÁ÷ÀÏ ¼ö ÀÖ°Ô ¼³Á¤)
-            playerParent.SetSwitching(false);
-        }
+    public void FinishSwitching()
+    {
+        mainCamera.enabled = true;
+        otherCamera.enabled = false;
+        isSwitching = false;
+        isSwitched = true; // ì „í™˜ëœ í›„ì—ëŠ” isSwitchedë¥¼ trueë¡œ ì„¤ì •
+        animator.enabled = false;
+        timelineDirector.enabled = false;
+
+        // í”Œë ˆì´ì–´ì˜ ì›€ì§ì„ ì œì–´ í•´ì œ (ë‹¤ì‹œ ì›€ì§ì¼ ìˆ˜ ìˆê²Œ ì„¤ì •)
+        playerParent.SetSwitching(false);
     }
 }

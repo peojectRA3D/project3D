@@ -16,6 +16,7 @@ TagManager:
   - EnemyMagic
   - charactorChage
   - Potal
+  - Wall
   layers:
   - Default
   - TransparentFX
