@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class PlayerParent : MonoBehaviour
@@ -90,11 +91,9 @@ public class PlayerParent : MonoBehaviour
     public Material[] maters;
     public SkinnedMeshRenderer[] skins;
 
-    [SerializeField]
-    private Image Defeat;
+    float potalDelay = 5f;
+    public Text guidetext;
 
-    int bcout;
-    int mcount;
 
     private bool isSwitching = false;
 
@@ -215,8 +214,6 @@ public class PlayerParent : MonoBehaviour
     {
         if (PlayerHp <= 0)
         {
-            Defeat.gameObject.SetActive(true);
-
             aniter.SetBool("isdie",true);
             isdead = true;
 
@@ -268,9 +265,32 @@ public class PlayerParent : MonoBehaviour
 
             }
         }
+        if (other.tag == "Potal")
+        {
+            guidetext.gameObject.SetActive(true);
 
+        }
     }
-
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Potal")
+        {
+            potalDelay -= Time.deltaTime;
+            guidetext.text = "전송까지 앞으로 "+ potalDelay.ToString("F1") + " 초!";
+        }
+        if (potalDelay < 0)
+        {
+            SceneManager.LoadScene("Stage1(JSH)");
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Potal")
+        {
+            potalDelay = 5f;
+            guidetext.gameObject.SetActive(false);
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
        
@@ -375,10 +395,8 @@ public class PlayerParent : MonoBehaviour
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // �ȱ� 0.3f �ӵ�
             aniter.SetInteger("vecterval", 5);
         */
-        if (!isBorder)
-        {
-            tr.position += dir * speed * Time.deltaTime;
-        }
+
+        tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
     {
@@ -642,16 +660,5 @@ public class PlayerParent : MonoBehaviour
                 // � ��쿡�� ���� ���ǿ� �ش����� ���� ���� ó��
                 break;
         }
-    }
-
-    void FixedUpdate()
-    {
-        StopToWall();
-    }
-
-    void StopToWall()
-    {
-        Debug.DrawRay(transform.position, transform.forward * 3, Color.green); // DrawRay - Scene내에서 Ray를 보여주는 함수
-        isBorder = Physics.Raycast(transform.position, transform.forward, 3, LayerMask.GetMask("Wall"));
     }
 }
