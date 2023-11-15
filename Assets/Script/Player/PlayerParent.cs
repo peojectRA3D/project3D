@@ -82,7 +82,7 @@ public class PlayerParent : MonoBehaviour
     public AudioClip heal_sfx;
     public AudioClip swap;
     public AudioClip rifle1;
-
+    public AudioClip rifle2;
 
     //���׸���
 
@@ -543,6 +543,12 @@ public class PlayerParent : MonoBehaviour
                     weaponIndex = 0;
                     fireDelay = 0;
                     StartCoroutine(endaniWithDelay("onattack", 1.0f));
+
+                    audioSource.Stop();
+                    audioSource.clip = rifle2;
+                    audioSource.volume = 0.3f;
+                    audioSource.loop = false;
+                    audioSource.Play();
                 }
                 else
                 {
