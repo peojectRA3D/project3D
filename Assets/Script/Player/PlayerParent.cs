@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerParent : MonoBehaviour
 {
@@ -89,8 +91,9 @@ public class PlayerParent : MonoBehaviour
     public Material[] maters;
     public SkinnedMeshRenderer[] skins;
 
-    int bcout;
-    int mcount;
+    float potalDelay = 5f;
+    public Text guidetext;
+
 
     private bool isSwitching = false;
 
@@ -262,9 +265,32 @@ public class PlayerParent : MonoBehaviour
 
             }
         }
+        if (other.tag == "Potal")
+        {
+            guidetext.gameObject.SetActive(true);
 
+        }
     }
-
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Potal")
+        {
+            potalDelay -= Time.deltaTime;
+            guidetext.text = "전송까지 앞으로 "+ potalDelay.ToString("F1") + " 초!";
+        }
+        if (potalDelay < 0)
+        {
+            SceneManager.LoadScene("Stage1(JSH)");
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.tag == "Potal")
+        {
+            potalDelay = 5f;
+            guidetext.gameObject.SetActive(false);
+        }
+    }
     private void OnCollisionEnter(Collision collision)
     {
        
