@@ -16,12 +16,12 @@ public class PlayerParent : MonoBehaviour
     private Animator aniter;
     public int  attacktype;
     public ParticleSystem[] particles;
-    // ÀÌµ¿
+    // ï¿½Ìµï¿½
     float hAxis;
     float vAxis;
     float jumpPower = 5.0f;
 
-    // Å°´Ù¿î
+    // Å°ï¿½Ù¿ï¿½
     bool RunDown;
     bool RunUp;
     bool jumpDown;
@@ -33,8 +33,8 @@ public class PlayerParent : MonoBehaviour
     bool swapDown1;
     bool swapDown2;
     bool swapDown3;
-
-    // ¾Ö´Ï
+    bool heal;
+    // ï¿½Ö´ï¿½
     bool isJump;
     bool isDodge;
     bool isSwap;
@@ -45,17 +45,25 @@ public class PlayerParent : MonoBehaviour
     bool isSkillReady= true;
     bool isdogeReady = true;
     bool isdead;
-    bool isBorder; // º® Ãæµ¹ ÇÃ·¡±× bool º¯¼ö
-    bool isDamage; // ¹«Àû Å¸ÀÓÀ» À§ÇÑ º¯¼ö
+    bool isBorder; // ï¿½ï¿½ ï¿½æµ¹ ï¿½Ã·ï¿½ï¿½ï¿½ bool ï¿½ï¿½ï¿½ï¿½
+    bool isDamage; // ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     bool ispause;
+    bool healReady;
+
+    bool[] isSkillDamagein= {false ,false };
+    bool[] SkillDamageReady= {false, false };
+    float[] skillDamageDelay = {0f,0f };
+    float[] damagedelayatskill = { 0.5f, 0.1f };
     bool pausedown;
 
-    Vector3 dodgeVec; // È¸ÇÇÇÏ´Â µ¿¾È ¿òÁ÷ÀÓ ¹æÁö¸¦ À§ÇÑ º¯¼ö
+
+    Vector3 dodgeVec; // È¸ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     public float PlayerHp = 100.0f;
     float fireDelay;
     float jumpDelay = 6f;
     float dogeDelay = 6f;
     float skillDelay = 6f;
+    float healDelay = 31f;
     float dogespeed;
     int[] magcount = {20,5};
     int equipWeaponIndex = 0;
@@ -64,11 +72,35 @@ public class PlayerParent : MonoBehaviour
     public GameObject[] canvas;
     // Start is called before the first frame update
 
+    //È¿ï¿½ï¿½ï¿½ï¿½
+    AudioSource audioSource;
+    public AudioClip dead;
+    public AudioClip hit;
+    public AudioClip roll;
+    public AudioClip walk;
+    public AudioClip run;
+    public AudioClip heal_sfx;
+    public AudioClip swap;
+    public AudioClip rifle1;
+
+
+    //ï¿½ï¿½ï¿½×¸ï¿½ï¿½ï¿½
+
+    public Material[] maters;
+    public SkinnedMeshRenderer[] skins;
+
+    int bcout;
+    int mcount;
+
+    private bool isSwitching = false;
+
     void Start()
     {
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
+        audioSource = GetComponent<AudioSource>();
+       
     }
     // Update is called once per frame
     void Update()
@@ -76,25 +108,47 @@ public class PlayerParent : MonoBehaviour
         if (isdead) {
             return;
         }
-       
-        GetInput();
-        HpCheck();
-        Runcheck();
-        Move();
-        Turn();
-        //reload();
-        Attack();
-        
-        Jump();       
-        Swap();
-        Dodge();
-        pause();
-        /*
-        Interation();
-        Grenade();
-        Reload();
-        */
+        if (!isSwitching)
+        {
+            GetInput();
+            HpCheck();
+            Runcheck();
+            Move();
+            Turn();
+            //reload();
+            Attack();
+            healplayer();
+            Jump();
+            Swap();
+            Dodge();
+            pause();
+            skilldamaged();
+            /*
+            Interation();
+            Grenade();
+            Reload();
+            */
+        }
     }
+
+    public void SetSwitching(bool value)
+    {
+        // ì¹´ë©”ë¼ ì „í™˜ ì¤‘ì¸ì§€ ì—¬ë¶€ë¥¼ ì„¤ì •í•˜ëŠ” ë©”ì†Œë“œ
+        isSwitching = value;
+    }
+
+    void skilldamaged()
+    {
+        for (int index = 0; index < isSkillDamagein.Length; index++)
+        {
+            if (isSkillDamagein[index])
+            {
+                skillDamageDelay[index] = Time.deltaTime;
+            }
+            SkillDamageReady[index] = skillDamageDelay[index] > damagedelayatskill[index];
+        }
+    }
+
     void GetInput()
     {
         dir.x = Input.GetAxisRaw("Horizontal");
@@ -111,8 +165,31 @@ public class PlayerParent : MonoBehaviour
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
         pausedown = Input.GetButtonDown("Cancel");
+        heal = Input.GetButtonDown("heal");
         // swapDown3 = Input.GetButtonDown("Swap3");
     }
+    void healplayer()
+    {
+        healDelay += Time.deltaTime;
+        healReady = healDelay > 30f;
+        if (healReady && heal)
+        {
+            PlayerHp += 30;
+            if (PlayerHp >= 100)
+            {
+                PlayerHp = 100;
+            }
+            healDelay = 0;
+            particles[2].Play();
+
+            audioSource.Stop();
+            audioSource.clip = heal_sfx;
+            audioSource.volume = 0.3f;
+            audioSource.loop = false;
+            audioSource.Play();
+        }
+    }
+    
     void pause()
     {
         if (pausedown)
@@ -139,15 +216,71 @@ public class PlayerParent : MonoBehaviour
 
         }
     }
+    void OnParticleCollision(GameObject other)
+    {
+        
+        if (other.tag == "Breath")
+        {
+           
+          
+                takedamge(0.3f);
+            
+        }
+        else if (other.tag == "EnemyMagic"&& !isDamage)
+        {
+            takedamge(20);
+           
+           
+        }
+     
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "EnemyHitbox" && !isDamage)
+        {
+            try
+            {
+                takedamge(other.GetComponent<Bullet>().damage);
+            }
+            catch
+            {
+                Debug.LogError("ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½ï¿½");
+            }
+        }
+        if (other.tag == "charactorChage")
+        {
+            for (int index = 0; index < skins.Length; index++)
+            {
+                try
+                {
+                    skins[index].material = maters[int.Parse(other.gameObject.name)];
+                }
+                catch
+                {
+                    Debug.LogError("ì´ë¦„ì—ëŸ¬ "+ other.gameObject.name);
+                }
+
+            }
+        }
+
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.tag == "EnemyHitbox" && !isDamage)
-        {
-            Debug.Log("Á¢ÃË");
-            PlayerHp -= 5;
-            isDamage = true;
-            StartCoroutine(endaniWithDelay("damage", 0.5f));
-        }
+       
+    }
+    private void takedamge(float damage)
+    {
+
+        PlayerHp -= damage;
+        isDamage = true;
+        StartCoroutine(endaniWithDelay("damage", 0.3f));
+
+        audioSource.Stop();
+        audioSource.clip = hit;
+        audioSource.volume = 0.3f;
+        audioSource.loop = false;
+        audioSource.Play();
     }
     void Runcheck()
     {
@@ -172,6 +305,7 @@ public class PlayerParent : MonoBehaviour
     void Move()
     {
 
+
         float angle = -45.0f;
         angle = Mathf.Deg2Rad * angle;
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
@@ -180,31 +314,74 @@ public class PlayerParent : MonoBehaviour
 
         if (isDodge)
         {
-          
+            if(rid.velocity.magnitude > 5f)
+            {
+                GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 20f;
+            }
+            else if(rid.velocity.magnitude < 5f)
+            {
+                GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 10f;
+            }
             dir = dodgeVec;
+          
+            return;
+        }
+        else
+        {
+
         }
         if (isJump)
         {
             dir = Vector3.zero;
         }
+
+        // Walk ï¿½ï¿½ï¿½Â¿ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+        /* if (!isRun && dir != Vector3.zero)
+         {
+             if (!audioSource.isPlaying || audioSource.clip != walk)
+             {
+                 audioSource.Stop();
+                 audioSource.clip = walk;
+                 audioSource.volume = 0.2f;
+                 audioSource.loop = true;
+                 audioSource.Play();
+             }
+         }
+         else if (isRun && dir != Vector3.zero)
+         {
+             if (!audioSource.isPlaying || audioSource.clip != run)
+             {
+                 audioSource.Stop();
+                 audioSource.clip = run;
+                 audioSource.volume = 0.2f;
+                 audioSource.loop = true;
+                 audioSource.Play();
+             }
+         }
+         else
+         {
+             // Walk ï¿½ï¿½ï¿½Â°ï¿½ ï¿½Æ´Ï°Å³ï¿½ dirï¿½ï¿½ zeroï¿½ï¿½ ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½Ò¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
+             audioSource.Stop();
+         }*/
+
         /*
         if (!isBorder)
-            transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // °È±â 0.3f ¼Óµµ
+            transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // ï¿½È±ï¿½ 0.3f ï¿½Óµï¿½
             aniter.SetInteger("vecterval", 5);
         */
-      
+
         tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
     {
-        // # 1. Å°º¸µå¿¡ ÀÇÇÑ È¸Àü
-        // LookAt() - ÁöÁ¤µÈ º¤ÅÍ¸¦ ÇâÇØ¼­ È¸Àü½ÃÄÑÁÖ´Â ÇÔ¼ö
+        // # 1. Å°ï¿½ï¿½ï¿½å¿¡ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
+        // LookAt() - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Í¸ï¿½ ï¿½ï¿½ï¿½Ø¼ï¿½ È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ ï¿½Ô¼ï¿½
         if (ispause)
         {
             return;
         }
-        // # 2. ¸¶¿ì½º¿¡ ÀÇÇÑ È¸Àü
-        if (fireDown && !isDodge) // ¸¶¿ì½º Å¬¸¯ ÇßÀ» ¶§¸¸ È­ÀüÇÏµµ·Ï Á¶°Ç Ãß°¡
+        // # 2. ï¿½ï¿½ï¿½ì½ºï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¸ï¿½ï¿½
+        if (fireDown && !isDodge) // ï¿½ï¿½ï¿½ì½º Å¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È­ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
         {
             transform.forward = Vector3.Lerp(transform.forward, Mousepo.getMousePosition() - transform.position, Time.deltaTime *30f);
        
@@ -240,7 +417,10 @@ public class PlayerParent : MonoBehaviour
     }
     void Swap()
     {
-        
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Îµï¿½ï¿½ï¿½
+        int previousWeaponIndex = weaponIndex;
+
+
         if (swapDown1 && (!particles[0] || weaponIndex == 0))
             return;
         if (swapDown2 && (!particles[1] || weaponIndex == 1))
@@ -252,6 +432,14 @@ public class PlayerParent : MonoBehaviour
         if (swapDown1) weaponIndex = 0;
         if (swapDown2) weaponIndex = 1;
         if (swapDown3) weaponIndex = 2;
+
+        // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½â°¡ ï¿½Ù¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½
+        if (previousWeaponIndex != weaponIndex)
+        {
+            PlayWeaponSwapSound();
+        }
+
+
 
         /*
         if ((swapDown1 || swapDown2 || swapDown3) && !isJump && !isDodge)
@@ -270,6 +458,15 @@ public class PlayerParent : MonoBehaviour
             Invoke("SwapOut", 0.4f);
         }*/
     }
+    void PlayWeaponSwapSound()
+    {
+        // ï¿½ï¿½ï¿½â¿¡ ï¿½ï¿½ï¿½â¸¦ ï¿½Ù²ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ò¸ï¿½ ï¿½ï¿½ï¿½ ï¿½Úµï¿½ ï¿½ß°ï¿½
+        audioSource.Stop();
+        audioSource.clip = swap;
+        audioSource.volume = 0.3f;
+        audioSource.loop = false;
+        audioSource.Play();
+    }
     void SwapOut()
     {
         isSwap = false;
@@ -281,7 +478,7 @@ public class PlayerParent : MonoBehaviour
        
         if (isJumpReady &&jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
         {
-            Debug.Log("Á¡ÇÁÀÛµ¿ ");
+            Debug.Log("ï¿½ï¿½ï¿½ï¿½ï¿½Ûµï¿½ ");
             rid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             //aniter.SetBool("isjump", true);
             aniter.SetTrigger("isjump");
@@ -316,12 +513,18 @@ public class PlayerParent : MonoBehaviour
                 particles[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
                 particles[0].gameObject.transform.Rotate(Vector3.up, -90f);
                 particles[0].Play();
-                
+
+
+                audioSource.Stop();
+                audioSource.clip = rifle1;
+                audioSource.volume = 0.3f;
+                audioSource.loop = false;
+                audioSource.Play();
 
 
                 aniter.SetBool("onattack", true);
-                //¹ß»ç ÇÑÁÙ Ãß°¡  equipWeapon.Use();
-                //¹ß»ç ¾Ö´Ï¸ŞÀÌ¼Ç Ãß°¡  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                //ï¿½ß»ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½  equipWeapon.Use();
+                //ï¿½ß»ï¿½ ï¿½Ö´Ï¸ï¿½ï¿½Ì¼ï¿½ ï¿½ß°ï¿½  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
                 fireDelay = 0;
 
                 StartCoroutine(endaniWithDelay("onattack", 0.33f));
@@ -349,7 +552,7 @@ public class PlayerParent : MonoBehaviour
             }
             else
             {
-                Debug.Log("error ¹«±â °ø°İ ½Ã½ºÅÛ ");
+                Debug.Log("error ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ã½ï¿½ï¿½ï¿½ ");
             }
 
         }
@@ -373,11 +576,21 @@ public class PlayerParent : MonoBehaviour
         
             dodgeVec = dir;
             dogespeed = speed;
-            speed = 15f;
+            
+          
             aniter.SetTrigger("isroll");
             isDodge = true;
             dogeDelay = 0f;
+            rid.AddForce(dir * Time.deltaTime * 500f, ForceMode.VelocityChange);
+            
             StartCoroutine(endaniWithDelay("doge", 0.67f));
+
+            audioSource.Stop();
+            audioSource.clip = roll;
+            audioSource.volume = 0.3f;
+            audioSource.loop = false;
+            audioSource.Play();
+
         }
     }
     IEnumerator endaniWithDelay(string aniname, float delay)
@@ -391,6 +604,8 @@ public class PlayerParent : MonoBehaviour
             case "doge":
                 isDodge = false;
                 speed = dogespeed;
+                float dampingFactor =0f; // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
+                rid.velocity *= dampingFactor;
                 break;
             case "onattack":
                 aniter.SetBool("onattack", false);
@@ -410,7 +625,7 @@ public class PlayerParent : MonoBehaviour
                 isDamage = false;
                 break;
             default:
-                // ¾î¶² °æ¿ì¿¡µµ À§ÀÇ Á¶°Ç¿¡ ÇØ´çÇÏÁö ¾ÊÀ» ¶§ÀÇ Ã³¸®
+                // ï¿½î¶² ï¿½ï¿½ì¿¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ç¿ï¿½ ï¿½Ø´ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½
                 break;
         }
     }

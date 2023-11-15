@@ -14,6 +14,8 @@ public class CameraSwitch : MonoBehaviour
     public bool isSwitching = false;
     public float switchTimer = 0f;
 
+    PlayerParent playerParent;
+
     public void Start()
     {
         mainCamera.enabled = true;
@@ -60,6 +62,9 @@ public class CameraSwitch : MonoBehaviour
             // 타임라인 재생
             timelineDirector.enabled = true;
             timelineDirector.Play();
+
+            // 플레이어의 움직임을 제어 (움직이지 않게 설정)
+            playerParent.SetSwitching(true);
         }
         else
         {
@@ -68,6 +73,9 @@ public class CameraSwitch : MonoBehaviour
             isSwitching = false;
             animator.enabled = false; // 애니메이터 비활성화
             timelineDirector.enabled = false; // PlayableDirector 비활성화
+
+            // 플레이어의 움직임 제어 해제 (다시 움직일 수 있게 설정)
+            playerParent.SetSwitching(false);
         }
     }
 }

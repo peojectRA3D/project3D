@@ -11,6 +11,10 @@ TagManager:
   - Floor
   - Monster
   - Boss
+  - Enemy
+  - Breath
+  - EnemyMagic
+  - charactorChage
   layers:
   - Default
   - TransparentFX

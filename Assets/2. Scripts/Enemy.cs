@@ -29,15 +29,29 @@ public class Enemy : MonoBehaviour
     public AudioClip response;
     public AudioClip attack1;
     public AudioClip die;
-
+    Bullet scriptbullet;
+    ConfigReader configreaders;
     void Awake()
     {
+        if (enemyType == Type.A) {
+            configreaders = new ConfigReader("Moster_Type_A");
+        }else if (enemyType == Type.B)
+        {
+            configreaders = new ConfigReader("Moster_Type_B");
+        }
+        else
+        {
+            configreaders = new ConfigReader("Moster_Type_A");
+        }
+
         rigid = GetComponent<Rigidbody>();
         nav = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         isDead = false;
-
+        scriptbullet = attackArea.GetComponent<Bullet>();
+       
+        scriptbullet.damage = configreaders.Search<float>("Damage");
         ChaseStart();
     }
 
@@ -158,7 +172,7 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.transform.rotation.eulerAngles.y);
+        //Debug.Log(other.transform.rotation.eulerAngles.y);
         // 2번 탄환 - 몬스터 피격
     }
     void StopChasing()

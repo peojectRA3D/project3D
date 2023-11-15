@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CameraFollowPlayer : MonoBehaviour
 {
@@ -10,6 +11,11 @@ public class CameraFollowPlayer : MonoBehaviour
     public float minZoom = 5.0f; // 최소 줌 거리
     public float maxZoom = 15.0f; // 최대 줌 거리
 
+    private void Start()
+    {
+        //if()
+        offset = offset.normalized * maxZoom;
+    }
     private void Update()
     {
         // 마우스 휠 스크롤 값을 얻어옴
