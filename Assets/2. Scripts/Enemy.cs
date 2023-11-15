@@ -172,8 +172,24 @@ public class Enemy : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log(other.transform.rotation.eulerAngles.y);
-        // 2번 탄환 - 몬스터 피격
+        if (other.tag == "bullet")
+        {
+            curHealth -= other.transform.rotation.eulerAngles.y;
+
+            if (curHealth <= 0)
+            {
+                if (isDead)
+                    return;
+
+                isChase = false;
+                isDead = true;
+                anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 0.1f;
+                audioSource.Play();
+            }
+        }
     }
     void StopChasing()
     {

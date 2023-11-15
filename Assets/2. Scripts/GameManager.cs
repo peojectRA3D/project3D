@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public RectTransform bossHealth;
     public RectTransform bossHealthBar;
 
+    public PlayerParent player;
+    public Text playerCurrentHealth;
+
     // 승리 UI
     public Image victory;
 
@@ -20,6 +23,7 @@ public class GameManager : MonoBehaviour
     void LateUpdate() // 보스 HP바
     {
         bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
+        playerCurrentHealth.text = player.PlayerHp.ToString();
     }
 
     public void StageClear() // 승리
@@ -34,7 +38,7 @@ public class GameManager : MonoBehaviour
 
     public void OnClickLobbyButton()
     {
-        // "Lobby" 씬으로 이동
+        // "Lobby" 로비로 이동
         SceneManager.LoadScene("Lobby");
     }
 
