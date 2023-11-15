@@ -100,13 +100,7 @@ public class PlayerParent : MonoBehaviour
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
         audioSource = GetComponent<AudioSource>();
-        /*
-        for (int index = 0; index < skins.Length; index++)
-        {
-            skins[index].material = maters[2];
-            Debug.Log("������������!");
-        }
-        */
+       
     }
     // Update is called once per frame
     void Update()
@@ -238,6 +232,7 @@ public class PlayerParent : MonoBehaviour
            
            
         }
+     
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -252,6 +247,26 @@ public class PlayerParent : MonoBehaviour
                 Debug.LogError("�Ҹ� ����");
             }
         }
+        if (other.tag == "charactorChage")
+        {
+            for (int index = 0; index < skins.Length; index++)
+            {
+                try
+                {
+                    skins[index].material = maters[int.Parse(other.gameObject.name)];
+                }
+                catch
+                {
+                    Debug.LogError("이름에러 "+ other.gameObject.name);
+                }
+
+            }
+        }
+
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
        
     }
     private void takedamge(float damage)
