@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour
     public RectTransform bossHealth;
     public RectTransform bossHealthBar;
 
+    public PlayerParent player;
+    public Text playerCurrentHealth;
+
     // ½Â¸® UI
     public Image victory;
 
@@ -20,6 +23,7 @@ public class GameManager : MonoBehaviour
     void LateUpdate() // º¸½º HP¹Ù
     {
         bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
+        playerCurrentHealth.text = player.PlayerHp.ToString();
     }
 
     public void StageClear() // ½Â¸®

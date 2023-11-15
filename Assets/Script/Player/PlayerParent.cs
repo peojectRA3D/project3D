@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerParent : MonoBehaviour
 {
@@ -88,6 +89,9 @@ public class PlayerParent : MonoBehaviour
 
     public Material[] maters;
     public SkinnedMeshRenderer[] skins;
+
+    [SerializeField]
+    private Image Defeat;
 
     int bcout;
     int mcount;
@@ -211,6 +215,8 @@ public class PlayerParent : MonoBehaviour
     {
         if (PlayerHp <= 0)
         {
+            Defeat.gameObject.SetActive(true);
+
             aniter.SetBool("isdie",true);
             isdead = true;
 
@@ -369,8 +375,10 @@ public class PlayerParent : MonoBehaviour
             transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // �ȱ� 0.3f �ӵ�
             aniter.SetInteger("vecterval", 5);
         */
-
-        tr.position += dir * speed * Time.deltaTime;
+        if (!isBorder)
+        {
+            tr.position += dir * speed * Time.deltaTime;
+        }
     }
     void Turn()
     {
@@ -634,5 +642,16 @@ public class PlayerParent : MonoBehaviour
                 // � ��쿡�� ���� ���ǿ� �ش����� ���� ���� ó��
                 break;
         }
+    }
+
+    void FixedUpdate()
+    {
+        StopToWall();
+    }
+
+    void StopToWall()
+    {
+        Debug.DrawRay(transform.position, transform.forward * 3, Color.green); // DrawRay - Scene내에서 Ray를 보여주는 함수
+        isBorder = Physics.Raycast(transform.position, transform.forward, 3, LayerMask.GetMask("Wall"));
     }
 }
