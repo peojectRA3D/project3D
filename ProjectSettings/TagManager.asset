@@ -15,6 +15,7 @@ TagManager:
   - Breath
   - EnemyMagic
   - charactorChage
+  - Potal
   layers:
   - Default
   - TransparentFX
