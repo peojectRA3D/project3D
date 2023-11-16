@@ -5,26 +5,26 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    public enum Type { A, B }; // ¸ó½ºÅÍ A, B
+    public enum Type { A, B }; // ëª¬ìŠ¤í„° A, B
     public Type enemyType;
 
-    public float maxHealth;           // ÃÖ´ë Ã¼·Â
-    public float curHealth;           // ÇöÀç Ã¼·Â
-    public Transform target;        // ÃßÀû ´ë»ó
-    public float distance = 25f;    // °¨Áö ¹üÀ§
-    public BoxCollider attackArea;  // °ø°İ ¹üÀ§
-    public bool isChase;            // ÃßÀû ¿©ºÎ
-    public bool isAttack;           // °ø°İ ¿©ºÎ
+    public float maxHealth;           // ìµœëŒ€ ì²´ë ¥
+    public float curHealth;           // í˜„ì¬ ì²´ë ¥
+    public Transform target;        // ì¶”ì  ëŒ€ìƒ
+    public float distance = 25f;    // ê°ì§€ ë²”ìœ„
+    public BoxCollider attackArea;  // ê³µê²© ë²”ìœ„
+    public bool isChase;            // ì¶”ì  ì—¬ë¶€
+    public bool isAttack;           // ê³µê²© ì—¬ë¶€
     private bool isDead;
 
-    float targetRadius;     // Å¸°ÙÀ» Ã£À» ½ºÇÇ¾î Ä³½ºÆ® ¹İÁö¸§
-    float targetRange;      // ½ºÇÇ¾î Ä³½ºÆ®ÀÇ ¹üÀ§
+    float targetRadius;     // íƒ€ê²Ÿì„ ì°¾ì„ ìŠ¤í”¼ì–´ ìºìŠ¤íŠ¸ ë°˜ì§€ë¦„
+    float targetRange;      // ìŠ¤í”¼ì–´ ìºìŠ¤íŠ¸ì˜ ë²”ìœ„
 
     Rigidbody rigid;
     NavMeshAgent nav;
     Animator anim;
 
-    // »ç¿îµå
+    // ì‚¬ìš´ë“œ
     AudioSource audioSource;
     public AudioClip response;
     public AudioClip attack1;
@@ -63,7 +63,7 @@ public class Enemy : MonoBehaviour
         audioSource.Play();
         */
 
-        isChase = true; // ÃßÀû »óÅÂ·Î º¯°æ
+        isChase = true; // ì¶”ì  ìƒíƒœë¡œ ë³€ê²½
         anim.SetBool("isRun", false);
     }
 
@@ -86,13 +86,13 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    void FreezeVelocity() // ¹°¸®·ÂÀÌ NavAgent ÀÌµ¿À» ¹æÇØÇÏÁö ¾Ê´Â ¸Ş¼­µå
+    void FreezeVelocity() // ë¬¼ë¦¬ë ¥ì´ NavAgent ì´ë™ì„ ë°©í•´í•˜ì§€ ì•ŠëŠ” ë©”ì„œë“œ
     {
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
     }
 
-    void Targeting() // Å¸°ÙÀ» Ã£´Â ¸Ş¼­µå
+    void Targeting() // íƒ€ê²Ÿì„ ì°¾ëŠ” ë©”ì„œë“œ
     {
 
 
@@ -106,36 +106,36 @@ public class Enemy : MonoBehaviour
             targetRange = 2.5f;
         }
 
-        // ÇÃ·¹ÀÌ¾î¸¦ Å½ÁöÇÏ±â À§ÇÑ ½ºÇÇ¾î Ä³½ºÆ®¸¦ ¼öÇà
+        // í”Œë ˆì´ì–´ë¥¼ íƒì§€í•˜ê¸° ìœ„í•œ ìŠ¤í”¼ì–´ ìºìŠ¤íŠ¸ë¥¼ ìˆ˜í–‰
         RaycastHit[] rayHits = Physics.SphereCastAll(transform.position,
                                                         targetRadius,
                                                         transform.forward,
                                                         targetRange,
                                                         LayerMask.GetMask("Player"));
 
-        if (rayHits.Length > 0 && !isAttack) // rayHit º¯¼ö¿¡ µ¥ÀÌÅÍ°¡ µé¾î¿À¸é °ø°İ ÄÚ·çÆ¾ ½ÇÇà
+        if (rayHits.Length > 0 && !isAttack) // rayHit ë³€ìˆ˜ì— ë°ì´í„°ê°€ ë“¤ì–´ì˜¤ë©´ ê³µê²© ì½”ë£¨í‹´ ì‹¤í–‰
         {
-            StartCoroutine(Attack()); // °ø°İ ÄÚ·çÆ¾ ½ÇÇà
+            StartCoroutine(Attack()); // ê³µê²© ì½”ë£¨í‹´ ì‹¤í–‰
         }
     }
 
     IEnumerator Attack()
     {
-        isChase = false;         // ÃßÀû ÁßÁö
-        isAttack = true;         // °ø°İ »óÅÂ·Î ¼³Á¤
+        isChase = false;         // ì¶”ì  ì¤‘ì§€
+        isAttack = true;         // ê³µê²© ìƒíƒœë¡œ ì„¤ì •
         anim.SetBool("isAttack", true);
         yield return new WaitForSeconds(0.1f);
         audioSource.clip = attack1;
-        audioSource.Play();           // °ø°İ »ç¿îµå Àç»ı
+        audioSource.Play();           // ê³µê²© ì‚¬ìš´ë“œ ì¬ìƒ
 
         yield return new WaitForSeconds(0.2f);
-        attackArea.enabled = true;    // °ø°İ ¹üÀ§ È°¼ºÈ­
+        attackArea.enabled = true;    // ê³µê²© ë²”ìœ„ í™œì„±í™”
 
         yield return new WaitForSeconds(1f);
-        attackArea.enabled = false; // °ø°İ ¹üÀ§ ºñÈ°¼ºÈ­
+        attackArea.enabled = false; // ê³µê²© ë²”ìœ„ ë¹„í™œì„±í™”
 
-        isChase = true;          // ÃßÀû ´Ù½Ã ½ÃÀÛ
-        isAttack = false;        // °ø°İ »óÅÂ ÇØÁ¦
+        isChase = true;          // ì¶”ì  ë‹¤ì‹œ ì‹œì‘
+        isAttack = false;        // ê³µê²© ìƒíƒœ í•´ì œ
         anim.SetBool("isAttack", false);
     }
 
@@ -166,6 +166,8 @@ public class Enemy : MonoBehaviour
                 audioSource.clip = die;
                 audioSource.volume = 0.1f;
                 audioSource.Play();
+
+                Destroy(gameObject, 3);
             }
         }
     }
@@ -188,6 +190,8 @@ public class Enemy : MonoBehaviour
                 audioSource.clip = die;
                 audioSource.volume = 0.1f;
                 audioSource.Play();
+
+                Destroy(gameObject, 3);
             }
         }
     }

@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // ∫∏Ω∫ HP
+    // Î≥¥Ïä§ HP
     public Boss boss;
     public RectTransform bossHealth;
     public RectTransform bossHealthBar;
@@ -14,43 +14,68 @@ public class GameManager : MonoBehaviour
     public PlayerParent player;
     public Text playerCurrentHealth;
 
-    // Ω¬∏Æ UI
+    // Î∞òÌà¨Î™Ö Î∞∞Í≤Ω
+    public RectTransform blackBG;
+
+    // ÏòµÏÖò UI
+    public RectTransform Option;
+    bool optionToggle = false;
+
+    // ÏÇ¨Ïö¥Îìú UI
+    public RectTransform Sound;
+
+    // ÏäπÎ¶¨ UI
     public Image victory;
 
-    // ∆–πË UI
+    // Ìå®Î∞∞ UI
     public Image defeat;
 
-    void LateUpdate() // ∫∏Ω∫ HPπŸ
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            OptionToggle();
+        }
+    }
+
+    void LateUpdate() // Î≥¥Ïä§ HPÎ∞î
     {
         bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
         playerCurrentHealth.text = player.PlayerHp.ToString();
     }
 
-    public void StageClear() // Ω¬∏Æ
+    public void OptionToggle()
+    {
+        // optionToggle = !optionToggle;
+        // blackBG.gameObject.SetActive(optionToggle);
+        // Option.gameObject.SetActive(optionToggle);
+    }
+
+    public void StageClear() // ÏäπÎ¶¨
     {
         victory.gameObject.SetActive(true);
     }
 
-    public void PlayerDefeat() // ∆–πË
+    public void PlayerDefeat() // Ìå®Î∞∞
     {
         defeat.gameObject.SetActive(true);
     }
 
     public void OnClickLobbyButton()
     {
-        // "Lobby" ∑Œ∫Ò∑Œ ¿Ãµø
+        // "Lobby" Î°úÎπÑÎ°ú Ïù¥Îèô
         SceneManager.LoadScene("Lobby");
     }
 
     public void OnClickStage1Button()
     {
-        // "Stage1" æ¿¿∏∑Œ ¿Ãµø
+        // "Stage1" Ïî¨ÏúºÎ°ú Ïù¥Îèô
         SceneManager.LoadScene("Stage1");
     }
 
     public void OnClickStage2Button()
     {
-        // "Stage2" æ¿¿∏∑Œ ¿Ãµø
+        // "Stage2" Ïî¨ÏúºÎ°ú Ïù¥Îèô
         SceneManager.LoadScene("Stage2");
     }
 }
