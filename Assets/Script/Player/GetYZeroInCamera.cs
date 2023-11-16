@@ -13,6 +13,11 @@ public class GetYZeroInCamera : MonoBehaviour
     GameObject enemyObject = null;
     float distance = 0;
     // Update is called once per frame
+    Transform tr;
+    private void Start()
+    {
+        tr = GetComponent<Transform>();
+    }
     void Update()
     {
         // 마우스 포인터의 스크린 좌표 가져오기
@@ -31,11 +36,15 @@ public class GetYZeroInCamera : MonoBehaviour
             {
                 // 충돌한 오브젝트가 "Enemy" 태그를 가진 경우
                 enemyObject = hitInfo.collider.gameObject;
-                float distance = Vector3.Distance(hitInfo.point, enemyObject.transform.position);
+                //float distance = Vector3.Distance(hitInfo.point, enemyObject.transform.position);
 
                 // 주변에서 가장 가까운 "Enemy" 태그를 가진 게임 오브젝트를 찾았을 때의 동작 수행
                 //Debug.Log("가장 처음에 부딪힌 Enemy를 찾았습니다: " + enemyObject.transform.position + "  " + hitInfo.point + "  " + distance);
                 break;
+            }
+            else
+            {
+                enemyObject = null;
             }
         }
   
@@ -45,7 +54,7 @@ public class GetYZeroInCamera : MonoBehaviour
       
 
         // 카메라 시선과 마우스 레이 간의 교차점을 찾습니다.
-        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, gameObject.transform.position.y, 0f)); // 지면을 나타내는 평면 (y=0)
+        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, tr.position.y, 0f)); // 지면을 나타내는 평면 (y=0)
         float rayDistance;
        
         if (groundPlane.Raycast(ray, out rayDistance))
@@ -56,22 +65,7 @@ public class GetYZeroInCamera : MonoBehaviour
 
             // worldPosition은 시선과 마우스 위치를 연결하는 직선에서 y 좌표가 0인 지점의 월드 위치입니다.
         }
-        if (Physics.Raycast(ray, out hit))
-        {
-            string hitTag = hit.collider.tag;
-            
-            if (hitTag == "Enemy")
-            {
-                // 교차 지점의 월드 좌표를 계산합니다.
-                targetpostion = hit.point;
-
-                //Debug.Log("Hit Position: " + worldPosition);
-            }
-            else
-            {
-                targetpostion = worldPosition;
-            }
-        }
+        
 
 
     }
@@ -90,7 +84,8 @@ public class GetYZeroInCamera : MonoBehaviour
         }
         else
         {
-            return targetpostion;
+            Debug.Log(worldPosition);
+            return worldPosition + new Vector3(0,1.0f,0) ;
         }
     }
 
