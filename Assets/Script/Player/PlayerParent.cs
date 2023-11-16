@@ -209,6 +209,7 @@ public class PlayerParent : MonoBehaviour
             }
             ispause = !ispause;
             canvas[0].SetActive(ispause);
+            canvas[1].SetActive(ispause);
         }
     }
     void HpCheck()
