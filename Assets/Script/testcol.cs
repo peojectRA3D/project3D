@@ -18,10 +18,10 @@ public class testcol : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier) ;
+       // Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier) ;
         if (other.tag == "bullet")
         {
-            Debug.Log("¾Æ¾ß");
+          //  Debug.Log("ì•„ì•¼");
         }
     }
     private void OnTriggerEnter(Collider other)
