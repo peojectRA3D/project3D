@@ -15,14 +15,14 @@ public class GameManager : MonoBehaviour
     public Text playerCurrentHealth;
 
     // 반투명 배경
-    public RectTransform blackBG;
+    public RectTransform bg;
 
-    // 옵션 UI
-    public RectTransform Option;
-    bool optionToggle = false;
+    // 옵션
+    public RectTransform option;
+    bool ispause;
 
-    // 사운드 UI
-    public RectTransform Sound;
+    // 사운드
+    public RectTransform sound;
 
     // 승리 UI
     public Image victory;
@@ -34,21 +34,54 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            OptionToggle();
+            pause();
+        }
+
+    }
+
+    public void pause()
+    {
+        ispause = !ispause;
+
+        if (!ispause)
+        {
+            Time.timeScale = 0;
+            bg.gameObject.SetActive(true);
+            option.gameObject.SetActive(true);
+        }
+        else if (ispause)
+        {
+            Time.timeScale = 1;
+            bg.gameObject.SetActive(false);
+            option.gameObject.SetActive(false);
+            sound.gameObject.SetActive(false);
         }
     }
+
+    public void OnClickContinue()
+    {
+        Time.timeScale = 1;
+        bg.gameObject.SetActive(false);
+        option.gameObject.SetActive(false);
+    }
+
+    public void OnClickSound()
+    {
+        option.gameObject.SetActive(false);
+        sound.gameObject.SetActive(true);
+    }
+
+    public void OnClickSoundClose()
+    {
+        option.gameObject.SetActive(true);
+        sound.gameObject.SetActive(false);
+    }
+
 
     void LateUpdate() // 보스 HP바
     {
         bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
         playerCurrentHealth.text = player.PlayerHp.ToString();
-    }
-
-    public void OptionToggle()
-    {
-        // optionToggle = !optionToggle;
-        // blackBG.gameObject.SetActive(optionToggle);
-        // Option.gameObject.SetActive(optionToggle);
     }
 
     public void StageClear() // 승리
