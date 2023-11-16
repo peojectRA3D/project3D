@@ -34,6 +34,8 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if (player.PlayerHp <= 0)
+                return;
             pause();
         }
 
