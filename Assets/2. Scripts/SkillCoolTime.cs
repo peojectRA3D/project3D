@@ -12,12 +12,19 @@ public class SkillCoolTime : MonoBehaviour
     public Text[] hideSkillTimeTexts; // 스킬 쿨타임 텍스트들
     public Image[] hideSkilIlmages; // 스킬 쿨타임 이미지들
 
+    private PlayerParent playerParent;
+
     bool heal;
+    bool roll;
+    bool healButtonPressed = false;
+    bool rollButtonPressed = false;
+    private Vector3 dir = Vector3.zero;
+
 
     // 각 스킬의 상태를 추적하기 위한 변수들
-    private bool[] isHideSkills = { false, false, false }; // 각 스킬의 사용 여부를 저장하는 배열
-    private float[] skillTimes = { 6, 6, 31 }; // 각 스킬의 쿨타임을 정의하는 배열
-    private float[] getSkillTimes = { 0, 0, 0 }; // 각 스킬의 현재 쿨타임을 저장하는 배열
+    private bool[] isHideSkills = { false, false, false, false }; // 각 스킬의 사용 여부를 저장하는 배열
+    private float[] skillTimes = { 6, 6, 31, 6 }; // 각 스킬의 쿨타임을 정의하는 배열
+    private float[] getSkillTimes = { 0, 0, 0, 0 }; // 각 스킬의 현재 쿨타임을 저장하는 배열
 
     // Start is called before the first frame update
     void Start()
@@ -34,15 +41,30 @@ public class SkillCoolTime : MonoBehaviour
     {
         for (int indexer = 0; indexer < skillTimes.Length; indexer++)
         {
-            //skillTimes[indexer] = getskillcool(indexer);
+            // skillTimes[indexer] = getskillcool(indexer);
         }
 
-        heal = Input.GetButtonDown("heal");
-        if (heal)
+        // 공격 2번 쿨타임
+        // HideSkillSetting(0);
+
+        // 공격 3번 쿨타임
+        // HideSkillSetting(1);
+
+        heal = Input.GetButtonDown("heal"); // 힐 쿨타임
+        if (heal && !isHideSkills[2])
         {
+            healButtonPressed = true;
             HideSkillSetting(2);
         }
-       
+        
+
+        roll = Input.GetButton("Jump"); // 구르기 쿨타임 << 현재는 제자리 점프도 쿨 돌아서 수정 필요
+        if (roll && !isHideSkills[3])
+        {
+            rollButtonPressed = true;
+            HideSkillSetting(3);
+        }
+
         HideSkillCheck();
     }
     
@@ -69,6 +91,11 @@ public class SkillCoolTime : MonoBehaviour
         {
             StartCoroutine(SkillTimeCheck(2));
         }
+
+        if (isHideSkills[3])
+        {
+            StartCoroutine(SkillTimeCheck(3));
+        }
     }
 
     IEnumerator SkillTimeCheck(int skillNum) // 각 스킬의 쿨타임을 관리하는 코루틴 함수
@@ -79,19 +106,51 @@ public class SkillCoolTime : MonoBehaviour
         {
             getSkillTimes[skillNum] -= Time.deltaTime; // 쿨타임 감소
 
-            // 쿨타임이 끝나면 해당 스킬의 상태를 초기화하고 UI 업데이트
-            if (getSkillTimes[skillNum] < 0)
+            if (getSkillTimes[skillNum] <= 0) // 쿨타임이 끝나면
             {
                 getSkillTimes[skillNum] = 0; // 쿨타임이 0 미만으로 가지 않도록 보정
                 isHideSkills[skillNum] = false; // 해당 스킬의 사용 상태를 해제
                 hideSkillButtons[skillNum].SetActive(false); // 해당 스킬 버튼 비활성화
+
+                // 힐 버튼이 눌렸다면 다시 누를 수 있도록 허용
+                if (skillNum == 2)
+                {
+                    healButtonPressed = false;
+                }
+                // 점프(구르기) 버튼
+                if (skillNum == 3)
+                {
+                    rollButtonPressed = false;
+                }
             }
 
-            hideSkillTimeTexts[skillNum].text = getSkillTimes[skillNum].ToString("00"); // UI 텍스트 업데이트
+            // 쿨타임이 1초 미만일 때 공백을 출력, 그렇지 않으면 시간을 표시
+            if (getSkillTimes[skillNum] > 0)
+            {
+                hideSkillTimeTexts[skillNum].text = getSkillTimes[skillNum].ToString("00");
+            }
+            else
+            {
+                hideSkillTimeTexts[skillNum].text = "";
+            }
 
             // UI 이미지의 쿨타임 표시를 업데이트 (0에서 1 사이의 값으로 변환)
             float time = getSkillTimes[skillNum] / skillTimes[skillNum];
             hideSkilIlmages[skillNum].fillAmount = time;
+        }
+    }
+
+    void LateUpdate()
+    {
+        // 힐 버튼이 눌렸고, 쿨타임이 끝났을 때 힐 버튼을 다시 누를 수 있도록 버튼 활성화
+        if (healButtonPressed && !isHideSkills[2])
+        {
+            healButtonPressed = false;
+        }
+
+        if (rollButtonPressed && !isHideSkills[3])
+        {
+            rollButtonPressed = false;
         }
     }
 }
