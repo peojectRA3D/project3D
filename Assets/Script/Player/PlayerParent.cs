@@ -117,8 +117,10 @@ public class PlayerParent : MonoBehaviour
     float potalDelay = 5f;
     public Text guidetext;
 
+
     int ModelType;
     int[] magcount = { 20, 5 };
+
     private bool isSwitching = false;
     ConfigReader configreaders;
     void Start()
@@ -246,7 +248,7 @@ public class PlayerParent : MonoBehaviour
         //itemDown = Input.GetButtonDown("Interation");
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
-        pausedown = Input.GetButtonDown("Cancel");
+        // pausedown = Input.GetButtonDown("Cancel");
         heal = Input.GetButtonDown("heal");
         swapDown3 = Input.GetButtonDown("Swap3");
     }
@@ -297,6 +299,8 @@ public class PlayerParent : MonoBehaviour
             aniter.SetBool("isdie",true);
             isdead = true;
             PlayerHp = 0;
+
+            defeat.gameObject.SetActive(true);
         }
     }
     void OnParticleCollision(GameObject other)
