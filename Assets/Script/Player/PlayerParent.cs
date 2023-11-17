@@ -46,9 +46,10 @@ public class PlayerParent : MonoBehaviour
     bool isReload;
     bool isJumpReady = true;
     bool isRun = false;
-    bool isFireReady = true;
+    bool isFirstSkillReady = true;
     bool isSecondSkillReady= true;
     bool isThirdSkillReady = true;
+    bool isFourSkillReady = true;
     bool isdogeReady = true;
     bool isdead;
     bool isBorder; // �� �浹 �÷��� bool ����
@@ -90,7 +91,7 @@ public class PlayerParent : MonoBehaviour
     float jumpDelayMax;
     float dogeDelayMax;
     float skillDelayMax;
-    float healDelayMax;
+    float HealDelayMax;
     float dogespeed;
     
     int equipWeaponIndex = 0;
@@ -215,14 +216,15 @@ public class PlayerParent : MonoBehaviour
 
         jumpDelayMax = configreaders.Search<float>("JumpDelay");
         dogeDelayMax = configreaders.Search<float>("DogeDelay");
-        healDelayMax = configreaders.Search<float>("HealDelay");
+        HealDelayMax = configreaders.Search<float>("HealDelay");
 
         FirstSkillDelay_time = FirstSkillDelay + 1f;
         SecondSkillDelay_time = SecondSkillDelay + 1f;
         ThirdSkillDelay_time = ThirdSkillDelay + 1f;
+        FourSkillDelay_time = fourSkillDelay + 1f;
         JumpDelay = jumpDelayMax + 1f;
         DogeDelay = dogeDelayMax + 1f;
-        HealDelay = healDelayMax + 1f;
+        HealDelay = HealDelayMax + 1f;
     }
     void skilldamaged()
     {
@@ -258,7 +260,7 @@ public class PlayerParent : MonoBehaviour
     void healplayer()
     {
         HealDelay += Time.deltaTime;
-        healReady = HealDelay > healDelayMax;
+        healReady = HealDelay > HealDelayMax;
         if (healReady && heal)
         {
             PlayerHp += healPower;
@@ -601,7 +603,7 @@ public class PlayerParent : MonoBehaviour
     {
        
         FirstSkillDelay_time += Time.deltaTime;
-        isFireReady =FirstSkillDelay< FirstSkillDelay_time;  // equipWeapon.rate < fireDelay;
+        isFirstSkillReady =FirstSkillDelay< FirstSkillDelay_time;  // equipWeapon.rate < fireDelay;
       
         SecondSkillDelay_time += Time.deltaTime;
         isSecondSkillReady = SecondSkillDelay < SecondSkillDelay_time;
@@ -609,41 +611,46 @@ public class PlayerParent : MonoBehaviour
         ThirdSkillDelay_time += Time.deltaTime;
         isThirdSkillReady = ThirdSkillDelay < ThirdSkillDelay_time;
 
-        if (fireDown && isFireReady && !isDodge && !isSwap)
+        FourSkillDelay_time += Time.deltaTime;
+        isFourSkillReady = fourSkillDelay < FourSkillDelay_time;
+
+        if (fireDown && !isDodge && !isSwap)
         {
             RunDown = true;
             isRun = true;
             Runcheck();
             if (ModelType == 0) {
                 if (0 == weaponIndex) {
-                    /*
-                    if (magcount[0] == 0)
+                    if (isFirstSkillReady)
                     {
-                        return;
+                        /*
+                        if (magcount[0] == 0)
+                        {
+                            return;
+                        }
+
+                        magcount[0]--;
+                        */
+                        particles[1].Simulate(1.01f);
+                        particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
+                        particles[1].Play();
+
+
+                        audioSource.Stop();
+                        audioSource.clip = rifle1;
+                        audioSource.volume = 0.3f;
+                        audioSource.loop = false;
+                        audioSource.Play();
+
+
+                        aniter.SetBool("onattack", true);
+                        //�߻� ���� �߰�  equipWeapon.Use();
+                        //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                        FirstSkillDelay_time = 0;
+
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
                     }
-
-                    magcount[0]--;
-                    */
-                    particles[1].Simulate(1.01f);
-                    particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                    particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
-                    particles[1].Play();
-
-
-                    audioSource.Stop();
-                    audioSource.clip = rifle1;
-                    audioSource.volume = 0.3f;
-                    audioSource.loop = false;
-                    audioSource.Play();
-
-
-                    aniter.SetBool("onattack", true);
-                    //�߻� ���� �߰�  equipWeapon.Use();
-                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    FirstSkillDelay_time = 0;
-
-                    StartCoroutine(endaniWithDelay("onattack", 0.33f));
-
                 }
                 else if (1 == weaponIndex)
                 {
@@ -763,7 +770,7 @@ public class PlayerParent : MonoBehaviour
                 {
                     if (isThirdSkillReady)
                     {
-                        isstaying = true;
+                        //isstaying = true;
                         //particles[3].Simulate(1.01f);
                         StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
@@ -978,38 +985,38 @@ public class PlayerParent : MonoBehaviour
         }
     }
 
-    public float getrestcool(string Actionname)
-    {
 
-        FieldInfo field = GetType().GetField(Actionname, BindingFlags.NonPublic | BindingFlags.Instance);
-
-        if (field != null)
-        {
-            return (float)field.GetValue(this);
-        }
-        else
-        {
-            // 인자로 받은 변수가 존재하지 않는 경우에 대한 처리를 원한다면 해당 처리를 추가할 수 있습니다.
-            // 예: return 다른_값;
-            throw new ArgumentException("인자로 받은 변수가 존재하지 않습니다.", nameof(Actionname));
-        }
-    }
     public float getrestcool(int Skillnum)
     {
+        float returndelay=0f;
         switch (Skillnum)
         {
+            case 0:
+                returndelay=FirstSkillDelay - FirstSkillDelay_time;
+                break;
             case 1:
-                return FirstSkillDelay_time;
-              
+                returndelay = SecondSkillDelay -SecondSkillDelay_time;
+                break;
             case 2:
-                return SecondSkillDelay_time;
+                returndelay = ThirdSkillDelay - ThirdSkillDelay_time;
+                break;
             case 3:
-                return ThirdSkillDelay_time;
+                returndelay = fourSkillDelay-FourSkillDelay_time;
+                break;
             case 4:
-                return FourSkillDelay_time;
+                returndelay = HealDelayMax - HealDelay;
+                break;
+
+            case 5:
+                returndelay = dogeDelayMax - DogeDelay;
+                break;
             default:
-                return 0f;
+                return returndelay;
+
         }
+        if (returndelay <= 0f)
+            returndelay = 0f;
+        return returndelay;
     }
  
 }
