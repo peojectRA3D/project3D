@@ -2925,6 +2925,7 @@ MonoBehaviour:
   - {fileID: 3584743037781714844}
   - {fileID: 6747105261631674821}
   guidetext: {fileID: 2983470139257971590}
+  defeat: {fileID: 0}
 --- !u!114 &5688219432264981344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3704,6 +3705,11 @@ PrefabInstance:
       propertyPath: lengthInSec
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 198161444309756460, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 198421077076039884, guid: bccc7a794e75b2a44a4b0dac69160b7b,
         type: 3}
       propertyPath: looping
@@ -3713,6 +3719,11 @@ PrefabInstance:
         type: 3}
       propertyPath: lengthInSec
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 198421077076039884, guid: bccc7a794e75b2a44a4b0dac69160b7b,
+        type: 3}
+      propertyPath: playOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 199086891411180386, guid: bccc7a794e75b2a44a4b0dac69160b7b,
         type: 3}

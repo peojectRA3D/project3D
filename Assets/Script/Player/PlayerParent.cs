@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -78,13 +79,14 @@ public class PlayerParent : MonoBehaviour
     Vector3 dodgeVec; // ȸ���ϴ� ���� ������ ������ ���� ����
     public float PlayerHp;
     float MaxHp;
-    float fireDelay;
-    float jumpDelay;
-    float dogeDelay;
+   
+    float JumpDelay;
+    float DogeDelay;
+    float FirstSkillDelay_time;
     float SecondSkillDelay_time;
     float ThirdSkillDelay_time;
-    float fourSkillDelay_time;
-    float healDelay;
+    float FourSkillDelay_time;
+    float HealDelay;
     float jumpDelayMax;
     float dogeDelayMax;
     float skillDelayMax;
@@ -117,6 +119,7 @@ public class PlayerParent : MonoBehaviour
     float potalDelay = 5f;
     public Text guidetext;
 
+    public RectTransform defeat;
 
     int ModelType;
     int[] magcount = { 20, 5 };
@@ -214,12 +217,12 @@ public class PlayerParent : MonoBehaviour
         dogeDelayMax = configreaders.Search<float>("DogeDelay");
         healDelayMax = configreaders.Search<float>("HealDelay");
 
-        fireDelay = FirstSkillDelay + 1f;
+        FirstSkillDelay_time = FirstSkillDelay + 1f;
         SecondSkillDelay_time = SecondSkillDelay + 1f;
         ThirdSkillDelay_time = ThirdSkillDelay + 1f;
-        jumpDelay = jumpDelayMax + 1f;
-        dogeDelay = dogeDelayMax + 1f;
-        healDelay = healDelayMax + 1f;
+        JumpDelay = jumpDelayMax + 1f;
+        DogeDelay = dogeDelayMax + 1f;
+        HealDelay = healDelayMax + 1f;
     }
     void skilldamaged()
     {
@@ -254,8 +257,8 @@ public class PlayerParent : MonoBehaviour
     }
     void healplayer()
     {
-        healDelay += Time.deltaTime;
-        healReady = healDelay > healDelayMax;
+        HealDelay += Time.deltaTime;
+        healReady = HealDelay > healDelayMax;
         if (healReady && heal)
         {
             PlayerHp += healPower;
@@ -263,7 +266,7 @@ public class PlayerParent : MonoBehaviour
             {
                 PlayerHp = MaxHp;
             }
-            healDelay = 0;
+            HealDelay = 0;
             particles[0].Play();
 
             audioSource.Stop();
@@ -580,8 +583,8 @@ public class PlayerParent : MonoBehaviour
     }
     void Jump()
     {
-        jumpDelay += Time.deltaTime;
-        isJumpReady =jumpDelayMax < jumpDelay;
+        JumpDelay += Time.deltaTime;
+        isJumpReady =jumpDelayMax < JumpDelay;
        
         if (isJumpReady &&jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
         {
@@ -590,15 +593,15 @@ public class PlayerParent : MonoBehaviour
             //aniter.SetBool("isjump", true);
             aniter.SetTrigger("isjump");
             isJump = true;
-            jumpDelay = 0f;
+            JumpDelay = 0f;
             StartCoroutine(endaniWithDelay("jump", 0.6f));
         }
     }
     void Attack()
     {
        
-        fireDelay += Time.deltaTime;
-        isFireReady =FirstSkillDelay< fireDelay;  // equipWeapon.rate < fireDelay;
+        FirstSkillDelay_time += Time.deltaTime;
+        isFireReady =FirstSkillDelay< FirstSkillDelay_time;  // equipWeapon.rate < fireDelay;
       
         SecondSkillDelay_time += Time.deltaTime;
         isSecondSkillReady = SecondSkillDelay < SecondSkillDelay_time;
@@ -637,7 +640,7 @@ public class PlayerParent : MonoBehaviour
                     aniter.SetBool("onattack", true);
                     //�߻� ���� �߰�  equipWeapon.Use();
                     //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    fireDelay = 0;
+                    FirstSkillDelay_time = 0;
 
                     StartCoroutine(endaniWithDelay("onattack", 0.33f));
 
@@ -653,7 +656,7 @@ public class PlayerParent : MonoBehaviour
                         aniter.SetBool("onattack", true);
                         SecondSkillDelay_time = 0;
                         weaponIndex = 0;
-                        fireDelay = 0;
+                        FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
                         audioSource.Stop();
@@ -724,7 +727,7 @@ public class PlayerParent : MonoBehaviour
                     aniter.SetBool("onattack", true);
                     //�߻� ���� �߰�  equipWeapon.Use();
                     //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    fireDelay = 0;
+                    FirstSkillDelay_time = 0;
 
                     StartCoroutine(endaniWithDelay("onattack_stay", 0.33f));
 
@@ -741,7 +744,7 @@ public class PlayerParent : MonoBehaviour
                         aniter.SetBool("onattack", true);
                         SecondSkillDelay_time = 0;
                         weaponIndex = 0;
-                        fireDelay = 0;
+                        FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
                         audioSource.Stop();
@@ -813,7 +816,7 @@ public class PlayerParent : MonoBehaviour
                     aniter.SetBool("onattack", true);
                     //�߻� ���� �߰�  equipWeapon.Use();
                     //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    fireDelay = 0;
+                    FirstSkillDelay_time = 0;
 
                     StartCoroutine(endaniWithDelay("onattack", 0.33f));
 
@@ -829,7 +832,7 @@ public class PlayerParent : MonoBehaviour
                         aniter.SetBool("onattack", true);
                         SecondSkillDelay_time = 0;
                         weaponIndex = 0;
-                        fireDelay = 0;
+                        FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
                         audioSource.Stop();
@@ -892,8 +895,8 @@ public class PlayerParent : MonoBehaviour
     void Dodge()
     {
        
-        dogeDelay += Time.deltaTime;
-        isdogeReady = dogeDelayMax < dogeDelay;
+        DogeDelay += Time.deltaTime;
+        isdogeReady = dogeDelayMax < DogeDelay;
         if (isdogeReady && jumpDown && dir != Vector3.zero && !isJump && !isDodge && !isSwap)
         {
         
@@ -903,7 +906,7 @@ public class PlayerParent : MonoBehaviour
           
             aniter.SetTrigger("isroll");
             isDodge = true;
-            dogeDelay = 0f;
+            DogeDelay = 0f;
 
             //rid.AddForce(dir * Time.deltaTime * 500f, ForceMode.VelocityChange);
             
@@ -974,4 +977,39 @@ public class PlayerParent : MonoBehaviour
                 break;
         }
     }
+
+    public float getrestcool(string Actionname)
+    {
+
+        FieldInfo field = GetType().GetField(Actionname, BindingFlags.NonPublic | BindingFlags.Instance);
+
+        if (field != null)
+        {
+            return (float)field.GetValue(this);
+        }
+        else
+        {
+            // 인자로 받은 변수가 존재하지 않는 경우에 대한 처리를 원한다면 해당 처리를 추가할 수 있습니다.
+            // 예: return 다른_값;
+            throw new ArgumentException("인자로 받은 변수가 존재하지 않습니다.", nameof(Actionname));
+        }
+    }
+    public float getrestcool(int Skillnum)
+    {
+        switch (Skillnum)
+        {
+            case 1:
+                return FirstSkillDelay_time;
+              
+            case 2:
+                return SecondSkillDelay_time;
+            case 3:
+                return ThirdSkillDelay_time;
+            case 4:
+                return FourSkillDelay_time;
+            default:
+                return 0f;
+        }
+    }
+ 
 }
