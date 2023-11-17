@@ -29,13 +29,16 @@ public class Enemy : MonoBehaviour
     public AudioClip response;
     public AudioClip attack1;
     public AudioClip die;
+
     Bullet scriptbullet;
     ConfigReader configreaders;
     void Awake()
     {
         if (enemyType == Type.A) {
+
             configreaders = new ConfigReader("Moster_Type_A");
-        }else if (enemyType == Type.B)
+        }
+        else if (enemyType == Type.B)
         {
             configreaders = new ConfigReader("Moster_Type_B");
         }
