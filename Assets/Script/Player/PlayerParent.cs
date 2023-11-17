@@ -11,7 +11,9 @@ public class PlayerParent : MonoBehaviour
     Transform tr;
     Rigidbody rid;
     public  GetYZeroInCamera Mousepo;
-    public float speed = 5f;
+     float speed;
+    float defaultspeed;
+    private float RunSpeed;
     public float humppower = 5f;
     public float dash = 5f;
     private Vector3 dir = Vector3.zero;
@@ -21,7 +23,7 @@ public class PlayerParent : MonoBehaviour
     // �̵�
     float hAxis;
     float vAxis;
-    float jumpPower = 5.0f;
+    float jumpPower;
 
     // Ű�ٿ�
     bool RunDown;
@@ -44,13 +46,15 @@ public class PlayerParent : MonoBehaviour
     bool isJumpReady = true;
     bool isRun = false;
     bool isFireReady = true;
-    bool isSkillReady= true;
+    bool isSecondSkillReady= true;
+    bool isThirdSkillReady = true;
     bool isdogeReady = true;
     bool isdead;
     bool isBorder; // �� �浹 �÷��� bool ����
     bool isDamage; // ���� Ÿ���� ���� ����
     bool ispause;
     bool healReady;
+    bool isstaying;
 
     bool[] isSkillDamagein= {false ,false };
     bool[] SkillDamageReady= {false, false };
@@ -58,16 +62,35 @@ public class PlayerParent : MonoBehaviour
     float[] damagedelayatskill = { 0.5f, 0.1f };
     bool pausedown;
 
+    float FirstSkillDamage;
+    float SecondSkillDamage;
+    float ThirdSkillDamage;
+    float FouredSkillDamage;
+
+    float healPower;
+
+    float FirstSkillDelay;
+    float SecondSkillDelay;
+
+    float ThirdSkillDelay;
+    float fourSkillDelay;
 
     Vector3 dodgeVec; // ȸ���ϴ� ���� ������ ������ ���� ����
-    public float PlayerHp = 100.0f;
+    public float PlayerHp;
+    float MaxHp;
     float fireDelay;
-    float jumpDelay = 6f;
-    float dogeDelay = 6f;
-    float skillDelay = 6f;
-    float healDelay = 31f;
+    float jumpDelay;
+    float dogeDelay;
+    float SecondSkillDelay_time;
+    float ThirdSkillDelay_time;
+    float fourSkillDelay_time;
+    float healDelay;
+    float jumpDelayMax;
+    float dogeDelayMax;
+    float skillDelayMax;
+    float healDelayMax;
     float dogespeed;
-    int[] magcount = {20,5};
+    
     int equipWeaponIndex = 0;
     int weaponIndex = 0;
     public GameObject  gunpos;
@@ -94,18 +117,39 @@ public class PlayerParent : MonoBehaviour
     float potalDelay = 5f;
     public Text guidetext;
 
-    public RectTransform defeat;
 
+    int ModelType;
+    int[] magcount = { 20, 5 };
 
     private bool isSwitching = false;
-
+    ConfigReader configreaders;
     void Start()
     {
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
         audioSource = GetComponent<AudioSource>();
-       
+        configreaders = new ConfigReader("Player");
+        ModelType = configreaders.Search<int>("Model");
+        for (int index = 0; index < skins.Length; index++)
+        {
+            try
+            {
+                skins[index].material = maters[ModelType];
+            }
+            catch
+            {
+                Debug.LogError("모델 에러  " + ModelType);
+            }
+        }
+        try
+        {
+            modelsetup();
+        }
+        catch
+        {
+            Debug.LogError("모델 에러  " + ModelType);
+        }
     }
     // Update is called once per frame
     void Update()
@@ -142,7 +186,41 @@ public class PlayerParent : MonoBehaviour
         // 카메라 전환 중인지 여부를 설정하는 메소드
         isSwitching = value;
     }
+    public void modelsetup()
+    {
+        configreaders = new ConfigReader("Model_" + ModelType.ToString());
 
+        PlayerHp = configreaders.Search<float>("Hp");
+        MaxHp = configreaders.Search<float>("Hp");
+        defaultspeed = configreaders.Search<float>("Speed");
+        speed = configreaders.Search<float>("Speed");
+        RunSpeed = configreaders.Search<float>("RunSpeed");
+
+        FirstSkillDamage = configreaders.Search<float>("FirstSkill");
+        SecondSkillDamage = configreaders.Search<float>("SecondSkill");
+        ThirdSkillDamage = configreaders.Search<float>("ThirdSkill");
+        FouredSkillDamage = configreaders.Search<float>("FouredSkill");
+
+        jumpPower = configreaders.Search<float>("JumpPower");
+        dogespeed = configreaders.Search<float>("DogeSpeed");
+        healPower = configreaders.Search<float>("HealPower");
+
+        FirstSkillDelay = configreaders.Search<float>("FirstSkillDelay");
+        SecondSkillDelay = configreaders.Search<float>("SecondSkillDelay");
+        ThirdSkillDelay = configreaders.Search<float>("ThirdSkillDelay");
+        fourSkillDelay = configreaders.Search<float>("fourSkillDelay");
+
+        jumpDelayMax = configreaders.Search<float>("JumpDelay");
+        dogeDelayMax = configreaders.Search<float>("DogeDelay");
+        healDelayMax = configreaders.Search<float>("HealDelay");
+
+        fireDelay = FirstSkillDelay + 1f;
+        SecondSkillDelay_time = SecondSkillDelay + 1f;
+        ThirdSkillDelay_time = ThirdSkillDelay + 1f;
+        jumpDelay = jumpDelayMax + 1f;
+        dogeDelay = dogeDelayMax + 1f;
+        healDelay = healDelayMax + 1f;
+    }
     void skilldamaged()
     {
         for (int index = 0; index < isSkillDamagein.Length; index++)
@@ -172,21 +250,21 @@ public class PlayerParent : MonoBehaviour
         swapDown2 = Input.GetButtonDown("Swap2");
         // pausedown = Input.GetButtonDown("Cancel");
         heal = Input.GetButtonDown("heal");
-        // swapDown3 = Input.GetButtonDown("Swap3");
+        swapDown3 = Input.GetButtonDown("Swap3");
     }
     void healplayer()
     {
         healDelay += Time.deltaTime;
-        healReady = healDelay > 30f;
+        healReady = healDelay > healDelayMax;
         if (healReady && heal)
         {
-            PlayerHp += 30;
-            if (PlayerHp >= 100)
+            PlayerHp += healPower;
+            if (PlayerHp >= MaxHp)
             {
-                PlayerHp = 100;
+                PlayerHp = MaxHp;
             }
             healDelay = 0;
-            particles[2].Play();
+            particles[0].Play();
 
             audioSource.Stop();
             audioSource.clip = heal_sfx;
@@ -263,6 +341,10 @@ public class PlayerParent : MonoBehaviour
                 try
                 {
                     skins[index].material = maters[int.Parse(other.gameObject.name)];
+                    configreaders = new ConfigReader("Player");
+                    configreaders.UpdateData("Model", other.gameObject.name.ToLower());
+                    ModelType = configreaders.Search<int>("Model");
+                    modelsetup();
                 }
                 catch
                 {
@@ -315,20 +397,17 @@ public class PlayerParent : MonoBehaviour
         audioSource.Play();
     }
     void Runcheck()
-    {
-        
+    {     
         if (RunDown)
         {
-
             if (!isRun)
             {
-                speed = 10.0f;
+                speed = RunSpeed;
                 aniter.SetBool("isrun", true);
-
             }
             else
             {
-                speed = 5.0f;
+                speed = defaultspeed;
                 aniter.SetBool("isrun", false);
             }
             isRun = !isRun;
@@ -336,8 +415,6 @@ public class PlayerParent : MonoBehaviour
     }
     void Move()
     {
-
-
         float angle = -45.0f;
         angle = Mathf.Deg2Rad * angle;
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
@@ -354,15 +431,9 @@ public class PlayerParent : MonoBehaviour
             {
                 GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 10f;
             }*/
-            dir = dodgeVec;
-          
-            
+            dir = dodgeVec;           
         }
-        else
-        {
-
-        }
-        if (isJump)
+        if (isJump || isstaying)
         {
             dir = Vector3.zero;
         }
@@ -395,16 +466,14 @@ public class PlayerParent : MonoBehaviour
              // Walk ���°� �ƴϰų� dir�� zero�� ��쿡�� �Ҹ��� �����մϴ�.
              audioSource.Stop();
          }*/
-
-        
         //if (!isBorder)
-          tr.position += dir * speed * Time.deltaTime;
+        tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
     {
         // # 1. Ű���忡 ���� ȸ��
         // LookAt() - ������ ���͸� ���ؼ� ȸ�������ִ� �Լ�
-        if (ispause)
+        if (ispause || isstaying)
         {
             return;
         }
@@ -459,11 +528,11 @@ public class PlayerParent : MonoBehaviour
         int previousWeaponIndex = weaponIndex;
 
 
-        if (swapDown1 && (!particles[0] || weaponIndex == 0))
+        if (swapDown1 && (!particles[1] || weaponIndex == 0))
             return;
-        if (swapDown2 && (!particles[1] || weaponIndex == 1))
+        if (swapDown2 && (!particles[2] || weaponIndex == 1))
             return;
-        if (swapDown3 && (!particles[2] || weaponIndex == 2))
+        if (swapDown3 && (!particles[3] || weaponIndex == 2))
             return;
         
         
@@ -512,11 +581,11 @@ public class PlayerParent : MonoBehaviour
     void Jump()
     {
         jumpDelay += Time.deltaTime;
-        isJumpReady = 5.0 < jumpDelay;
+        isJumpReady =jumpDelayMax < jumpDelay;
        
         if (isJumpReady &&jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
         {
-            Debug.Log("�����۵� ");
+          
             rid.AddForce(Vector3.up * jumpPower, ForceMode.Impulse);
             //aniter.SetBool("isjump", true);
             aniter.SetTrigger("isjump");
@@ -529,74 +598,284 @@ public class PlayerParent : MonoBehaviour
     {
        
         fireDelay += Time.deltaTime;
-        isFireReady = 0.33< fireDelay;  // equipWeapon.rate < fireDelay;
+        isFireReady =FirstSkillDelay< fireDelay;  // equipWeapon.rate < fireDelay;
       
-        skillDelay += Time.deltaTime;
-        isSkillReady = 5.0f < skillDelay;
+        SecondSkillDelay_time += Time.deltaTime;
+        isSecondSkillReady = SecondSkillDelay < SecondSkillDelay_time;
+
+        ThirdSkillDelay_time += Time.deltaTime;
+        isThirdSkillReady = ThirdSkillDelay < ThirdSkillDelay_time;
+
         if (fireDown && isFireReady && !isDodge && !isSwap)
         {
             RunDown = true;
             isRun = true;
             Runcheck();
-            if (0 == weaponIndex) {
-                /*
-                if (magcount[0] == 0)
-                {
-                    return;
-                }
-               
-                magcount[0]--;
-                */
-                particles[0].Simulate(1.01f);
-                particles[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                particles[0].gameObject.transform.Rotate(Vector3.up, -90f);
-                particles[0].Play();
+            if (ModelType == 0) {
+                if (0 == weaponIndex) {
+                    /*
+                    if (magcount[0] == 0)
+                    {
+                        return;
+                    }
 
+                    magcount[0]--;
+                    */
+                    particles[1].Simulate(1.01f);
+                    particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                    particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
+                    particles[1].Play();
 
-                audioSource.Stop();
-                audioSource.clip = rifle1;
-                audioSource.volume = 0.3f;
-                audioSource.loop = false;
-                audioSource.Play();
-
-
-                aniter.SetBool("onattack", true);
-                //�߻� ���� �߰�  equipWeapon.Use();
-                //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                fireDelay = 0;
-
-                StartCoroutine(endaniWithDelay("onattack", 0.33f));
-
-            }
-            else if (1 == weaponIndex )
-            {
-                if (isSkillReady)
-                {
-
-                    ParticleSystem temp = Instantiate(particles[1]);
-                    temp.GetComponent<movebullet>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
-                    aniter.speed = 0.25f;
-                    aniter.SetBool("onattack", true);
-                    skillDelay = 0;
-                    weaponIndex = 0;
-                    fireDelay = 0;
-                    StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
                     audioSource.Stop();
-                    audioSource.clip = rifle2;
+                    audioSource.clip = rifle1;
                     audioSource.volume = 0.3f;
                     audioSource.loop = false;
                     audioSource.Play();
+
+
+                    aniter.SetBool("onattack", true);
+                    //�߻� ���� �߰�  equipWeapon.Use();
+                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                    fireDelay = 0;
+
+                    StartCoroutine(endaniWithDelay("onattack", 0.33f));
+
                 }
+                else if (1 == weaponIndex)
+                {
+                    if (isSecondSkillReady)
+                    {
+
+                        ParticleSystem temp = Instantiate(particles[2]);
+                        temp.GetComponent<movebullet>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
+                        aniter.speed = 0.25f;
+                        aniter.SetBool("onattack", true);
+                        SecondSkillDelay_time = 0;
+                        weaponIndex = 0;
+                        fireDelay = 0;
+                        StartCoroutine(endaniWithDelay("onattack", 1.0f));
+
+                        audioSource.Stop();
+                        audioSource.clip = rifle2;
+                        audioSource.volume = 0.3f;
+                        audioSource.loop = false;
+                        audioSource.Play();
+                    }
+                    else
+                    {
+                        aniter.SetBool("onattack", true);
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
+                    }
+                }
+                else if (2 == weaponIndex)
+                {
+                    if (isThirdSkillReady)
+                    {
+                        isstaying = true;
+                        //particles[3].Simulate(1.01f);
+                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
+
+
+
+
+                        aniter.SetBool("sitattack", true);
+
+                        ThirdSkillDelay_time = 0;
+
+
+                    }
+                    else
+                    {
+                        aniter.SetBool("onattack", true);
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
+                    }
+                }
+
                 else
                 {
+                    Debug.Log("error ���� ���� �ý��� ");
+                }
+            }
+            else if (ModelType == 1)
+            {
+                if (0 == weaponIndex)
+                {
+                    /*
+                    if (magcount[0] == 0)
+                    {
+                        return;
+                    }
+
+                    magcount[0]--;
+                    */
+                    particles[4].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                    particles[4].gameObject.transform.Rotate(Vector3.up, -90f);
+                    particles[4].Play();
+
+                    isstaying = true;
+                    audioSource.Stop();
+                    audioSource.clip = rifle1;
+                    audioSource.volume = 0.3f;
+                    audioSource.loop = false;
+                    audioSource.Play();
+
+
                     aniter.SetBool("onattack", true);
+                    //�߻� ���� �߰�  equipWeapon.Use();
+                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                    fireDelay = 0;
+
+                    StartCoroutine(endaniWithDelay("onattack_stay", 0.33f));
+
+                }
+                else if (1 == weaponIndex)
+                {
+                    if (isSecondSkillReady)
+                    {
+                        particles[5].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles[5].Play();
+                        Debug.Log("작동");
+                        isstaying = true;
+                        //aniter.speed = 0.25f;
+                        aniter.SetBool("onattack", true);
+                        SecondSkillDelay_time = 0;
+                        weaponIndex = 0;
+                        fireDelay = 0;
+                        StartCoroutine(endaniWithDelay("onattack", 1.0f));
+
+                        audioSource.Stop();
+                        audioSource.clip = rifle2;
+                        audioSource.volume = 0.3f;
+                        audioSource.loop = false;
+                        audioSource.Play();
+                    }
+                    else
+                    {
+                        aniter.SetBool("onattack", true);
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
+                    }
+                }
+                else if (2 == weaponIndex)
+                {
+                    if (isThirdSkillReady)
+                    {
+                        isstaying = true;
+                        //particles[3].Simulate(1.01f);
+                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
+
+
+
+
+                        aniter.SetBool("sitattack", true);
+
+                        ThirdSkillDelay_time = 0;
+
+
+                    }
+                    else
+                    {
+                        aniter.SetBool("onattack", true);
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
+                    }
+                }
+
+                else
+                {
+                    Debug.Log("error ���� ���� �ý��� ");
+                }
+            }
+            else if (ModelType == 2)
+            {
+                if (0 == weaponIndex)
+                {
+                    /*
+                    if (magcount[0] == 0)
+                    {
+                        return;
+                    }
+
+                    magcount[0]--;
+                    */
+                    particles[1].Simulate(1.01f);
+                    particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                    particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
+                    particles[1].Play();
+
+
+                    audioSource.Stop();
+                    audioSource.clip = rifle1;
+                    audioSource.volume = 0.3f;
+                    audioSource.loop = false;
+                    audioSource.Play();
+
+
+                    aniter.SetBool("onattack", true);
+                    //�߻� ���� �߰�  equipWeapon.Use();
+                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                    fireDelay = 0;
+
                     StartCoroutine(endaniWithDelay("onattack", 0.33f));
+
+                }
+                else if (1 == weaponIndex)
+                {
+                    if (isSecondSkillReady)
+                    {
+
+                        ParticleSystem temp = Instantiate(particles[2]);
+                        temp.GetComponent<movebullet>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
+                        aniter.speed = 0.25f;
+                        aniter.SetBool("onattack", true);
+                        SecondSkillDelay_time = 0;
+                        weaponIndex = 0;
+                        fireDelay = 0;
+                        StartCoroutine(endaniWithDelay("onattack", 1.0f));
+
+                        audioSource.Stop();
+                        audioSource.clip = rifle2;
+                        audioSource.volume = 0.3f;
+                        audioSource.loop = false;
+                        audioSource.Play();
+                    }
+                    else
+                    {
+                        aniter.SetBool("onattack", true);
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
+                    }
+                }
+                else if (2 == weaponIndex)
+                {
+                    if (isThirdSkillReady)
+                    {
+                        isstaying = true;
+                        //particles[3].Simulate(1.01f);
+                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
+
+
+
+
+                        aniter.SetBool("sitattack", true);
+
+                        ThirdSkillDelay_time = 0;
+
+
+                    }
+                    else
+                    {
+                        aniter.SetBool("onattack", true);
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
+                    }
+                }
+
+                else
+                {
+                    Debug.Log("error ���� ���� �ý��� ");
                 }
             }
             else
             {
-                Debug.Log("error ���� ���� �ý��� ");
+                Debug.LogError("모델에러_무기");
             }
 
         }
@@ -614,13 +893,13 @@ public class PlayerParent : MonoBehaviour
     {
        
         dogeDelay += Time.deltaTime;
-        isdogeReady = 5.0 < dogeDelay;
+        isdogeReady = dogeDelayMax < dogeDelay;
         if (isdogeReady && jumpDown && dir != Vector3.zero && !isJump && !isDodge && !isSwap)
         {
         
             dodgeVec = dir;
-            dogespeed = speed;
-            speed = 15f;  
+            
+            speed = dogespeed;  
           
             aniter.SetTrigger("isroll");
             isDodge = true;
@@ -648,13 +927,18 @@ public class PlayerParent : MonoBehaviour
         {
             case "doge":
                 isDodge = false;
-                speed = dogespeed;
+                speed = defaultspeed;
 
                 //float dampingFactor =0f; // ���� ������ ���
                 //rid.velocity *= dampingFactor;
                 break;
             case "onattack":
                 aniter.SetBool("onattack", false);
+                aniter.speed = 1;
+                break;
+            case "onattack_stay":
+                aniter.SetBool("onattack", false);
+                isstaying = false;
                 aniter.speed = 1;
                 break;
             case "jump":
@@ -665,10 +949,25 @@ public class PlayerParent : MonoBehaviour
                 isSwap = false;
                 magcount[0] = 20;
                 break;
-
-
+            case "sitattack":
+                aniter.SetBool("sitattack", false);
+                weaponIndex = 0;
+                isstaying = false;
+                break;
             case "damage":
                 isDamage = false;
+                break;
+            case "sitattack_doit":
+                particles[3].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                //particles[3].gameObject.transform.Rotate(Vector3.up, -90f);
+                particles[3].Play();
+               
+                audioSource.Stop();
+                audioSource.clip = rifle1;
+                audioSource.volume = 0.3f;
+                audioSource.loop = false;
+                audioSource.Play();
+                StartCoroutine(endaniWithDelay("sitattack", 2f));
                 break;
             default:
                 // � ��쿡�� ���� ���ǿ� �ش����� ���� ���� ó��
