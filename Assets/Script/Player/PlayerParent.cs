@@ -46,9 +46,10 @@ public class PlayerParent : MonoBehaviour
     bool isReload;
     bool isJumpReady = true;
     bool isRun = false;
-    bool isFireReady = true;
+    bool isFirstSkillReady = true;
     bool isSecondSkillReady= true;
     bool isThirdSkillReady = true;
+    bool isFourSkillReady = true;
     bool isdogeReady = true;
     bool isdead;
     bool isBorder; // �� �浹 �÷��� bool ����
@@ -220,6 +221,7 @@ public class PlayerParent : MonoBehaviour
         FirstSkillDelay_time = FirstSkillDelay + 1f;
         SecondSkillDelay_time = SecondSkillDelay + 1f;
         ThirdSkillDelay_time = ThirdSkillDelay + 1f;
+        FourSkillDelay_time = fourSkillDelay + 1f;
         JumpDelay = jumpDelayMax + 1f;
         DogeDelay = dogeDelayMax + 1f;
         HealDelay = HealDelayMax + 1f;
@@ -601,7 +603,7 @@ public class PlayerParent : MonoBehaviour
     {
        
         FirstSkillDelay_time += Time.deltaTime;
-        isFireReady =FirstSkillDelay< FirstSkillDelay_time;  // equipWeapon.rate < fireDelay;
+        isFirstSkillReady =FirstSkillDelay< FirstSkillDelay_time;  // equipWeapon.rate < fireDelay;
       
         SecondSkillDelay_time += Time.deltaTime;
         isSecondSkillReady = SecondSkillDelay < SecondSkillDelay_time;
@@ -609,41 +611,46 @@ public class PlayerParent : MonoBehaviour
         ThirdSkillDelay_time += Time.deltaTime;
         isThirdSkillReady = ThirdSkillDelay < ThirdSkillDelay_time;
 
-        if (fireDown && isFireReady && !isDodge && !isSwap)
+        FourSkillDelay_time += Time.deltaTime;
+        isFourSkillReady = fourSkillDelay < FourSkillDelay_time;
+
+        if (fireDown && !isDodge && !isSwap)
         {
             RunDown = true;
             isRun = true;
             Runcheck();
             if (ModelType == 0) {
                 if (0 == weaponIndex) {
-                    /*
-                    if (magcount[0] == 0)
+                    if (isFirstSkillReady)
                     {
-                        return;
+                        /*
+                        if (magcount[0] == 0)
+                        {
+                            return;
+                        }
+
+                        magcount[0]--;
+                        */
+                        particles[1].Simulate(1.01f);
+                        particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
+                        particles[1].Play();
+
+
+                        audioSource.Stop();
+                        audioSource.clip = rifle1;
+                        audioSource.volume = 0.3f;
+                        audioSource.loop = false;
+                        audioSource.Play();
+
+
+                        aniter.SetBool("onattack", true);
+                        //�߻� ���� �߰�  equipWeapon.Use();
+                        //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                        FirstSkillDelay_time = 0;
+
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
                     }
-
-                    magcount[0]--;
-                    */
-                    particles[1].Simulate(1.01f);
-                    particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                    particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
-                    particles[1].Play();
-
-
-                    audioSource.Stop();
-                    audioSource.clip = rifle1;
-                    audioSource.volume = 0.3f;
-                    audioSource.loop = false;
-                    audioSource.Play();
-
-
-                    aniter.SetBool("onattack", true);
-                    //�߻� ���� �߰�  equipWeapon.Use();
-                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    FirstSkillDelay_time = 0;
-
-                    StartCoroutine(endaniWithDelay("onattack", 0.33f));
-
                 }
                 else if (1 == weaponIndex)
                 {
@@ -763,7 +770,7 @@ public class PlayerParent : MonoBehaviour
                 {
                     if (isThirdSkillReady)
                     {
-                        isstaying = true;
+                        //isstaying = true;
                         //particles[3].Simulate(1.01f);
                         StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
