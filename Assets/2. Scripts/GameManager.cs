@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    // º¸½º HP
+    // ë³´ìŠ¤ HP
     public Boss boss;
     public RectTransform bossHealth;
     public RectTransform bossHealthBar;
@@ -14,43 +14,103 @@ public class GameManager : MonoBehaviour
     public PlayerParent player;
     public Text playerCurrentHealth;
 
-    // ½Â¸® UI
+    // ë°˜íˆ¬ëª… ë°°ê²½
+    public RectTransform bg;
+
+    // ì˜µì…˜
+    public RectTransform option;
+    bool ispause;
+
+    // ì‚¬ìš´ë“œ
+    public RectTransform sound;
+
+    // ìŠ¹ë¦¬ UI
     public Image victory;
 
-    // ÆÐ¹è UI
+    // íŒ¨ë°° UI
     public Image defeat;
 
-    void LateUpdate() // º¸½º HP¹Ù
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (player.PlayerHp <= 0)
+                return;
+            pause();
+        }
+
+    }
+
+    public void pause()
+    {
+        ispause = !ispause;
+
+        if (!ispause)
+        {
+            Time.timeScale = 0;
+            bg.gameObject.SetActive(true);
+            option.gameObject.SetActive(true);
+        }
+        else if (ispause)
+        {
+            Time.timeScale = 1;
+            bg.gameObject.SetActive(false);
+            option.gameObject.SetActive(false);
+            sound.gameObject.SetActive(false);
+        }
+    }
+
+    public void OnClickContinue()
+    {
+        Time.timeScale = 1;
+        bg.gameObject.SetActive(false);
+        option.gameObject.SetActive(false);
+    }
+
+    public void OnClickSound()
+    {
+        option.gameObject.SetActive(false);
+        sound.gameObject.SetActive(true);
+    }
+
+    public void OnClickSoundClose()
+    {
+        option.gameObject.SetActive(true);
+        sound.gameObject.SetActive(false);
+    }
+
+
+    void LateUpdate() // ë³´ìŠ¤ HPë°”
     {
         bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
         playerCurrentHealth.text = player.PlayerHp.ToString();
     }
 
-    public void StageClear() // ½Â¸®
+    public void StageClear() // ìŠ¹ë¦¬
     {
         victory.gameObject.SetActive(true);
     }
 
-    public void PlayerDefeat() // ÆÐ¹è
+    public void PlayerDefeat() // íŒ¨ë°°
     {
         defeat.gameObject.SetActive(true);
     }
 
     public void OnClickLobbyButton()
     {
-        // "Lobby" ·Îºñ·Î ÀÌµ¿
+        // "Lobby" ë¡œë¹„ë¡œ ì´ë™
         SceneManager.LoadScene("Lobby");
     }
 
     public void OnClickStage1Button()
     {
-        // "Stage1" ¾ÀÀ¸·Î ÀÌµ¿
+        // "Stage1" ì”¬ìœ¼ë¡œ ì´ë™
         SceneManager.LoadScene("Stage1");
     }
 
     public void OnClickStage2Button()
     {
-        // "Stage2" ¾ÀÀ¸·Î ÀÌµ¿
+        // "Stage2" ì”¬ìœ¼ë¡œ ì´ë™
         SceneManager.LoadScene("Stage2");
     }
 }

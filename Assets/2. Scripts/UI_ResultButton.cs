@@ -7,19 +7,25 @@ public class UI_ResultButton : MonoBehaviour
 {
     public void OnClickLobbyButton()
     {
-        // "Lobby" ¾ÀÀ¸·Î ÀÌµ¿
+        // "Lobby" ì”¬ìœ¼ë¡œ ì´ë™
         SceneManager.LoadScene("Lobby");
     }
 
     public void OnClickStage1Button()
     {
-        // "Stage1" ¾ÀÀ¸·Î ÀÌµ¿
+        // "Stage1" ì”¬ìœ¼ë¡œ ì´ë™
         SceneManager.LoadScene("Stage1(JSH)");
     }
 
     public void OnClickStage2Button()
     {
-        // "Stage2" ¾ÀÀ¸·Î ÀÌµ¿
+        // "Stage2" ì”¬ìœ¼ë¡œ ì´ë™
         SceneManager.LoadScene("Stage2");
+    }
+
+    public void QuitGame()
+    {
+        // ê²Œì„ ì¢…ë£Œ
+        Application.Quit();
     }
 }

@@ -94,6 +94,8 @@ public class PlayerParent : MonoBehaviour
     float potalDelay = 5f;
     public Text guidetext;
 
+    public RectTransform defeat;
+
 
     private bool isSwitching = false;
 
@@ -126,6 +128,7 @@ public class PlayerParent : MonoBehaviour
             Dodge();
             pause();
             skilldamaged();
+            
             /*
             Interation();
             Grenade();
@@ -167,7 +170,7 @@ public class PlayerParent : MonoBehaviour
         //itemDown = Input.GetButtonDown("Interation");
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
-        pausedown = Input.GetButtonDown("Cancel");
+        // pausedown = Input.GetButtonDown("Cancel");
         heal = Input.GetButtonDown("heal");
         // swapDown3 = Input.GetButtonDown("Swap3");
     }
@@ -208,6 +211,7 @@ public class PlayerParent : MonoBehaviour
             }
             ispause = !ispause;
             canvas[0].SetActive(ispause);
+            canvas[1].SetActive(ispause);
         }
     }
     void HpCheck()
@@ -216,7 +220,9 @@ public class PlayerParent : MonoBehaviour
         {
             aniter.SetBool("isdie",true);
             isdead = true;
+            PlayerHp = 0;
 
+            defeat.gameObject.SetActive(true);
         }
     }
     void OnParticleCollision(GameObject other)
@@ -339,7 +345,7 @@ public class PlayerParent : MonoBehaviour
         dir = dir.normalized;
 
         if (isDodge)
-        {
+        {/*
             if(rid.velocity.magnitude > 5f)
             {
                 GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 20f;
@@ -347,10 +353,10 @@ public class PlayerParent : MonoBehaviour
             else if(rid.velocity.magnitude < 5f)
             {
                 GetComponent<Rigidbody>().velocity = GetComponent<Rigidbody>().velocity.normalized * 10f;
-            }
+            }*/
             dir = dodgeVec;
           
-            return;
+            
         }
         else
         {
@@ -390,13 +396,9 @@ public class PlayerParent : MonoBehaviour
              audioSource.Stop();
          }*/
 
-        /*
-        if (!isBorder)
-            transform.position += dir * speed * (walkDown ? 0.3f : 1f) * Time.deltaTime; // �ȱ� 0.3f �ӵ�
-            aniter.SetInteger("vecterval", 5);
-        */
-
-        tr.position += dir * speed * Time.deltaTime;
+        
+        //if (!isBorder)
+          tr.position += dir * speed * Time.deltaTime;
     }
     void Turn()
     {
@@ -440,6 +442,16 @@ public class PlayerParent : MonoBehaviour
         {
             aniter.SetInteger("vecterval", 5);
         }
+    }
+
+    void FixedUpdate()
+    {
+        StopToWall();
+    }
+    void StopToWall()
+    {
+        //Debug.DrawRay(transform.position, transform.forward * 3, Color.green); // DrawRay - Scene내에서 Ray를 보여주는 함수
+        isBorder = Physics.Raycast(transform.position, transform.forward, 3, LayerMask.GetMask("Wall"));
     }
     void Swap()
     {
@@ -608,12 +620,13 @@ public class PlayerParent : MonoBehaviour
         
             dodgeVec = dir;
             dogespeed = speed;
-            
+            speed = 15f;  
           
             aniter.SetTrigger("isroll");
             isDodge = true;
             dogeDelay = 0f;
-            rid.AddForce(dir * Time.deltaTime * 500f, ForceMode.VelocityChange);
+
+            //rid.AddForce(dir * Time.deltaTime * 500f, ForceMode.VelocityChange);
             
             StartCoroutine(endaniWithDelay("doge", 0.67f));
 
@@ -636,8 +649,9 @@ public class PlayerParent : MonoBehaviour
             case "doge":
                 isDodge = false;
                 speed = dogespeed;
-                float dampingFactor =0f; // ���� ������ ���
-                rid.velocity *= dampingFactor;
+
+                //float dampingFactor =0f; // ���� ������ ���
+                //rid.velocity *= dampingFactor;
                 break;
             case "onattack":
                 aniter.SetBool("onattack", false);

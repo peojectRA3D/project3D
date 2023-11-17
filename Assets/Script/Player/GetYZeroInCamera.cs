@@ -9,43 +9,63 @@ public class GetYZeroInCamera : MonoBehaviour
     // Start is called before the first frame update
     private Vector3 worldPosition;
     private Vector3 targetpostion;
+    GameObject nearestEnemy = null;
+    GameObject enemyObject = null;
+    float distance = 0;
     // Update is called once per frame
+    Transform tr;
+    private void Start()
+    {
+        tr = GetComponent<Transform>();
+    }
     void Update()
     {
-        // ¸¶¿ì½º Æ÷ÀÎÅÍÀÇ ½ºÅ©¸° ÁÂÇ¥ °¡Á®¿À±â
+        // ë§ˆìš°ìŠ¤ í¬ì¸í„°ì˜ ìŠ¤í¬ë¦° ì¢Œí‘œ ê°€ì ¸ì˜¤ê¸°
         Vector3 mousePosition = Input.mousePosition;
 
-        // ½ºÅ©¸° ÁÂÇ¥¸¦ ·¹ÀÌ·Î º¯È¯
+        // ìŠ¤í¬ë¦° ì¢Œí‘œë¥¼ ë ˆì´ë¡œ ë³€í™˜
         Ray ray = mainCamera.ScreenPointToRay(mousePosition);
 
-        // Ä«¸Ş¶ó ½Ã¼±°ú ¸¶¿ì½º ·¹ÀÌ °£ÀÇ ±³Â÷Á¡À» Ã£½À´Ï´Ù.
-        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, gameObject.transform.position.y, 0f)); // Áö¸éÀ» ³ªÅ¸³»´Â Æò¸é (y=0)
+        RaycastHit[] hitInfos;
+
+        hitInfos = Physics.SphereCastAll(ray, /*radius*/ 1.0f);
+        // Rayì™€ ì¶©ëŒí•˜ëŠ” ì˜¤ë¸Œì íŠ¸ë¥¼ ê²€ìƒ‰
+        foreach (var hitInfo in hitInfos)
+        {
+            if (hitInfo.collider.CompareTag("Enemy"))
+            {
+                // ì¶©ëŒí•œ ì˜¤ë¸Œì íŠ¸ê°€ "Enemy" íƒœê·¸ë¥¼ ê°€ì§„ ê²½ìš°
+                enemyObject = hitInfo.collider.gameObject;
+                //float distance = Vector3.Distance(hitInfo.point, enemyObject.transform.position);
+
+                // ì£¼ë³€ì—ì„œ ê°€ì¥ ê°€ê¹Œìš´ "Enemy" íƒœê·¸ë¥¼ ê°€ì§„ ê²Œì„ ì˜¤ë¸Œì íŠ¸ë¥¼ ì°¾ì•˜ì„ ë•Œì˜ ë™ì‘ ìˆ˜í–‰
+                //Debug.Log("ê°€ì¥ ì²˜ìŒì— ë¶€ë”ªíŒ Enemyë¥¼ ì°¾ì•˜ìŠµë‹ˆë‹¤: " + enemyObject.transform.position + "  " + hitInfo.point + "  " + distance);
+                break;
+            }
+            else
+            {
+                enemyObject = null;
+            }
+        }
+  
+        
+    
+
+      
+
+        // ì¹´ë©”ë¼ ì‹œì„ ê³¼ ë§ˆìš°ìŠ¤ ë ˆì´ ê°„ì˜ êµì°¨ì ì„ ì°¾ìŠµë‹ˆë‹¤.
+        Plane groundPlane = new Plane(Vector3.up, new Vector3(0f, tr.position.y, 0f)); // ì§€ë©´ì„ ë‚˜íƒ€ë‚´ëŠ” í‰ë©´ (y=0)
         float rayDistance;
        
         if (groundPlane.Raycast(ray, out rayDistance))
         {
-            // ±³Â÷ ÁöÁ¡ÀÇ ¿ùµå ÁÂÇ¥¸¦ °è»êÇÕ´Ï´Ù.
+            // êµì°¨ ì§€ì ì˜ ì›”ë“œ ì¢Œí‘œë¥¼ ê³„ì‚°í•©ë‹ˆë‹¤.
         worldPosition = ray.GetPoint(rayDistance);
            
 
-            // worldPositionÀº ½Ã¼±°ú ¸¶¿ì½º À§Ä¡¸¦ ¿¬°áÇÏ´Â Á÷¼±¿¡¼­ y ÁÂÇ¥°¡ 0ÀÎ ÁöÁ¡ÀÇ ¿ùµå À§Ä¡ÀÔ´Ï´Ù.
+            // worldPositionì€ ì‹œì„ ê³¼ ë§ˆìš°ìŠ¤ ìœ„ì¹˜ë¥¼ ì—°ê²°í•˜ëŠ” ì§ì„ ì—ì„œ y ì¢Œí‘œê°€ 0ì¸ ì§€ì ì˜ ì›”ë“œ ìœ„ì¹˜ì…ë‹ˆë‹¤.
         }
-        if (Physics.Raycast(ray, out hit))
-        {
-            string hitTag = hit.collider.tag;
-            
-            if (hitTag == "Enemy")
-            {
-                // ±³Â÷ ÁöÁ¡ÀÇ ¿ùµå ÁÂÇ¥¸¦ °è»êÇÕ´Ï´Ù.
-                targetpostion = hit.point;
-
-                //Debug.Log("Hit Position: " + worldPosition);
-            }
-            else
-            {
-                targetpostion = worldPosition;
-            }
-        }
+        
 
 
     }
@@ -58,8 +78,15 @@ public class GetYZeroInCamera : MonoBehaviour
     }
     public Vector3 gettargetpostion()
     {
-        
-        return targetpostion;
-
+        if (enemyObject != null ) {
+            return enemyObject.transform.position;
+           
+        }
+        else
+        {
+            Debug.Log(worldPosition);
+            return worldPosition + new Vector3(0,1.0f,0) ;
+        }
     }
+
 }
