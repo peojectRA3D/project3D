@@ -84,7 +84,7 @@ public class GetYZeroInCamera : MonoBehaviour
         }
         else
         {
-            Debug.Log(worldPosition);
+            //Debug.Log(worldPosition);
             return worldPosition + new Vector3(0,1.0f,0) ;
         }
     }
