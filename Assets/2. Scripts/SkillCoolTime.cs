@@ -12,6 +12,7 @@ public class SkillCoolTime : MonoBehaviour
     public Text[] hideSkillTimeTexts; // 스킬 쿨타임 텍스트들
     public Image[] hideSkilIlmages; // 스킬 쿨타임 이미지들
 
+    public GameObject plr;
     private PlayerParent playerParent;
 
     bool heal;
@@ -29,19 +30,32 @@ public class SkillCoolTime : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // 초기화: UI 요소들을 설정하고 모든 스킬 버튼을 비활성화 상태로 초기화
-        for (int i = 0; i < textPros.Length; i++)
+    
+        try
         {
-            hideSkillTimeTexts[i] = textPros[i].GetComponent<Text>(); // 각 텍스트 요소에 연결
-            hideSkillButtons[i].SetActive(false); // 모든 스킬 버튼 비활성화
+            playerParent = plr.GetComponent<PlayerParent>();
+        }
+        catch
+        {
+            Debug.LogError("플레이어 입력 안됨");
         }
     }
 
     void Update()
     {
-        for (int indexer = 0; indexer < skillTimes.Length; indexer++)
+        for (int indexer = 1; indexer < hideSkillTimeTexts.Length; indexer++)
         {
-            // skillTimes[indexer] = getskillcool(indexer);
+            
+            hideSkillTimeTexts[indexer].text = playerParent.getrestcool(indexer).ToString("F1");
+            if (playerParent.getrestcool(indexer) < 0.1f)
+            {
+                hideSkillTimeTexts[indexer].text = "";
+                hideSkillButtons[indexer].GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 255f / 255f);
+            }
+            else
+            {
+                hideSkillButtons[indexer].GetComponent<Image>().color = new Color(255f / 255f, 255f / 255f, 255f / 255f, 100f / 255f);
+            }
         }
 
         // 공격 2번 쿨타임
@@ -49,7 +63,7 @@ public class SkillCoolTime : MonoBehaviour
 
         // 공격 3번 쿨타임
         // HideSkillSetting(1);
-
+/*
         heal = Input.GetButtonDown("heal"); // 힐 쿨타임
         if (heal && !isHideSkills[2])
         {
@@ -66,6 +80,7 @@ public class SkillCoolTime : MonoBehaviour
         }
 
         HideSkillCheck();
+*/
     }
     
     public void HideSkillSetting(int skillNum) // 버튼을 누를 때 호출되는 함수: 해당 스킬의 쿨타임을 시작
