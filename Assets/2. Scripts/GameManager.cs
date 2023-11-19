@@ -82,8 +82,10 @@ public class GameManager : MonoBehaviour
 
     void LateUpdate() // 보스 HP바
     {
-        bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
-        playerCurrentHealth.text = player.PlayerHp.ToString();
+
+       // bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
+        //playerCurrentHealth.text = player.PlayerHp.ToString();
+
     }
 
     public void StageClear() // 승리

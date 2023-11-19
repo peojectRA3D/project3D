@@ -6,19 +6,21 @@ using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
-    public float maxHealth;               // ÃÖ´ë Ã¼·Â
-    public float curHealth;               // ÇöÀç Ã¼·Â
-    public Transform target;            // ÃßÀû ´ë»ó
-    public float distance = 20f;        // °¨Áö ¹üÀ§
-    public BoxCollider attackArea;      // ±ÙÁ¢ °ø°İ
-    public ParticleSystem earthquake;       // ÁöÁø °ø°İ
-    public ParticleSystem fireBreath;       // ºÒ °ø°İ
-    public bool isChase;                // ÃßÀû ¿©ºÎ
-    public bool isAttack;               // °ø°İ ¿©ºÎ
+    public float maxHealth;               // ìµœëŒ€ ì²´ë ¥
+    public float curHealth;               // í˜„ì¬ ì²´ë ¥
+    public Transform target;            // ì¶”ì  ëŒ€ìƒ
+    public float distance = 20f;        // ê°ì§€ ë²”ìœ„
+    public BoxCollider attackArea;      // ê·¼ì ‘ ê³µê²©
+    public ParticleSystem earthquake;       // ì§€ì§„ ê³µê²©
+    public ParticleSystem fireBreath;       // ë¶ˆ ê³µê²©
+    public bool isChase;                // ì¶”ì  ì—¬ë¶€
+    public bool isAttack;               // ê³µê²© ì—¬ë¶€
     private bool isDead;
 
     [SerializeField]
     private Image Victory;
+    [SerializeField]
+    private Slider HPbar;
 
     bool isCooldownA;
     bool isCooldownB;
@@ -30,7 +32,7 @@ public class Boss : MonoBehaviour
     NavMeshAgent nav;
     Animator anim;
 
-    // »ç¿îµå
+    // ì‚¬ìš´ë“œ
     AudioSource audioSource;
     public AudioClip response;
     public AudioClip attack1;
@@ -52,6 +54,8 @@ public class Boss : MonoBehaviour
         scriptbullet.damage = configreaders.Search<float>("Damage");
 
         ChaseStart();
+
+        HPbar.value = (float)curHealth / (float)maxHealth;
     }
 
     void ChaseStart()
@@ -61,7 +65,7 @@ public class Boss : MonoBehaviour
         audioSource.Play();
         */
 
-        isChase = true; // ÃßÀû »óÅÂ·Î º¯°æ
+        isChase = true; // ì¶”ì  ìƒíƒœë¡œ ë³€ê²½
         anim.SetBool("isRun", false);
     }
 
@@ -82,9 +86,16 @@ public class Boss : MonoBehaviour
         {
             StopChasing();
         }
+
+        HandleHP();
     }
 
-    void FreezeVelocity() // ¹°¸®·ÂÀÌ NavAgent ÀÌµ¿À» ¹æÇØÇÏÁö ¾Ê´Â ¸Ş¼­µå
+    void HandleHP() // ë³´ìŠ¤ HP
+    {
+        HPbar.value = (float)curHealth / (float)maxHealth;
+    }
+
+    void FreezeVelocity() // ë¬¼ë¦¬ë ¥ì´ NavAgent ì´ë™ì„ ë°©í•´í•˜ì§€ ì•ŠëŠ” ë©”ì„œë“œ
     {
         rigid.velocity = Vector3.zero;
         rigid.angularVelocity = Vector3.zero;
@@ -92,8 +103,8 @@ public class Boss : MonoBehaviour
 
     void Targeting()
     {
-        // °ø°İ 1, 2
-        float targetRadius = 4.5f; 
+        // ê³µê²© 1, 2
+        float targetRadius = 1.5f; 
         float targetRange = 3f;   
 
         RaycastHit[] rayHits = Physics.SphereCastAll(transform.position,
@@ -107,7 +118,7 @@ public class Boss : MonoBehaviour
             StartCoroutine(Attack()); 
         }
 
-        // °ø°İ 3
+        // ê³µê²© 3
         if (!isCooldownA)
         {
             targetRadius = 9f;
@@ -125,7 +136,7 @@ public class Boss : MonoBehaviour
             }
         }
 
-        // °ø°İ 4
+        // ê³µê²© 4
         if (!isCooldownB)
         {
             targetRadius = 10f;
@@ -149,8 +160,8 @@ public class Boss : MonoBehaviour
         if (isDead)
             yield break;
 
-        isChase = false;         // ÃßÀû ÁßÁö
-        isAttack = true;         // °ø°İ »óÅÂ·Î ¼³Á¤
+        isChase = false;         // ì¶”ì  ì¤‘ì§€
+        isAttack = true;         // ê³µê²© ìƒíƒœë¡œ ì„¤ì •
 
         int attackNumber = Random.Range(1, 3);
         if (attackNumber == 1)
@@ -277,10 +288,11 @@ public class Boss : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         //Debug.Log(other.transform.rotation.eulerAngles.y);
-        // 2¹ø ÅºÈ¯ - ¸ó½ºÅÍ ÇÇ°İ
+        // 2ë²ˆ íƒ„í™˜ - ëª¬ìŠ¤í„° í”¼ê²©
     }
     void StopChasing()
     {
         isChase = false;
     }
+
 }

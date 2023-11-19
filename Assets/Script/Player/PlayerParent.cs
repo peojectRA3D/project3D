@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -45,9 +46,10 @@ public class PlayerParent : MonoBehaviour
     bool isReload;
     bool isJumpReady = true;
     bool isRun = false;
-    bool isFireReady = true;
+    bool isFirstSkillReady = true;
     bool isSecondSkillReady= true;
     bool isThirdSkillReady = true;
+    bool isFourSkillReady = true;
     bool isdogeReady = true;
     bool isdead;
     bool isBorder; // �� �浹 �÷��� bool ����
@@ -78,17 +80,18 @@ public class PlayerParent : MonoBehaviour
     Vector3 dodgeVec; // ȸ���ϴ� ���� ������ ������ ���� ����
     public float PlayerHp;
     float MaxHp;
-    float fireDelay;
-    float jumpDelay;
-    float dogeDelay;
+   
+    float JumpDelay;
+    float DogeDelay;
+    float FirstSkillDelay_time;
     float SecondSkillDelay_time;
     float ThirdSkillDelay_time;
-    float fourSkillDelay_time;
-    float healDelay;
+    float FourSkillDelay_time;
+    float HealDelay;
     float jumpDelayMax;
     float dogeDelayMax;
     float skillDelayMax;
-    float healDelayMax;
+    float HealDelayMax;
     float dogespeed;
     
     int equipWeaponIndex = 0;
@@ -117,6 +120,7 @@ public class PlayerParent : MonoBehaviour
     float potalDelay = 5f;
     public Text guidetext;
 
+    public RectTransform defeat;
 
     int ModelType;
     int[] magcount = { 20, 5 };
@@ -212,14 +216,15 @@ public class PlayerParent : MonoBehaviour
 
         jumpDelayMax = configreaders.Search<float>("JumpDelay");
         dogeDelayMax = configreaders.Search<float>("DogeDelay");
-        healDelayMax = configreaders.Search<float>("HealDelay");
+        HealDelayMax = configreaders.Search<float>("HealDelay");
 
-        fireDelay = FirstSkillDelay + 1f;
+        FirstSkillDelay_time = FirstSkillDelay + 1f;
         SecondSkillDelay_time = SecondSkillDelay + 1f;
         ThirdSkillDelay_time = ThirdSkillDelay + 1f;
-        jumpDelay = jumpDelayMax + 1f;
-        dogeDelay = dogeDelayMax + 1f;
-        healDelay = healDelayMax + 1f;
+        FourSkillDelay_time = fourSkillDelay + 1f;
+        JumpDelay = jumpDelayMax + 1f;
+        DogeDelay = dogeDelayMax + 1f;
+        HealDelay = HealDelayMax + 1f;
     }
     void skilldamaged()
     {
@@ -254,8 +259,8 @@ public class PlayerParent : MonoBehaviour
     }
     void healplayer()
     {
-        healDelay += Time.deltaTime;
-        healReady = healDelay > healDelayMax;
+        HealDelay += Time.deltaTime;
+        healReady = HealDelay > HealDelayMax;
         if (healReady && heal)
         {
             PlayerHp += healPower;
@@ -263,7 +268,7 @@ public class PlayerParent : MonoBehaviour
             {
                 PlayerHp = MaxHp;
             }
-            healDelay = 0;
+            HealDelay = 0;
             particles[0].Play();
 
             audioSource.Stop();
@@ -580,8 +585,8 @@ public class PlayerParent : MonoBehaviour
     }
     void Jump()
     {
-        jumpDelay += Time.deltaTime;
-        isJumpReady =jumpDelayMax < jumpDelay;
+        JumpDelay += Time.deltaTime;
+        isJumpReady =jumpDelayMax < JumpDelay;
        
         if (isJumpReady &&jumpDown && dir == Vector3.zero && !isJump && !isDodge && !isSwap)
         {
@@ -590,15 +595,15 @@ public class PlayerParent : MonoBehaviour
             //aniter.SetBool("isjump", true);
             aniter.SetTrigger("isjump");
             isJump = true;
-            jumpDelay = 0f;
+            JumpDelay = 0f;
             StartCoroutine(endaniWithDelay("jump", 0.6f));
         }
     }
     void Attack()
     {
        
-        fireDelay += Time.deltaTime;
-        isFireReady =FirstSkillDelay< fireDelay;  // equipWeapon.rate < fireDelay;
+        FirstSkillDelay_time += Time.deltaTime;
+        isFirstSkillReady =FirstSkillDelay< FirstSkillDelay_time;  // equipWeapon.rate < fireDelay;
       
         SecondSkillDelay_time += Time.deltaTime;
         isSecondSkillReady = SecondSkillDelay < SecondSkillDelay_time;
@@ -606,41 +611,46 @@ public class PlayerParent : MonoBehaviour
         ThirdSkillDelay_time += Time.deltaTime;
         isThirdSkillReady = ThirdSkillDelay < ThirdSkillDelay_time;
 
-        if (fireDown && isFireReady && !isDodge && !isSwap)
+        FourSkillDelay_time += Time.deltaTime;
+        isFourSkillReady = fourSkillDelay < FourSkillDelay_time;
+
+        if (fireDown && !isDodge && !isSwap)
         {
             RunDown = true;
             isRun = true;
             Runcheck();
             if (ModelType == 0) {
                 if (0 == weaponIndex) {
-                    /*
-                    if (magcount[0] == 0)
+                    if (isFirstSkillReady)
                     {
-                        return;
+                        /*
+                        if (magcount[0] == 0)
+                        {
+                            return;
+                        }
+
+                        magcount[0]--;
+                        */
+                        particles[1].Simulate(1.01f);
+                        particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
+                        particles[1].Play();
+
+
+                        audioSource.Stop();
+                        audioSource.clip = rifle1;
+                        audioSource.volume = 0.3f;
+                        audioSource.loop = false;
+                        audioSource.Play();
+
+
+                        aniter.SetBool("onattack", true);
+                        //�߻� ���� �߰�  equipWeapon.Use();
+                        //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                        FirstSkillDelay_time = 0;
+
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
                     }
-
-                    magcount[0]--;
-                    */
-                    particles[1].Simulate(1.01f);
-                    particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                    particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
-                    particles[1].Play();
-
-
-                    audioSource.Stop();
-                    audioSource.clip = rifle1;
-                    audioSource.volume = 0.3f;
-                    audioSource.loop = false;
-                    audioSource.Play();
-
-
-                    aniter.SetBool("onattack", true);
-                    //�߻� ���� �߰�  equipWeapon.Use();
-                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    fireDelay = 0;
-
-                    StartCoroutine(endaniWithDelay("onattack", 0.33f));
-
                 }
                 else if (1 == weaponIndex)
                 {
@@ -653,7 +663,7 @@ public class PlayerParent : MonoBehaviour
                         aniter.SetBool("onattack", true);
                         SecondSkillDelay_time = 0;
                         weaponIndex = 0;
-                        fireDelay = 0;
+                        FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
                         audioSource.Stop();
@@ -724,7 +734,7 @@ public class PlayerParent : MonoBehaviour
                     aniter.SetBool("onattack", true);
                     //�߻� ���� �߰�  equipWeapon.Use();
                     //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    fireDelay = 0;
+                    FirstSkillDelay_time = 0;
 
                     StartCoroutine(endaniWithDelay("onattack_stay", 0.33f));
 
@@ -741,7 +751,7 @@ public class PlayerParent : MonoBehaviour
                         aniter.SetBool("onattack", true);
                         SecondSkillDelay_time = 0;
                         weaponIndex = 0;
-                        fireDelay = 0;
+                        FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
                         audioSource.Stop();
@@ -760,7 +770,7 @@ public class PlayerParent : MonoBehaviour
                 {
                     if (isThirdSkillReady)
                     {
-                        isstaying = true;
+                        //isstaying = true;
                         //particles[3].Simulate(1.01f);
                         StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
@@ -813,7 +823,7 @@ public class PlayerParent : MonoBehaviour
                     aniter.SetBool("onattack", true);
                     //�߻� ���� �߰�  equipWeapon.Use();
                     //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    fireDelay = 0;
+                    FirstSkillDelay_time = 0;
 
                     StartCoroutine(endaniWithDelay("onattack", 0.33f));
 
@@ -829,7 +839,7 @@ public class PlayerParent : MonoBehaviour
                         aniter.SetBool("onattack", true);
                         SecondSkillDelay_time = 0;
                         weaponIndex = 0;
-                        fireDelay = 0;
+                        FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
                         audioSource.Stop();
@@ -892,8 +902,8 @@ public class PlayerParent : MonoBehaviour
     void Dodge()
     {
        
-        dogeDelay += Time.deltaTime;
-        isdogeReady = dogeDelayMax < dogeDelay;
+        DogeDelay += Time.deltaTime;
+        isdogeReady = dogeDelayMax < DogeDelay;
         if (isdogeReady && jumpDown && dir != Vector3.zero && !isJump && !isDodge && !isSwap)
         {
         
@@ -903,7 +913,7 @@ public class PlayerParent : MonoBehaviour
           
             aniter.SetTrigger("isroll");
             isDodge = true;
-            dogeDelay = 0f;
+            DogeDelay = 0f;
 
             //rid.AddForce(dir * Time.deltaTime * 500f, ForceMode.VelocityChange);
             
@@ -974,4 +984,39 @@ public class PlayerParent : MonoBehaviour
                 break;
         }
     }
+
+
+    public float getrestcool(int Skillnum)
+    {
+        float returndelay=0f;
+        switch (Skillnum)
+        {
+            case 0:
+                returndelay=FirstSkillDelay - FirstSkillDelay_time;
+                break;
+            case 1:
+                returndelay = SecondSkillDelay -SecondSkillDelay_time;
+                break;
+            case 2:
+                returndelay = ThirdSkillDelay - ThirdSkillDelay_time;
+                break;
+            case 3:
+                returndelay = fourSkillDelay-FourSkillDelay_time;
+                break;
+            case 4:
+                returndelay = HealDelayMax - HealDelay;
+                break;
+
+            case 5:
+                returndelay = dogeDelayMax - DogeDelay;
+                break;
+            default:
+                return returndelay;
+
+        }
+        if (returndelay <= 0f)
+            returndelay = 0f;
+        return returndelay;
+    }
+ 
 }
