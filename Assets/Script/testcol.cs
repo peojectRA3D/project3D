@@ -21,12 +21,12 @@ public class testcol : MonoBehaviour
        // Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier) ;
         if (other.tag == "bullet")
         {
-          //  Debug.Log("아야");
+            Debug.Log("아야");
         }
     }
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.transform.rotation.eulerAngles.y);
+        Debug.Log(other.GetComponent<bulletStatus>().Damage);
     }
 
 }
