@@ -6,7 +6,7 @@ public class movebullet : MonoBehaviour
 {
     private float countdownTime = 5.0f;
     private bool isCounting = false;
-    public float moveSpeed = 5.0f; // ¿Ãµø º”µµ º≥¡§
+    public float moveSpeed = 5.0f; // Ïù¥Îèô ÏÜçÎèÑ ÏÑ§Ï†ï
     public ParticleSystem[] pars;
     public Vector3 forword;
     public Vector3 thisplayerpos;
@@ -19,7 +19,7 @@ public class movebullet : MonoBehaviour
 
     public void getvec(Vector3 vec, Vector3 playerpos)
     {
-        Debug.Log(vec);
+        //Debug.Log(vec);
         //vec += new Vector3(0, 1.5f, 0);
         transform.position = playerpos;
         thisplayerpos = vec;
@@ -40,13 +40,13 @@ public class movebullet : MonoBehaviour
             transform.position += forword.normalized * moveSpeed * Time.deltaTime; ;
             if (countdownTime <= 0)
             {
-                // ºº±‚∞° ≥°≥µ¿ª ∂ß Ω««‡«“ ¿€æ˜¿ª ø©±‚ø° √ﬂ∞°«œΩ Ω√ø¿.
-                Debug.Log("ƒ´øÓ∆Æ¥ŸøÓ ¡æ∑·");
+                // ÏÑ∏Í∏∞Í∞Ä ÎÅùÎÇ¨ÏùÑ Îïå Ïã§ÌñâÌï† ÏûëÏóÖÏùÑ Ïó¨Í∏∞Ïóê Ï∂îÍ∞ÄÌïòÏã≠ÏãúÏò§.
+                //Debug.Log("Ïπ¥Ïö¥Ìä∏Îã§Ïö¥ Ï¢ÖÎ£å");
                 isCounting = false;
                 for (int indexer = 0; indexer < pars.Length; indexer++) {
                     if (pars[indexer] == null)
                     {
-                        Debug.Log("Ω∫≈≥Ω√Ω∫≈€2 ∆ƒ∆º≈¨ ∫ˆ ");
+                         Debug.Log("Ïä§ÌÇ¨ÏãúÏä§ÌÖú2 ÌååÌã∞ÌÅ¥ Îπî ");
                     }
                     else
                     {
