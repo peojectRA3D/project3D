@@ -152,7 +152,7 @@ public class Enemy : MonoBehaviour
     {
         if (other.tag == "bullet")
         {
-            curHealth -= other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier;
+            curHealth -= other.GetComponent<bulletStatus>().Damage;// other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier;
 
             if (curHealth <= 0)
             {
@@ -176,7 +176,7 @@ public class Enemy : MonoBehaviour
     {
         if (other.tag == "bullet")
         {
-            curHealth -= other.transform.rotation.eulerAngles.y;
+            curHealth -= other.GetComponent<bulletStatus>().Damage; //other.transform.rotation.eulerAngles.y;
 
             if (curHealth <= 0)
             {
