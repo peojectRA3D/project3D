@@ -89,8 +89,8 @@ public class AudioManager : MonoBehaviour
             channelIndex = loopIndex;
             sfxPlayers[loopIndex].clip = sfxClip[(int)sfx];
 
-            // roll과 shotgun3의 소리 크기 조절
-            float adjustedVolume = (sfx == Sfx.roll || sfx == Sfx.shotgun3) ? 0.5f : sfxVolume;
+            // 소리 크기 조절
+            float adjustedVolume = (sfx == Sfx.roll || sfx == Sfx.shotgun3 || sfx == Sfx.hit) ? 0.5f : sfxVolume;
             sfxPlayers[loopIndex].volume = adjustedVolume;
 
             sfxPlayers[loopIndex].Play();
