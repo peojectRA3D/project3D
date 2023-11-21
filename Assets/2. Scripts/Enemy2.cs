@@ -16,8 +16,7 @@ public class Enemy2 : MonoBehaviour
     public bool isChase;            // 추적 여부
     public bool isAttack;           // 공격 여부
     private bool isDead;
-    public GameObject crabThorn;
-    public GameObject crabThornArea;
+    public ParticleSystem crabThorn;
 
     float targetRadius;     // 타겟을 찾을 스피어 캐스트 반지름
     float targetRange;      // 스피어 캐스트의 범위
@@ -112,8 +111,8 @@ public class Enemy2 : MonoBehaviour
         }
         else
         {
-            targetRadius = 2.5f;
-            targetRange = 2.5f;
+            targetRadius = 1.5f;
+            targetRange = 1.7f;
         }
 
         // 플레이어를 탐지하기 위한 스피어 캐스트를 수행
@@ -196,14 +195,15 @@ public class Enemy2 : MonoBehaviour
 
         anim.SetBool("isAttack2", true);
 
-        yield return new WaitForSeconds(1.2f);
-
+        yield return new WaitForSeconds(1.0f);
+        crabThorn.Play();
+        /*
         GameObject instantCrabThorn = Instantiate(crabThorn, crabThornArea.transform.position, transform.rotation);
         Rigidbody rigidCrabThorn = instantCrabThorn.GetComponent<Rigidbody>();
         rigidCrabThorn.velocity = transform.forward * 10;
 
         Destroy(instantCrabThorn, 5.0f);
-
+        */
         yield return new WaitForSeconds(0.8f);
         isChase = true;
         isAttack = false;
