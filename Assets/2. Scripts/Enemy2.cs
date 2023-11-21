@@ -16,9 +16,14 @@ public class Enemy2 : MonoBehaviour
     public bool isChase;            // 추적 여부
     public bool isAttack;           // 공격 여부
     private bool isDead;
+    public GameObject crabThorn;
+    public GameObject crabThornArea;
 
     float targetRadius;     // 타겟을 찾을 스피어 캐스트 반지름
     float targetRange;      // 스피어 캐스트의 범위
+
+    bool isCooldownA;
+    float cooldownTimeA = 6f;
 
     Rigidbody rigid;
     NavMeshAgent nav;
@@ -28,6 +33,7 @@ public class Enemy2 : MonoBehaviour
     AudioSource audioSource;
     public AudioClip response;
     public AudioClip attack1;
+    public AudioClip attack2;
     public AudioClip die;
 
     Bullet scriptbullet;
@@ -104,7 +110,7 @@ public class Enemy2 : MonoBehaviour
             targetRadius = 1.5f;
             targetRange = 1.3f;
         }
-        else if (enemyType == Type.B)
+        else
         {
             targetRadius = 2.5f;
             targetRange = 2.5f;
@@ -121,26 +127,91 @@ public class Enemy2 : MonoBehaviour
         {
             StartCoroutine(Attack()); // 공격 코루틴 실행
         }
+        
+        if(enemyType == Type.C)
+        {
+            if (!isCooldownA)
+            {
+                targetRadius = 3f;
+                targetRange = 15f;
+
+                rayHits = Physics.SphereCastAll(transform.position,
+                                                                targetRadius,
+                                                                transform.forward,
+                                                                targetRange,
+                                                                LayerMask.GetMask("Player"));
+
+                if (rayHits.Length > 0 && !isAttack)
+                {
+                    StartCoroutine(Attack2());
+                }
+            }
+        }
     }
 
     IEnumerator Attack()
     {
         isChase = false;         // 추적 중지
         isAttack = true;         // 공격 상태로 설정
-        anim.SetBool("isAttack01", true);
-        yield return new WaitForSeconds(0.1f);
-        audioSource.clip = attack1;
-        audioSource.Play();           // 공격 사운드 재생
+
+        if(enemyType == Type.A)
+        {
+            int attackNumber = Random.Range(1, 3);
+            if (attackNumber == 1)
+            {
+                anim.SetBool("isAttack1", true);
+                audioSource.clip = attack1;
+                audioSource.Play();
+            }
+            else if (attackNumber == 2)
+            {
+                anim.SetBool("isAttack2", true);
+                audioSource.clip = attack2;
+                audioSource.Play();
+            }        
+        } else
+        {
+            anim.SetBool("isAttack1", true);
+            audioSource.clip = attack1;
+            audioSource.Play();
+        }
 
         yield return new WaitForSeconds(0.2f);
-        attackArea.enabled = true;    // 공격 범위 활성화
+        attackArea.enabled = true;    
 
         yield return new WaitForSeconds(1f);
-        attackArea.enabled = false; // 공격 범위 비활성화
+        attackArea.enabled = false; 
 
-        isChase = true;          // 추적 다시 시작
-        isAttack = false;        // 공격 상태 해제
-        anim.SetBool("isAttack01", false);
+        isChase = true;          
+        isAttack = false;        
+
+        anim.SetBool("isAttack1", false);
+        anim.SetBool("isAttack2", false);
+    }
+
+    IEnumerator Attack2() // Crab 원거리 공격
+    {
+        isChase = false;         
+        isAttack = true;
+
+        anim.SetBool("isAttack2", true);
+
+        yield return new WaitForSeconds(1.2f);
+
+        GameObject instantCrabThorn = Instantiate(crabThorn, crabThornArea.transform.position, transform.rotation);
+        Rigidbody rigidCrabThorn = instantCrabThorn.GetComponent<Rigidbody>();
+        rigidCrabThorn.velocity = transform.forward * 10;
+
+        Destroy(instantCrabThorn, 5.0f);
+
+        yield return new WaitForSeconds(0.8f);
+        isChase = true;
+        isAttack = false;
+        anim.SetBool("isAttack2", false);
+
+        isCooldownA = true;
+        yield return new WaitForSeconds(cooldownTimeA);
+        isCooldownA = false;
     }
 
     void FixedUpdate()
