@@ -108,7 +108,7 @@ public class PlayerParent : MonoBehaviour
     // Start is called before the first frame update
 
     //ȿ����
-    AudioSource audioSource;
+    /*AudioSource audioSource;
     public AudioClip dead;
     public AudioClip hit;
     public AudioClip roll;
@@ -117,7 +117,7 @@ public class PlayerParent : MonoBehaviour
     public AudioClip heal_sfx;
     public AudioClip swap;
     public AudioClip rifle1;
-    public AudioClip rifle2;
+    public AudioClip rifle2;*/
 
     //���׸���
 
@@ -139,7 +139,6 @@ public class PlayerParent : MonoBehaviour
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
-        audioSource = GetComponent<AudioSource>();
         configreaders = new ConfigReader("Player");
         ModelType = configreaders.Search<int>("Model");
         skinsetup(ModelType);
@@ -337,11 +336,7 @@ public class PlayerParent : MonoBehaviour
             HealDelay = 0;
             particles_util[0].Play();
 
-            audioSource.Stop();
-            audioSource.clip = heal_sfx;
-            audioSource.volume = 0.3f;
-            audioSource.loop = false;
-            audioSource.Play();
+            AudioManager.instance.Playsfx(AudioManager.Sfx.heal_sfx);
         }
     }
     
@@ -453,11 +448,7 @@ public class PlayerParent : MonoBehaviour
         isDamage = true;
         StartCoroutine(endaniWithDelay("damage", 0.3f));
 
-        audioSource.Stop();
-        audioSource.clip = hit;
-        audioSource.volume = 0.3f;
-        audioSource.loop = false;
-        audioSource.Play();
+        AudioManager.instance.Playsfx(AudioManager.Sfx.hit);
     }
     void Runcheck()
     {     
@@ -627,11 +618,7 @@ public class PlayerParent : MonoBehaviour
     void PlayWeaponSwapSound()
     {
         // ���⿡ ���⸦ �ٲ� �� ����� �Ҹ� ��� �ڵ� �߰�
-        audioSource.Stop();
-        audioSource.clip = swap;
-        audioSource.volume = 0.3f;
-        audioSource.loop = false;
-        audioSource.Play();
+        AudioManager.instance.Playsfx(AudioManager.Sfx.swap);
     }
     void SwapOut()
     {
@@ -691,11 +678,7 @@ public class PlayerParent : MonoBehaviour
                         particles_0[0].Play();
 
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle1;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle1);
 
 
                         aniter.SetBool("onattack", true);
@@ -720,11 +703,7 @@ public class PlayerParent : MonoBehaviour
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle2;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle2);
                     }
                     else
                     {
@@ -740,6 +719,7 @@ public class PlayerParent : MonoBehaviour
                         //particles[3].Simulate(1.01f);
                         StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle3);
 
 
 
@@ -780,11 +760,8 @@ public class PlayerParent : MonoBehaviour
                         particles_1[0].Play();
 
                         isstaying = true;
-                        audioSource.Stop();
-                        audioSource.clip = rifle1;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun1);
 
 
                         aniter.SetBool("onattack", true);
@@ -811,12 +788,8 @@ public class PlayerParent : MonoBehaviour
                         weaponIndex = 0;
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 3.5f));
-                       
-                        audioSource.Stop();
-                        audioSource.clip = rifle2;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun2);
                     }
                     else
                     {
@@ -872,11 +845,7 @@ public class PlayerParent : MonoBehaviour
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack_stay", 1.0f));
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle2;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun3);
 
                         ThirdSkillDelay_time = 0;
                        
@@ -914,6 +883,10 @@ public class PlayerParent : MonoBehaviour
                         particles_2[0].Play();
 
 
+
+                    AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun1);
+
+
                         audioSource.Stop();
                         audioSource.clip = rifle1;
                         audioSource.volume = 0.3f;
@@ -943,11 +916,7 @@ public class PlayerParent : MonoBehaviour
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 0.5f));
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle2;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun2);
                     }
                     else
                     {
@@ -963,7 +932,7 @@ public class PlayerParent : MonoBehaviour
                         //particles[3].Simulate(1.01f);
                         StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
-
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun3);
 
 
                         aniter.SetBool("sitattack", true);
@@ -1020,11 +989,7 @@ public class PlayerParent : MonoBehaviour
             
             StartCoroutine(endaniWithDelay("doge", 0.67f));
 
-            audioSource.Stop();
-            audioSource.clip = roll;
-            audioSource.volume = 0.3f;
-            audioSource.loop = false;
-            audioSource.Play();
+            AudioManager.instance.Playsfx(AudioManager.Sfx.roll);
 
         }
     }
@@ -1076,11 +1041,7 @@ public class PlayerParent : MonoBehaviour
                 //particles[3].gameObject.transform.Rotate(Vector3.up, -90f);
                 particles_0[2].Play();
                
-                audioSource.Stop();
-                audioSource.clip = rifle1;
-                audioSource.volume = 0.3f;
-                audioSource.loop = false;
-                audioSource.Play();
+                
                 StartCoroutine(endaniWithDelay("sitattack", 2f));
                 break;
             default:
