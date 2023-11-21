@@ -26,6 +26,7 @@ public class PlayerParent : MonoBehaviour
     public ParticleSystem[] particles_2;
 
     public GameObject greneid;
+    public GameObject[] specialbullet;
     // �̵�
     float hAxis;
     float vAxis;
@@ -141,25 +142,7 @@ public class PlayerParent : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
         configreaders = new ConfigReader("Player");
         ModelType = configreaders.Search<int>("Model");
-        for (int index = 0; index < skins.Length; index++)
-        {
-            try
-            {
-                skins[index].material = maters[ModelType];
-            }
-            catch
-            {
-                Debug.LogError("모델 에러  " + ModelType);
-            }
-        }
-        try
-        {
-            modelsetup();
-        }
-        catch
-        {
-            Debug.LogError("모델 에러  " + ModelType);
-        }
+        skinsetup(ModelType);
     }
     // Update is called once per frame
     void Update()
@@ -196,8 +179,53 @@ public class PlayerParent : MonoBehaviour
         // 카메라 전환 중인지 여부를 설정하는 메소드
         isSwitching = value;
     }
+
+    public void skinsetup(int model)
+    {
+        skins[1].gameObject.SetActive(false);
+        skins[6].gameObject.SetActive(false);
+        skins[7].gameObject.SetActive(false);
+        skins[8].gameObject.SetActive(false);
+        if (model == 0)
+        {
+            skins[1].gameObject.SetActive(true);
+        }
+        else if (model ==1)
+        {
+            skins[7].gameObject.SetActive(true);
+        }
+        else if(model == 2)
+        {
+            skins[6].gameObject.SetActive(true);
+        }
+        else
+        {
+            skins[8].gameObject.SetActive(true);
+        }
+        for (int index = 0; index < skins.Length; index++)
+        {
+            try
+            {
+                skins[index].material = maters[model];
+            }
+            catch
+            {
+                Debug.LogError("모델 에러  " + model);
+            }
+        }
+        try
+        {
+            modelsetup();
+        }
+        catch
+        {
+            Debug.LogError("모델 에러  " + model);
+        }
+    }
     public void modelsetup()
     {
+
+
         configreaders = new ConfigReader("Model_" + ModelType.ToString());
 
         PlayerHp = configreaders.Search<float>("Hp");
@@ -379,22 +407,13 @@ public class PlayerParent : MonoBehaviour
         }
         if (other.tag == "charactorChage")
         {
-            for (int index = 0; index < skins.Length; index++)
-            {
-                try
-                {
-                    skins[index].material = maters[int.Parse(other.gameObject.name)];
-                    configreaders = new ConfigReader("Player");
-                    configreaders.UpdateData("Model", other.gameObject.name.ToLower());
-                    ModelType = configreaders.Search<int>("Model");
-                    modelsetup();
-                }
-                catch
-                {
-                    Debug.LogError("이름에러 "+ other.gameObject.name);
-                }
-
-            }
+           
+            configreaders = new ConfigReader("Player");
+            configreaders.UpdateData("Model", other.gameObject.name.ToLower());
+            ModelType = configreaders.Search<int>("Model");
+            skinsetup(int.Parse(other.gameObject.name));
+            modelsetup();
+           
         }
         if (other.tag == "Potal")
         {
@@ -402,6 +421,7 @@ public class PlayerParent : MonoBehaviour
 
         }
     }
+    
     private void OnTriggerStay(Collider other)
     {
         if (other.tag == "Potal")
@@ -655,7 +675,7 @@ public class PlayerParent : MonoBehaviour
             Runcheck();
             if (ModelType == 0) {
                 if (0 == weaponIndex) {
-                    if (isFirstSkillReady)
+                    if (isFirstSkillReady && !isstaying)
                     {
                         /*
                         if (magcount[0] == 0)
@@ -812,35 +832,38 @@ public class PlayerParent : MonoBehaviour
                         Vector3 grefront;
                         GameObject[] temp = new GameObject[6];
                         Quaternion rotation = Quaternion.Euler(0, 45, 0);
+                        
                         temp[0] = Instantiate(greneid);
                         temp[0].transform.position = gunpos.transform.position;
                         grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
+                        Vector3 norgrefront = grefront.normalized;
                         temp[0].transform.forward = grefront;
                         temp[0].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward*3f, ForceMode.Impulse);
                         StartCoroutine(endaniWithDelay("justdelay", 0.2f));
                         temp[1] = Instantiate(greneid);
                         temp[2] = Instantiate(greneid);
-                        temp[1].transform.position = gunpos.transform.position + new Vector3(1,0,0);
-                        temp[2].transform.position = gunpos.transform.position + new Vector3(-1,0,0) ;
+                        temp[1].transform.position = gunpos.transform.position + Quaternion.Euler(0, 60, 0) * norgrefront * 1f;
+                        temp[2].transform.position = gunpos.transform.position + Quaternion.Euler(0, -60, 0) * norgrefront * 1f;
                         grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
                         temp[1].transform.forward = grefront;
                         temp[2].transform.forward = grefront;
                         temp[1].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 8f, ForceMode.Impulse);
                         temp[2].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 8f, ForceMode.Impulse);
                         StartCoroutine(endaniWithDelay("justdelay", 0.2f));
-                        temp[1] = Instantiate(greneid);
-                        temp[2] = Instantiate(greneid);
                         temp[3] = Instantiate(greneid);
-                        temp[1].transform.position = gunpos.transform.position + new Vector3(1.5f, 0, 0);
-                        temp[2].transform.position = gunpos.transform.position + new Vector3(0, 0, 0);
-                        temp[2].transform.position = gunpos.transform.position + new Vector3(-1.5f, 0, 0);
+                        temp[4] = Instantiate(greneid);
+                        temp[5] = Instantiate(greneid);
+                        temp[3].transform.position = gunpos.transform.position + Quaternion.Euler(0, 120, 0) * norgrefront *1.5f;
+                        temp[4].transform.position = gunpos.transform.position;
+                        temp[5].transform.position = gunpos.transform.position + Quaternion.Euler(0, -120, 0) * (norgrefront * 1.5f); 
                         grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
-                        temp[1].transform.forward = grefront;
-                        temp[2].transform.forward = grefront;
                         temp[3].transform.forward = grefront;
-                        temp[1].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
-                        temp[2].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
+                        temp[4].transform.forward = grefront;
+                        temp[5].transform.forward = grefront;
                         temp[3].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
+                        temp[4].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
+                        temp[5].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
+                      
                         StartCoroutine(endaniWithDelay("justdelay", 0.2f));
 
                         aniter.SetBool("onattack", true);
@@ -875,48 +898,50 @@ public class PlayerParent : MonoBehaviour
             {
                 if (0 == weaponIndex)
                 {
-                    /*
-                    if (magcount[0] == 0)
+                    if (isFirstSkillReady && !isstaying)
                     {
-                        return;
+                        /*
+                        if (magcount[0] == 0)
+                        {
+                            return;
+                        }
+
+                        magcount[0]--;
+                        */
+                       //particles_2[0].Simulate(1.01f);
+                        particles_2[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles_2[0].gameObject.transform.Rotate(Vector3.up, -90f);
+                        particles_2[0].Play();
+
+
+                        audioSource.Stop();
+                        audioSource.clip = rifle1;
+                        audioSource.volume = 0.3f;
+                        audioSource.loop = false;
+                        audioSource.Play();
+
+
+                        aniter.SetBool("onattack", true);
+                        //�߻� ���� �߰�  equipWeapon.Use();
+                        //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                        FirstSkillDelay_time = 0;
+
+                        StartCoroutine(endaniWithDelay("onattack", 0.33f));
                     }
-
-                    magcount[0]--;
-                    */
-                    particles_2[0].Simulate(1.01f);
-                    particles_2[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                    particles_2[0].gameObject.transform.Rotate(Vector3.up, -90f);
-                    particles_2[0].Play();
-
-                   
-                    audioSource.Stop();
-                    audioSource.clip = rifle1;
-                    audioSource.volume = 0.3f;
-                    audioSource.loop = false;
-                    audioSource.Play();
-
-
-                    aniter.SetBool("onattack", true);
-                    //�߻� ���� �߰�  equipWeapon.Use();
-                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    FirstSkillDelay_time = 0;
-
-                    StartCoroutine(endaniWithDelay("onattack", 0.33f));
-
                 }
                 else if (1 == weaponIndex)
                 {
                     if (isSecondSkillReady)
                     {
-
-                        ParticleSystem temp = Instantiate(particles_2[1]);
-                        temp.GetComponent<movebullet>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
-                        aniter.speed = 0.25f;
+                        GameObject temp = Instantiate(specialbullet[0]);
+                       // temp.transform.position = gunpos.transform.position;
+                        temp.GetComponent<movebullet_viv>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
+                      
                         aniter.SetBool("onattack", true);
                         SecondSkillDelay_time = 0;
                         weaponIndex = 0;
                         FirstSkillDelay_time = 0;
-                        StartCoroutine(endaniWithDelay("onattack", 1.0f));
+                        StartCoroutine(endaniWithDelay("onattack", 0.5f));
 
                         audioSource.Stop();
                         audioSource.clip = rifle2;

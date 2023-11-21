@@ -18,6 +18,7 @@ TagManager:
   - Potal
   - Wall
   - booms
+  - spebullet
   layers:
   - Default
   - TransparentFX
