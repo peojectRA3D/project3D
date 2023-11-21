@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 5752002227831138442}
   - component: {fileID: 863948905891172922}
   - component: {fileID: 7812850312253681689}
+  - component: {fileID: 3162263386798194281}
   m_Layer: 0
   m_Name: SpecailBullet_01
   m_TagString: spebullet
@@ -167,6 +168,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &3162263386798194281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796249310188468159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69c7fd9599dc54f4ea9b1043370ccf89, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Damage: 1
 --- !u!1 &5170130108604555195
 GameObject:
   m_ObjectHideFlags: 0

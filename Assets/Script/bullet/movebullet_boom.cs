@@ -48,12 +48,20 @@ public class movebullet_boom : MonoBehaviour
         }
     }
 
-
+   
 
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("충돌!");
+      
         crush = true;
+        if (collision.transform.tag == "Enemy")
+        {
+            
+           
+            //GameObject boom = Instantiate(boompub);
+            gameObject.transform.parent = collision.transform;
+
+        }
     }
 
     IEnumerator endbullet(string aniname, float delay)
