@@ -49,7 +49,7 @@ public class AudioManager : MonoBehaviour
         {
             instance = this;
             Init();
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {

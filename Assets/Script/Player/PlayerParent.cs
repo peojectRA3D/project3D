@@ -884,7 +884,7 @@ public class PlayerParent : MonoBehaviour
 
 
 
-                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper1);
+                       AudioManager.instance.Playsfx(AudioManager.Sfx.sniper1);
 
 
 

@@ -38,29 +38,17 @@ public class movebullet_boom : MonoBehaviour
         {
             moveSpeed = 0;
             // Visual Effect 재생
-            viveff.SendEvent("OnPlay");
+           
 
             // 일정 시간 후에 메시 파괴
-            StartCoroutine(endbullet("endbul", 3f));
-
+            StartCoroutine(endbullet("endbul", 1f));
+            
             crush = !crush;
             crush_viv = true;
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (crush_viv)
-        {
-            int spawnRateValue = viveff.GetInt("Spawnrate");
-            spawnRateValue -= 50;
-            if (spawnRateValue < 2)
-            {
-                spawnRateValue = 0;
-            }
-            viveff.SetInt("Spawnrate", spawnRateValue);
-        }
-    }
+
 
     public void OnCollisionEnter(Collision collision)
     {
@@ -71,6 +59,15 @@ public class movebullet_boom : MonoBehaviour
     IEnumerator endbullet(string aniname, float delay)
     {
         yield return new WaitForSeconds(delay);
+        boompaticle.Play();
+
+        StartCoroutine(endbullet_02("endbul", 0.5f));
+    }
+   
+    IEnumerator endbullet_02(string aniname, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+       
         Destroy(gameObject);
     }
 }
