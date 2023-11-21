@@ -41,7 +41,9 @@ public class CameraSwitch : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !isSwitching && !isSwitched)
+        playerParent = other.GetComponent<PlayerParent>();
+
+        if (playerParent != null)
         {
             SwitchCamera();
         }

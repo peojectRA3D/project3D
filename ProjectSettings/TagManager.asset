@@ -17,6 +17,7 @@ TagManager:
   - charactorChage
   - Potal
   - Wall
+  - booms
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - Monster
   - Boss
   - cellings
-  - 
+  - booms
   - 
   - 
   - 

@@ -20,7 +20,12 @@ public class PlayerParent : MonoBehaviour
     private Vector3 dir = Vector3.zero;
     private Animator aniter;
     public int  attacktype;
-    public ParticleSystem[] particles;
+    public ParticleSystem[] particles_util;
+    public ParticleSystem[] particles_0;
+    public ParticleSystem[] particles_1;
+    public ParticleSystem[] particles_2;
+
+    public GameObject greneid;
     // �̵�
     float hAxis;
     float vAxis;
@@ -57,6 +62,7 @@ public class PlayerParent : MonoBehaviour
     bool ispause;
     bool healReady;
     bool isstaying;
+    bool isfireaction =false;
 
     bool[] isSkillDamagein= {false ,false };
     bool[] SkillDamageReady= {false, false };
@@ -101,7 +107,7 @@ public class PlayerParent : MonoBehaviour
     // Start is called before the first frame update
 
     //ȿ����
-    AudioSource audioSource;
+    /*AudioSource audioSource;
     public AudioClip dead;
     public AudioClip hit;
     public AudioClip roll;
@@ -110,7 +116,7 @@ public class PlayerParent : MonoBehaviour
     public AudioClip heal_sfx;
     public AudioClip swap;
     public AudioClip rifle1;
-    public AudioClip rifle2;
+    public AudioClip rifle2;*/
 
     //���׸���
 
@@ -132,7 +138,6 @@ public class PlayerParent : MonoBehaviour
         aniter = GetComponent<Animator>();
         rid = GetComponent<Rigidbody>();
         tr = GetComponent<Transform>();
-        audioSource = GetComponent<AudioSource>();
         configreaders = new ConfigReader("Player");
         ModelType = configreaders.Search<int>("Model");
         for (int index = 0; index < skins.Length; index++)
@@ -202,8 +207,40 @@ public class PlayerParent : MonoBehaviour
 
         FirstSkillDamage = configreaders.Search<float>("FirstSkill");
         SecondSkillDamage = configreaders.Search<float>("SecondSkill");
-        ThirdSkillDamage = configreaders.Search<float>("ThirdSkill");
+        ThirdSkillDamage = configreaders.Search<float>("ThirdSkill");       
         FouredSkillDamage = configreaders.Search<float>("FouredSkill");
+
+        try{
+            if (ModelType == 0)
+            {
+                particles_0[0].GetComponent<bulletStatus>().Damage = FirstSkillDamage;
+                //particles_0[1].GetComponent<bulletStatus>().Damage = SecondSkillDamage;
+                particles_0[2].GetComponent<bulletStatus>().Damage = ThirdSkillDamage;
+                particles_0[3].GetComponent<bulletStatus>().Damage = FouredSkillDamage;
+            }
+            else if (ModelType == 1)
+            {
+                particles_1[0].GetComponent<bulletStatus>().Damage = FirstSkillDamage;
+                particles_1[1].GetComponent<bulletStatus>().Damage = SecondSkillDamage;
+                particles_1[2].GetComponent<bulletStatus>().Damage = ThirdSkillDamage;
+                particles_1[3].GetComponent<bulletStatus>().Damage = FouredSkillDamage;
+            } else if (ModelType == 2)
+            {
+                particles_2[0].GetComponent<bulletStatus>().Damage = FirstSkillDamage;
+                particles_2[1].GetComponent<bulletStatus>().Damage = SecondSkillDamage;
+                particles_2[2].GetComponent<bulletStatus>().Damage = ThirdSkillDamage;
+                particles_2[3].GetComponent<bulletStatus>().Damage = FouredSkillDamage;
+            } 
+        }
+        catch
+        {
+
+        }
+        
+        
+
+        
+
 
         jumpPower = configreaders.Search<float>("JumpPower");
         dogespeed = configreaders.Search<float>("DogeSpeed");
@@ -269,13 +306,9 @@ public class PlayerParent : MonoBehaviour
                 PlayerHp = MaxHp;
             }
             HealDelay = 0;
-            particles[0].Play();
+            particles_util[0].Play();
 
-            audioSource.Stop();
-            audioSource.clip = heal_sfx;
-            audioSource.volume = 0.3f;
-            audioSource.loop = false;
-            audioSource.Play();
+            AudioManager.instance.Playsfx(AudioManager.Sfx.heal_sfx);
         }
     }
     
@@ -395,11 +428,7 @@ public class PlayerParent : MonoBehaviour
         isDamage = true;
         StartCoroutine(endaniWithDelay("damage", 0.3f));
 
-        audioSource.Stop();
-        audioSource.clip = hit;
-        audioSource.volume = 0.3f;
-        audioSource.loop = false;
-        audioSource.Play();
+        AudioManager.instance.Playsfx(AudioManager.Sfx.hit);
     }
     void Runcheck()
     {     
@@ -438,7 +467,7 @@ public class PlayerParent : MonoBehaviour
             }*/
             dir = dodgeVec;           
         }
-        if (isJump || isstaying)
+        if (isJump || isstaying )
         {
             dir = Vector3.zero;
         }
@@ -478,19 +507,21 @@ public class PlayerParent : MonoBehaviour
     {
         // # 1. Ű���忡 ���� ȸ��
         // LookAt() - ������ ���͸� ���ؼ� ȸ�������ִ� �Լ�
-        if (ispause || isstaying)
+        if (ispause || isstaying )
         {
             return;
         }
         // # 2. ���콺�� ���� ȸ��
-        if (fireDown && !isDodge) // ���콺 Ŭ�� ���� ���� ȭ���ϵ��� ���� �߰�
-        {
-            transform.forward = Vector3.Lerp(transform.forward, Mousepo.getMousePosition() - transform.position, Time.deltaTime *30f);
-       
-        }
-        else
-        {
-            transform.LookAt(transform.position + dir);
+        if (!isfireaction) {
+            if (fireDown && !isDodge) // ���콺 Ŭ�� ���� ���� ȭ���ϵ��� ���� �߰�
+            {
+                transform.forward = Vector3.Lerp(transform.forward, Mousepo.getMousePosition() - transform.position, Time.deltaTime * 30f);
+
+            }
+            else
+            {
+                transform.LookAt(transform.position + dir);
+            }
         }
 
         if (Vector3.Angle(dir, transform.forward) <= 45.0f)
@@ -533,12 +564,6 @@ public class PlayerParent : MonoBehaviour
         int previousWeaponIndex = weaponIndex;
 
 
-        if (swapDown1 && (!particles[1] || weaponIndex == 0))
-            return;
-        if (swapDown2 && (!particles[2] || weaponIndex == 1))
-            return;
-        if (swapDown3 && (!particles[3] || weaponIndex == 2))
-            return;
         
         
         if (swapDown1) weaponIndex = 0;
@@ -573,11 +598,7 @@ public class PlayerParent : MonoBehaviour
     void PlayWeaponSwapSound()
     {
         // ���⿡ ���⸦ �ٲ� �� ����� �Ҹ� ��� �ڵ� �߰�
-        audioSource.Stop();
-        audioSource.clip = swap;
-        audioSource.volume = 0.3f;
-        audioSource.loop = false;
-        audioSource.Play();
+        AudioManager.instance.Playsfx(AudioManager.Sfx.swap);
     }
     void SwapOut()
     {
@@ -614,7 +635,7 @@ public class PlayerParent : MonoBehaviour
         FourSkillDelay_time += Time.deltaTime;
         isFourSkillReady = fourSkillDelay < FourSkillDelay_time;
 
-        if (fireDown && !isDodge && !isSwap)
+        if (fireDown && !isDodge && !isSwap && !isfireaction)
         {
             RunDown = true;
             isRun = true;
@@ -631,17 +652,13 @@ public class PlayerParent : MonoBehaviour
 
                         magcount[0]--;
                         */
-                        particles[1].Simulate(1.01f);
-                        particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                        particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
-                        particles[1].Play();
+                        particles_0[0].Simulate(1.01f);
+                        particles_0[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles_0[0].gameObject.transform.Rotate(Vector3.up, -90f);
+                        particles_0[0].Play();
 
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle1;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle1);
 
 
                         aniter.SetBool("onattack", true);
@@ -657,7 +674,7 @@ public class PlayerParent : MonoBehaviour
                     if (isSecondSkillReady)
                     {
 
-                        ParticleSystem temp = Instantiate(particles[2]);
+                        ParticleSystem temp = Instantiate(particles_0[1]);
                         temp.GetComponent<movebullet>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
                         aniter.speed = 0.25f;
                         aniter.SetBool("onattack", true);
@@ -666,11 +683,7 @@ public class PlayerParent : MonoBehaviour
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle2;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle2);
                     }
                     else
                     {
@@ -686,6 +699,7 @@ public class PlayerParent : MonoBehaviour
                         //particles[3].Simulate(1.01f);
                         StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle3);
 
 
 
@@ -711,54 +725,51 @@ public class PlayerParent : MonoBehaviour
             {
                 if (0 == weaponIndex)
                 {
-                    /*
-                    if (magcount[0] == 0)
+                    if (isFirstSkillReady)
                     {
-                        return;
+                        /*
+                        if (magcount[0] == 0)
+                        {
+                            return;
+                        }
+
+                        magcount[0]--;
+                        */
+                        particles_1[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles_1[0].gameObject.transform.Rotate(Vector3.up, -90f);
+                        particles_1[0].Play();
+
+                        isstaying = true;
+
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun1);
+
+
+                        aniter.SetBool("onattack", true);
+                        //�߻� ���� �߰�  equipWeapon.Use();
+                        //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
+                        FirstSkillDelay_time = 0;
+
+                        StartCoroutine(endaniWithDelay("onattack_stay", 0.33f));
                     }
-
-                    magcount[0]--;
-                    */
-                    particles[4].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                    particles[4].gameObject.transform.Rotate(Vector3.up, -90f);
-                    particles[4].Play();
-
-                    isstaying = true;
-                    audioSource.Stop();
-                    audioSource.clip = rifle1;
-                    audioSource.volume = 0.3f;
-                    audioSource.loop = false;
-                    audioSource.Play();
-
-
-                    aniter.SetBool("onattack", true);
-                    //�߻� ���� �߰�  equipWeapon.Use();
-                    //�߻� �ִϸ��̼� �߰�  ani.SetTrigger(equipWeapon.type == Weapon.Type.Melee ? "doSwing" : "doShot");
-                    FirstSkillDelay_time = 0;
-
-                    StartCoroutine(endaniWithDelay("onattack_stay", 0.33f));
 
                 }
                 else if (1 == weaponIndex)
                 {
                     if (isSecondSkillReady)
                     {
-                        particles[5].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                        particles[5].Play();
-                        Debug.Log("작동");
-                        isstaying = true;
+                        particles_1[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                        particles_1[1].Play();
+                        
+                        isfireaction = true;
                         //aniter.speed = 0.25f;
-                        aniter.SetBool("onattack", true);
-                        SecondSkillDelay_time = 0;
+                        //fireDown = false;
+                        //aniter.SetBool("onattack", true);
+                        SecondSkillDelay_time = 0; 
                         weaponIndex = 0;
                         FirstSkillDelay_time = 0;
-                        StartCoroutine(endaniWithDelay("onattack", 1.0f));
+                        StartCoroutine(endaniWithDelay("onattack", 3.5f));
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle2;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun2);
                     }
                     else
                     {
@@ -770,17 +781,51 @@ public class PlayerParent : MonoBehaviour
                 {
                     if (isThirdSkillReady)
                     {
-                        //isstaying = true;
-                        //particles[3].Simulate(1.01f);
-                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
+                        isstaying = true;
+                        Vector3 grefront;
+                        GameObject[] temp = new GameObject[6];
+                        Quaternion rotation = Quaternion.Euler(0, 45, 0);
+                        temp[0] = Instantiate(greneid);
+                        temp[0].transform.position = gunpos.transform.position;
+                        grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
+                        temp[0].transform.forward = grefront;
+                        temp[0].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward*3f, ForceMode.Impulse);
+                        StartCoroutine(endaniWithDelay("justdelay", 0.2f));
+                        temp[1] = Instantiate(greneid);
+                        temp[2] = Instantiate(greneid);
+                        temp[1].transform.position = gunpos.transform.position + new Vector3(1,0,0);
+                        temp[2].transform.position = gunpos.transform.position + new Vector3(-1,0,0) ;
+                        grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
+                        temp[1].transform.forward = grefront;
+                        temp[2].transform.forward = grefront;
+                        temp[1].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 8f, ForceMode.Impulse);
+                        temp[2].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 8f, ForceMode.Impulse);
+                        StartCoroutine(endaniWithDelay("justdelay", 0.2f));
+                        temp[1] = Instantiate(greneid);
+                        temp[2] = Instantiate(greneid);
+                        temp[3] = Instantiate(greneid);
+                        temp[1].transform.position = gunpos.transform.position + new Vector3(1.5f, 0, 0);
+                        temp[2].transform.position = gunpos.transform.position + new Vector3(0, 0, 0);
+                        temp[2].transform.position = gunpos.transform.position + new Vector3(-1.5f, 0, 0);
+                        grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
+                        temp[1].transform.forward = grefront;
+                        temp[2].transform.forward = grefront;
+                        temp[3].transform.forward = grefront;
+                        temp[1].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
+                        temp[2].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
+                        temp[3].GetComponent<Rigidbody>().AddForce(temp[0].transform.forward * 13f, ForceMode.Impulse);
+                        StartCoroutine(endaniWithDelay("justdelay", 0.2f));
 
+                        aniter.SetBool("onattack", true);
+                        
+                        weaponIndex = 0;
+                        FirstSkillDelay_time = 0;
+                        StartCoroutine(endaniWithDelay("onattack_stay", 1.0f));
 
-
-
-                        aniter.SetBool("sitattack", true);
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun3);
 
                         ThirdSkillDelay_time = 0;
-
+                       
 
                     }
                     else
@@ -807,17 +852,13 @@ public class PlayerParent : MonoBehaviour
 
                     magcount[0]--;
                     */
-                    particles[1].Simulate(1.01f);
-                    particles[1].gameObject.transform.LookAt(Mousepo.gettargetpostion());
-                    particles[1].gameObject.transform.Rotate(Vector3.up, -90f);
-                    particles[1].Play();
+                    particles_2[0].Simulate(1.01f);
+                    particles_2[0].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                    particles_2[0].gameObject.transform.Rotate(Vector3.up, -90f);
+                    particles_2[0].Play();
 
 
-                    audioSource.Stop();
-                    audioSource.clip = rifle1;
-                    audioSource.volume = 0.3f;
-                    audioSource.loop = false;
-                    audioSource.Play();
+                    AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun1);
 
 
                     aniter.SetBool("onattack", true);
@@ -833,7 +874,7 @@ public class PlayerParent : MonoBehaviour
                     if (isSecondSkillReady)
                     {
 
-                        ParticleSystem temp = Instantiate(particles[2]);
+                        ParticleSystem temp = Instantiate(particles_2[1]);
                         temp.GetComponent<movebullet>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
                         aniter.speed = 0.25f;
                         aniter.SetBool("onattack", true);
@@ -842,11 +883,7 @@ public class PlayerParent : MonoBehaviour
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 1.0f));
 
-                        audioSource.Stop();
-                        audioSource.clip = rifle2;
-                        audioSource.volume = 0.3f;
-                        audioSource.loop = false;
-                        audioSource.Play();
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun2);
                     }
                     else
                     {
@@ -862,7 +899,7 @@ public class PlayerParent : MonoBehaviour
                         //particles[3].Simulate(1.01f);
                         StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
-
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.shotgun3);
 
 
                         aniter.SetBool("sitattack", true);
@@ -919,11 +956,7 @@ public class PlayerParent : MonoBehaviour
             
             StartCoroutine(endaniWithDelay("doge", 0.67f));
 
-            audioSource.Stop();
-            audioSource.clip = roll;
-            audioSource.volume = 0.3f;
-            audioSource.loop = false;
-            audioSource.Play();
+            AudioManager.instance.Playsfx(AudioManager.Sfx.roll);
 
         }
     }
@@ -945,6 +978,7 @@ public class PlayerParent : MonoBehaviour
             case "onattack":
                 aniter.SetBool("onattack", false);
                 aniter.speed = 1;
+                isfireaction = false;
                 break;
             case "onattack_stay":
                 aniter.SetBool("onattack", false);
@@ -967,16 +1001,14 @@ public class PlayerParent : MonoBehaviour
             case "damage":
                 isDamage = false;
                 break;
+            case "justdelay":
+                break;
             case "sitattack_doit":
-                particles[3].gameObject.transform.LookAt(Mousepo.gettargetpostion());
+                particles_0[2].gameObject.transform.LookAt(Mousepo.gettargetpostion());
                 //particles[3].gameObject.transform.Rotate(Vector3.up, -90f);
-                particles[3].Play();
+                particles_0[2].Play();
                
-                audioSource.Stop();
-                audioSource.clip = rifle1;
-                audioSource.volume = 0.3f;
-                audioSource.loop = false;
-                audioSource.Play();
+                
                 StartCoroutine(endaniWithDelay("sitattack", 2f));
                 break;
             default:
