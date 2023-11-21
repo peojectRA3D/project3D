@@ -86,6 +86,7 @@ public class PlayerParent : MonoBehaviour
     Vector3 dodgeVec; // ȸ���ϴ� ���� ������ ������ ���� ����
     public float PlayerHp;
     float MaxHp;
+    public Text PlayerHPUI;
    
     float JumpDelay;
     float DogeDelay;
@@ -188,6 +189,8 @@ public class PlayerParent : MonoBehaviour
             Reload();
             */
         }
+
+        PlayerHPUI.text = PlayerHp.ToString();
     }
 
     public void SetSwitching(bool value)
