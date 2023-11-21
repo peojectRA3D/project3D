@@ -30,7 +30,16 @@ public class AudioManager : MonoBehaviour
         rifle3,
         shotgun1,
         shotgun2,
-        shotgun3
+        shotgun3,
+        sniper1,
+        sniper2,
+        sniper3,
+        ultimate,
+        grunt_respon,
+        boss1_respon,
+        crab_respon,
+        minotaur_respon,
+        boss2_respon
     }
 
     void Awake()
