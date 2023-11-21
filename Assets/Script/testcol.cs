@@ -28,5 +28,12 @@ public class testcol : MonoBehaviour
     {
         Debug.Log(other.GetComponent<bulletStatus>().Damage);
     }
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.transform.tag == "spebullet")
+        {
+            Debug.Log("아야");
+        }
+    }
 
 }
