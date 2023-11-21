@@ -84,7 +84,7 @@ public class GameManager : MonoBehaviour
     {
 
        // bossHealthBar.localScale = new Vector3(boss.curHealth / boss.maxHealth, 1, 1);
-        //playerCurrentHealth.text = player.PlayerHp.ToString();
+       // playerCurrentHealth.text = player.PlayerHp.ToString();
 
     }
 
