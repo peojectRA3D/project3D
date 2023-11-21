@@ -198,7 +198,29 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    
+    private void OnCollisionStay(Collision collision)
+    {
+        if (collision.transform.tag == "spebullet")
+        {
+            curHealth -= collision.transform.GetComponent<bulletStatus>().Damage; //other.transform.rotation.eulerAngles.y;
+
+            if (curHealth <= 0)
+            {
+                if (isDead)
+                    return;
+
+                isChase = false;
+                isDead = true;
+                anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 0.1f;
+                audioSource.Play();
+
+                Destroy(gameObject, 3);
+            }
+        }
+    }
     void StopChasing()
     {
         isChase = false;
