@@ -17,7 +17,7 @@ public class black_boom : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position += -transform.forward * speed * Time.timeScale;
+        //transform.position += -transform.forward * speed * Time.timeScale;
 
         if (speed == 0f)
         {
