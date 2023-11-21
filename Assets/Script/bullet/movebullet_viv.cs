@@ -64,8 +64,12 @@ public class movebullet_viv : MonoBehaviour
 
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("충돌!");
-        crush = true;
+        if (collision.transform.tag == "Monster" || collision.transform.tag == "Boss")
+        {
+            gameObject.transform.parent = collision.transform;
+            crush = true;
+        }
+     
     }
 
     IEnumerator endbullet(string aniname, float delay)

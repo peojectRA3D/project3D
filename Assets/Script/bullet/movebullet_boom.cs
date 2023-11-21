@@ -53,11 +53,11 @@ public class movebullet_boom : MonoBehaviour
     public void OnCollisionEnter(Collision collision)
     {
       
-        crush = true;
-        if (collision.transform.tag == "Enemy")
+       
+        if (collision.transform.tag == "Monster" || collision.transform.tag == "Boss")
         {
-            
-           
+            crush = true;
+
             //GameObject boom = Instantiate(boompub);
             gameObject.transform.parent = collision.transform;
 
