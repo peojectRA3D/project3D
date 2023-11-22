@@ -175,7 +175,7 @@ public class PlayerParent : MonoBehaviour
             */
         }
 
-        PlayerHPUI.text = PlayerHp.ToString();
+        PlayerHPUI.text = PlayerHp.ToString("F0");
     }
 
     public void SetSwitching(bool value)
@@ -390,6 +390,10 @@ public class PlayerParent : MonoBehaviour
             takedamge(20);
            
            
+        }
+        else if(other.tag == "EnermyFireMagic" && !isDamage)
+        {
+            takedamge(5);
         }
      
     }

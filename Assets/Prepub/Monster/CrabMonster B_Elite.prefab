@@ -4970,6 +4970,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CrabThorn
       objectReference: {fileID: 0}
+    - target: {fileID: 8648103044091095768, guid: 081ffc49871bb284ab81e346816f5aea,
+        type: 3}
+      propertyPath: m_TagString
+      value: EnemyMagic
+      objectReference: {fileID: 0}
     - target: {fileID: 8925926396979535526, guid: 081ffc49871bb284ab81e346816f5aea,
         type: 3}
       propertyPath: m_LocalScale.x
