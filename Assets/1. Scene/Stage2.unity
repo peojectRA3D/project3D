@@ -688,7 +688,7 @@ PrefabInstance:
     - target: {fileID: 2057960, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: m_TargetTexture
       value: 
-      objectReference: {fileID: 1265669199}
+      objectReference: {fileID: 1779337242}
     - target: {fileID: 2057960, guid: 98e2b8a7d6de642f8ae08a3cbb957b7a, type: 3}
       propertyPath: near clip plane
       value: 0.3
@@ -1238,6 +1238,44 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 95114878}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!84 &101346454
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 150
+  m_Height: 150
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 4
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 1
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &110470157 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2415054265898578342, guid: cf132895c5811464eaeb053875a78e5a,
@@ -1483,6 +1521,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 1974480077}
   option: {fileID: 1618519073}
@@ -4462,6 +4501,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 1974480077}
   option: {fileID: 1618519073}
@@ -11939,6 +11979,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 1974480077}
   option: {fileID: 1618519073}
@@ -14199,44 +14240,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1637000245}
   m_SourcePrefab: {fileID: 100100000, guid: 50fba2f163418df47b4f53d5eae25cf2, type: 3}
---- !u!84 &1265669199
-RenderTexture:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: 
-  m_ImageContentsHash:
-    serializedVersion: 2
-    Hash: 00000000000000000000000000000000
-  m_ForcedFallbackFormat: 4
-  m_DownscaleFallback: 0
-  m_IsAlphaChannelOptional: 0
-  serializedVersion: 5
-  m_Width: 150
-  m_Height: 150
-  m_AntiAliasing: 1
-  m_MipCount: -1
-  m_DepthStencilFormat: 94
-  m_ColorFormat: 4
-  m_MipMap: 0
-  m_GenerateMips: 1
-  m_SRGB: 1
-  m_UseDynamicScale: 0
-  m_BindMS: 0
-  m_EnableCompatibleFormat: 1
-  m_EnableRandomWrite: 0
-  m_TextureSettings:
-    serializedVersion: 2
-    m_FilterMode: 1
-    m_Aniso: 1
-    m_MipBias: 0
-    m_WrapU: 1
-    m_WrapV: 1
-    m_WrapW: 1
-  m_Dimension: 2
-  m_VolumeDepth: 1
-  m_ShadowSamplingMode: 2
 --- !u!1 &1265742731 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8645253220753547661, guid: 07e5f6b6100578d45accf8f5ba1050ed,
@@ -14965,13 +14968,14 @@ MonoBehaviour:
   boss: {fileID: 0}
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
-  player: {fileID: 0}
-  playerCurrentHealth: {fileID: 0}
+  player: {fileID: 1716408087}
+  players: {fileID: 952602345}
+  playerCurrentHealth: {fileID: 814048824}
   bg: {fileID: 1974480077}
   option: {fileID: 1618519073}
   sound: {fileID: 720869029}
-  victory: {fileID: 0}
-  defeat: {fileID: 0}
+  victory: {fileID: 443947340}
+  defeat: {fileID: 1827204428}
 --- !u!114 &1354865653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15722,6 +15726,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 0}
   option: {fileID: 1618519073}
@@ -17225,6 +17230,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 0}
   option: {fileID: 0}
@@ -18140,6 +18146,18 @@ MonoBehaviour:
   initialIconRotation: 0
   clampIconInBorder: 1
   clampDistance: 100
+--- !u!114 &1716408087 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8431679619417009982, guid: 5654bca196eed6442ad24a12bb6979f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 615776029}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 952602345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d42e792c78091e4eb8b8a2c05edb567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1726603534
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18794,6 +18812,44 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1367575235}
   m_SourcePrefab: {fileID: 100100000, guid: 142d227a05eec0f4b8f551b37c78166c, type: 3}
+--- !u!84 &1779337242
+RenderTexture:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 5
+  m_Width: 150
+  m_Height: 150
+  m_AntiAliasing: 1
+  m_MipCount: -1
+  m_DepthStencilFormat: 94
+  m_ColorFormat: 4
+  m_MipMap: 0
+  m_GenerateMips: 1
+  m_SRGB: 1
+  m_UseDynamicScale: 0
+  m_BindMS: 0
+  m_EnableCompatibleFormat: 1
+  m_EnableRandomWrite: 0
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 0
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_Dimension: 2
+  m_VolumeDepth: 1
+  m_ShadowSamplingMode: 2
 --- !u!1 &1781581485 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100014, guid: 510e8b094d51c0c448a1f47f52b71413,
