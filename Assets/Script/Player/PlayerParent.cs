@@ -428,11 +428,31 @@ public class PlayerParent : MonoBehaviour
         if (other.tag == "Potal")
         {
             potalDelay -= Time.deltaTime;
-            guidetext.text = "전송까지 앞으로 "+ potalDelay.ToString("F1") + " 초!";
+
+        }
+        if (other.gameObject.name =="1")
+        {
+            guidetext.text = " \"오크 전초 기지\" 전송까지 앞으로 " + potalDelay.ToString("F1") + " 초!";
+        }
+        else if(other.gameObject.name == "2")
+        {
+            guidetext.text = " \"죽음의 사막\" 전송까지 앞으로 " + potalDelay.ToString("F1") + " 초!";
         }
         if (potalDelay < 0)
         {
-            SceneManager.LoadScene("Stage1(JSH)");
+            if (other.gameObject.name == "1")
+            {
+                SceneManager.LoadScene("Stage1(JSH)");
+            }
+            else if (other.gameObject.name == "2")
+            {
+                SceneManager.LoadScene("Stage2");
+            }
+            else
+            {
+                Debug.Log("전송포탈에러 ");
+            }
+           
         }
     }
     private void OnTriggerExit(Collider other)
