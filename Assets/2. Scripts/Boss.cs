@@ -339,8 +339,6 @@ public class Boss : MonoBehaviour
             }
         }
     }
-
-
     
     private void OnCollisionEnter(Collision collision)
     {
