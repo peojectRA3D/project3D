@@ -446,6 +446,7 @@ public class PlayerParent : MonoBehaviour
         }
         if (potalDelay < 0)
         {
+            //Debug.Log(other.gameObject.name);
             if (other.gameObject.name == "1")
             {
                 SceneManager.LoadScene("Stage1(JSH)");
@@ -1006,7 +1007,7 @@ public class PlayerParent : MonoBehaviour
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 0.5f));
 
-                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper2);
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper3);
 
                     }
                     else
