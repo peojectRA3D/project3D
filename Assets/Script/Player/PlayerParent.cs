@@ -108,6 +108,7 @@ public class PlayerParent : MonoBehaviour
     int weaponIndex = 0;
     public GameObject  gunpos;
     public GameObject[] canvas;
+    public Image playerchangeimage;
     // Start is called before the first frame update
 
     //ȿ����
@@ -416,9 +417,10 @@ public class PlayerParent : MonoBehaviour
             configreaders = new ConfigReader("Player");
             configreaders.UpdateData("Model", other.gameObject.name.ToLower());
             ModelType = configreaders.Search<int>("Model");
-            skinsetup(int.Parse(other.gameObject.name));
+            skinsetup(ModelType);
             modelsetup();
-           
+
+
         }
         if (other.tag == "Potal")
         {
@@ -467,10 +469,7 @@ public class PlayerParent : MonoBehaviour
             guidetext.gameObject.SetActive(false);
         }
     }
-    private void OnCollisionEnter(Collision collision)
-    {
-       
-    }
+ 
     private void takedamge(float damage)
     {
 
