@@ -7,6 +7,7 @@ public class UI_ResultButton : MonoBehaviour
 {
     public void OnClickLobbyButton()
     {
+        Debug.LogError("작동");
         // "Lobby" 씬으로 이동
         SceneManager.LoadScene("Lobby");
     }
