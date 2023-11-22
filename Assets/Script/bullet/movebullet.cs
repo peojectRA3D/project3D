@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class movebullet : MonoBehaviour
 {
-    private float countdownTime = 5.0f;
+    public float countdownTime = 5.0f;
     private bool isCounting = false;
     public float moveSpeed = 5.0f; // 이동 속도 설정
     public ParticleSystem[] pars;
@@ -37,7 +37,7 @@ public class movebullet : MonoBehaviour
         {
             countdownTime -= Time.deltaTime;
             
-            transform.position += forword.normalized * moveSpeed * Time.deltaTime; ;
+            transform.position += forword.normalized * moveSpeed * Time.deltaTime; 
             if (countdownTime <= 0)
             {
                 // 세기가 끝났을 때 실행할 작업을 여기에 추가하십시오.

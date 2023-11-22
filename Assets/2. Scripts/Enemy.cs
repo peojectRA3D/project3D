@@ -198,6 +198,7 @@ public class Enemy : MonoBehaviour
             }
         }
     }
+    
     void StopChasing()
     {
         isChase = false;
