@@ -747,24 +747,22 @@ public class PlayerParent : MonoBehaviour
                 }
                 else if (3 == weaponIndex)
                 {
+
                     if (isFourSkillReady)
                     {
                         GameObject temp;
                         temp = Instantiate(specialRockat[0]);
-                        temp.transform.position = gunpos.transform.position+ new Vector3(0,20,0);
+                        temp.transform.position = gunpos.transform.position + new Vector3(0, 15, 0);
                         Vector3 grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
-                      
-                        temp.transform.forward = grefront + new Vector3(0, 20, 0); 
-                       
-                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
-                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle3);
+                        temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
 
 
 
-                        aniter.SetBool("sitattack", true);
 
-                        ThirdSkillDelay_time = 0;
+
+
+                        FourSkillDelay_time = 0;
 
 
                     }
@@ -978,7 +976,7 @@ public class PlayerParent : MonoBehaviour
                         GameObject temp = Instantiate(specialbullet[1]);
                         // temp.transform.position = gunpos.transform.position;
                         temp.GetComponent<movebullet_boom>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
-
+                        temp.GetComponent<movebullet_boom>().setdamage(ThirdSkillDamage);
                         aniter.SetBool("onattack", true);
                         ThirdSkillDelay_time = 0;
                         weaponIndex = 0;
