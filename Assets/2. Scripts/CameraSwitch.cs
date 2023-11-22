@@ -43,7 +43,7 @@ public class CameraSwitch : MonoBehaviour
     {
         playerParent = other.GetComponent<PlayerParent>();
 
-        if (playerParent != null)
+        if (playerParent != null && !isSwitched && !isSwitching)
         {
             SwitchCamera();
         }

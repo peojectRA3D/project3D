@@ -38,8 +38,8 @@ public class movebullet_boom : MonoBehaviour
         {
             moveSpeed = 0;
             // Visual Effect 재생
-           
 
+            gameObject.GetComponent<Collider>().isTrigger = true;
             // 일정 시간 후에 메시 파괴
             StartCoroutine(endbullet("endbul", 1f));
             
@@ -49,11 +49,22 @@ public class movebullet_boom : MonoBehaviour
     }
 
 
-
+    public void setdamage(float dex)
+    {
+        boompaticle.GetComponent<bulletStatus>().Damage = dex;
+    }
     public void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("충돌!");
-        crush = true;
+      
+       
+        if (collision.transform.tag == "Monster" || collision.transform.tag == "Boss")
+        {
+            crush = true;
+
+            //GameObject boom = Instantiate(boompub);
+            gameObject.transform.parent = collision.transform;
+
+        }
     }
 
     IEnumerator endbullet(string aniname, float delay)

@@ -32,6 +32,11 @@ public class Enemy : MonoBehaviour
 
     Bullet scriptbullet;
     ConfigReader configreaders;
+
+    private float damageTimer = 0f;
+    private float damageInterval = 0.01f;
+    private float damageDuration = 1.5f;
+    float takedamagesit;
     void Awake()
     {
         if (enemyType == Type.A) {
@@ -144,6 +149,29 @@ public class Enemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (damageTimer < damageDuration)
+        {
+            damageTimer += Time.fixedDeltaTime;
+
+            // 고정된 간격으로 데미지를 입히는 로직 수행
+            curHealth -= takedamagesit;
+
+            if (curHealth <= 0)
+            {
+                if (isDead)
+                    return;
+
+                isChase = false;
+                isDead = true;
+                anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 0.1f;
+                audioSource.Play();
+
+                Destroy(gameObject, 3f);
+            }
+        }
         if (!isDead)
         {
             Targeting();
@@ -198,7 +226,16 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-    
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "spebullet")
+        {
+            damageTimer = 0f; // 충돌이 발생했을 때 타이머 초기화
+            takedamagesit = collision.transform.GetComponent<bulletStatus>().Damage;
+        }
+    }
+  
+
     void StopChasing()
     {
         isChase = false;
