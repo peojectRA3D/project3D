@@ -3321,9 +3321,11 @@ MonoBehaviour:
   specialRockat:
   - {fileID: 7703277288024547355, guid: 2474a384909b6264584e0afe47aa527b, type: 3}
   PlayerHp: 100
+  PlayerHPUI: {fileID: 0}
   gunpos: {fileID: 6556405562644027603}
   canvas:
-  - {fileID: 5662612774746996674}
+  - {fileID: 7216574887112467285}
+  playerchangeimage: {fileID: 0}
   maters:
   - {fileID: 2100000, guid: ead96d974314a5f45a8ebb9e323a9394, type: 2}
   - {fileID: 2100000, guid: 100e60469f6e1f84fba1ad2d60238109, type: 2}
@@ -4450,6 +4452,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3498690740761817345}
     m_Modifications:
+    - target: {fileID: 4378417188980830508, guid: 77f1aacf2ebc19048ba211953777d5f5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4443269755339812103, guid: 77f1aacf2ebc19048ba211953777d5f5,
         type: 3}
       propertyPath: m_IsActive
@@ -4533,6 +4540,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7216574887112467285 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4378417188980830508, guid: 77f1aacf2ebc19048ba211953777d5f5,
+    type: 3}
+  m_PrefabInstance: {fileID: 6405578425267737209}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8935910729686875361
 PrefabInstance:
   m_ObjectHideFlags: 0
