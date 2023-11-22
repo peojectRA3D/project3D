@@ -25,6 +25,7 @@ public class mainpanelbutton: MonoBehaviour
     public void optionbuttonclick()
     {
         butttononoff(false);
+        optionpanel.SetActive(true);
     }
     public void exitclick()
     {
