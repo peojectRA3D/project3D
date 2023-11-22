@@ -35,5 +35,12 @@ public class testcol : MonoBehaviour
             Debug.Log("아야");
         }
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "spebullet")
+        {
 
+            Debug.Log("ㅈㄴ아야");
+        }
+    }
 }

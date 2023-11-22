@@ -39,7 +39,7 @@ public class movebullet_viv : MonoBehaviour
             moveSpeed = 0;
             // Visual Effect 재생
             viveff.SendEvent("OnPlay");
-
+            gameObject.GetComponent<Collider>().isTrigger=true;
             // 일정 시간 후에 메시 파괴
             StartCoroutine(endbullet("endbul", 3f));
 

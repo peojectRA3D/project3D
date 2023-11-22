@@ -976,7 +976,7 @@ public class PlayerParent : MonoBehaviour
                         GameObject temp = Instantiate(specialbullet[1]);
                         // temp.transform.position = gunpos.transform.position;
                         temp.GetComponent<movebullet_boom>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
-
+                        temp.GetComponent<movebullet_boom>().setdamage(ThirdSkillDamage);
                         aniter.SetBool("onattack", true);
                         ThirdSkillDelay_time = 0;
                         weaponIndex = 0;

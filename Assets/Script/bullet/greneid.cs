@@ -11,6 +11,10 @@ public class NewBehaviourScript : MonoBehaviour
     {
        
     }
+    private void Awake()
+    {
+        boom.GetComponent<bulletStatus>().Damage = 2;
+    }
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.tag != "booms")
