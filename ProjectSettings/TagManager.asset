@@ -19,6 +19,8 @@ TagManager:
   - Wall
   - booms
   - spebullet
+  - Terrain
+  - EnermyFireMagic
   layers:
   - Default
   - TransparentFX
