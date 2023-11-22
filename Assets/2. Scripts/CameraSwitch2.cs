@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class CameraSwitch : MonoBehaviour
+public class CameraSwitch2 : MonoBehaviour
 {
     public Camera mainCamera;
-    public Camera otherCamera;
+    public Camera ultimateCamera;
     public float switchDuration = 10f;
     public Animator animator; // Animator 컴포넌트 추가
     public PlayableDirector timelineDirector; // PlayableDirector 컴포넌트 추가
@@ -21,7 +21,7 @@ public class CameraSwitch : MonoBehaviour
     public void Start()
     {
         mainCamera.enabled = true;
-        otherCamera.enabled = false;
+        ultimateCamera.enabled = false;
         animator.enabled = false; // 애니메이터 비활성화
         timelineDirector.enabled = false; // PlayableDirector 비활성화
     }
@@ -54,7 +54,7 @@ public class CameraSwitch : MonoBehaviour
         if (!isSwitching)
         {
             mainCamera.enabled = !mainCamera.enabled;
-            otherCamera.enabled = !otherCamera.enabled;
+            ultimateCamera.enabled = !ultimateCamera.enabled;
             isSwitching = true;
             switchTimer = 0f;
 
@@ -74,7 +74,7 @@ public class CameraSwitch : MonoBehaviour
     public void FinishSwitching()
     {
         mainCamera.enabled = true;
-        otherCamera.enabled = false;
+        ultimateCamera.enabled = false;
         isSwitching = false;
         isSwitched = true; // 전환된 후에는 isSwitched를 true로 설정
         animator.enabled = false;
