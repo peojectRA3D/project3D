@@ -390,11 +390,11 @@ InputManager:
     axis: 0
     joyNum: 0
   - serializedVersion: 3
-    m_Name: Debug Persistent
+    m_Name: Swap4
     descriptiveName: 
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: right shift
+    positiveButton: 4
     altNegativeButton: 
     altPositiveButton: joystick button 2
     gravity: 0

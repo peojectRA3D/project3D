@@ -4847,6 +4847,7 @@ GameObject:
   - component: {fileID: 7943655594286133081}
   - component: {fileID: 8840737112240627726}
   - component: {fileID: 3956111676817841534}
+  - component: {fileID: 8786538978230909504}
   m_Layer: 0
   m_Name: CrabThorn
   m_TagString: bullet
@@ -6195,7 +6196,7 @@ ParticleSystem:
         m_RotationOrder: 4
     separateAxes: 0
   ColorModule:
-    enabled: 1
+    enabled: 0
     gradient:
       serializedVersion: 2
       minMaxState: 1
@@ -9772,3 +9773,16 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &8786538978230909504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8648103044091095768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bf7df6d7e5b6f341868b3556b49514d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 5

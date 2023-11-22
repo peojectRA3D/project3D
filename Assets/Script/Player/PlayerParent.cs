@@ -27,6 +27,7 @@ public class PlayerParent : MonoBehaviour
 
     public GameObject greneid;
     public GameObject[] specialbullet;
+    public GameObject[] specialRockat;
     // �̵�
     float hAxis;
     float vAxis;
@@ -44,6 +45,7 @@ public class PlayerParent : MonoBehaviour
     bool swapDown1;
     bool swapDown2;
     bool swapDown3;
+    bool swapDown4;
     bool heal;
     // �ִ�
     bool isJump;
@@ -87,6 +89,7 @@ public class PlayerParent : MonoBehaviour
     Vector3 dodgeVec; // ȸ���ϴ� ���� ������ ������ ���� ����
     public float PlayerHp;
     float MaxHp;
+    public Text PlayerHPUI;
    
     float JumpDelay;
     float DogeDelay;
@@ -171,6 +174,8 @@ public class PlayerParent : MonoBehaviour
             Reload();
             */
         }
+
+        PlayerHPUI.text = PlayerHp.ToString();
     }
 
     public void SetSwitching(bool value)
@@ -321,6 +326,7 @@ public class PlayerParent : MonoBehaviour
         // pausedown = Input.GetButtonDown("Cancel");
         heal = Input.GetButtonDown("heal");
         swapDown3 = Input.GetButtonDown("Swap3");
+        swapDown4 = Input.GetButtonDown("Swap4");
     }
     void healplayer()
     {
@@ -589,7 +595,7 @@ public class PlayerParent : MonoBehaviour
         if (swapDown1) weaponIndex = 0;
         if (swapDown2) weaponIndex = 1;
         if (swapDown3) weaponIndex = 2;
-
+        if (swapDown4) weaponIndex = 3;
         // ���� ����� ���� ���Ⱑ �ٸ� ���� �Ҹ� ���
         if (previousWeaponIndex != weaponIndex)
         {
@@ -655,8 +661,12 @@ public class PlayerParent : MonoBehaviour
         FourSkillDelay_time += Time.deltaTime;
         isFourSkillReady = fourSkillDelay < FourSkillDelay_time;
 
+
+
         if (fireDown && !isDodge && !isSwap && !isfireaction)
         {
+        
+
             RunDown = true;
             isRun = true;
             Runcheck();
@@ -735,7 +745,30 @@ public class PlayerParent : MonoBehaviour
                         StartCoroutine(endaniWithDelay("onattack", 0.33f));
                     }
                 }
+                else if (3 == weaponIndex)
+                {
+                    if (isFourSkillReady)
+                    {
+                        GameObject temp;
+                        temp = Instantiate(specialRockat[0]);
+                        temp.transform.position = gunpos.transform.position+ new Vector3(0,20,0);
+                        Vector3 grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
+                      
+                        temp.transform.forward = grefront + new Vector3(0, 20, 0); 
+                       
+                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle3);
+
+
+
+                        aniter.SetBool("sitattack", true);
+
+                        ThirdSkillDelay_time = 0;
+
+
+                    }
+                }
                 else
                 {
                     Debug.Log("error ���� ���� �ý��� ");
@@ -857,7 +890,27 @@ public class PlayerParent : MonoBehaviour
                         StartCoroutine(endaniWithDelay("onattack", 0.33f));
                     }
                 }
+                else if (3 == weaponIndex)
+                {
+                    if (isFourSkillReady)
+                    {
+                        GameObject temp;
+                        temp = Instantiate(specialRockat[0]);
+                        temp.transform.position = gunpos.transform.position + new Vector3(0, 15, 0);
+                        Vector3 grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
 
+                        temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
+
+
+
+
+
+
+                        FourSkillDelay_time = 0;
+
+
+                    }
+                }
                 else
                 {
                     Debug.Log("error ���� ���� �ý��� ");
@@ -922,17 +975,17 @@ public class PlayerParent : MonoBehaviour
                 {
                     if (isThirdSkillReady)
                     {
-                        isstaying = true;
-                        //particles[3].Simulate(1.01f);
-                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
+                        GameObject temp = Instantiate(specialbullet[1]);
+                        // temp.transform.position = gunpos.transform.position;
+                        temp.GetComponent<movebullet_boom>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
 
-                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper3);
-
-
-                        aniter.SetBool("sitattack", true);
-
+                        aniter.SetBool("onattack", true);
                         ThirdSkillDelay_time = 0;
+                        weaponIndex = 0;
+                        FirstSkillDelay_time = 0;
+                        StartCoroutine(endaniWithDelay("onattack", 0.5f));
 
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper2);
 
                     }
                     else
@@ -941,7 +994,27 @@ public class PlayerParent : MonoBehaviour
                         StartCoroutine(endaniWithDelay("onattack", 0.33f));
                     }
                 }
+                else if (3 == weaponIndex)
+                {
+                    if (isFourSkillReady)
+                    {
+                        GameObject temp;
+                        temp = Instantiate(specialRockat[0]);
+                        temp.transform.position = gunpos.transform.position + new Vector3(0, 15, 0);
+                        Vector3 grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
 
+                        temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
+
+                      
+
+
+
+
+                        FourSkillDelay_time = 0;
+
+
+                    }
+                }
                 else
                 {
                     Debug.Log("error ���� ���� �ý��� ");
