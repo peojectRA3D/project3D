@@ -144,7 +144,7 @@ public class Boss2 : MonoBehaviour
         if (!isCooldownB)
         {
             targetRadius = 10f;
-            targetRange = 12f;
+            targetRange = 18f;
 
             rayHits = Physics.SphereCastAll(transform.position,
                                                             targetRadius,
@@ -186,10 +186,10 @@ public class Boss2 : MonoBehaviour
             audioSource.Play();
         }
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.4f);
         attackArea.enabled = true;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.7f);
         attackArea.enabled = false;
 
         isChase = true;
@@ -345,7 +345,6 @@ public class Boss2 : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-
         if (other.tag == "bullet")
         {
             curHealth -= other.GetComponent<bulletStatus>().Damage;
@@ -370,6 +369,7 @@ public class Boss2 : MonoBehaviour
         }
         
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.tag == "spebullet")
