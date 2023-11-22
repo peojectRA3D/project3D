@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/1. Scene/Stage1(JSH).unity
     guid: 93bb104228ad4924fa8095cd7b6a1225
+  - enabled: 1
+    path: Assets/1. Scene/Stage2.unity
+    guid: c94ca95656bbb785b8fd3d3e4a640dba
   m_configObjects: {}
