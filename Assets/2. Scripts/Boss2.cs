@@ -42,7 +42,10 @@ public class Boss2 : MonoBehaviour
     public AudioClip die;
     ConfigReader configreaders;
     Bullet scriptbullet;
-
+    private float damageTimer = 0f;
+    
+    private float damageDuration = 1.5f;
+    float takedamagesit;
     void Awake()
     {
         configreaders = new ConfigReader("Boss_Type_One");
@@ -141,7 +144,7 @@ public class Boss2 : MonoBehaviour
         if (!isCooldownB)
         {
             targetRadius = 10f;
-            targetRange = 12f;
+            targetRange = 18f;
 
             rayHits = Physics.SphereCastAll(transform.position,
                                                             targetRadius,
@@ -183,10 +186,10 @@ public class Boss2 : MonoBehaviour
             audioSource.Play();
         }
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.4f);
         attackArea.enabled = true;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.7f);
         attackArea.enabled = false;
 
         isChase = true;
@@ -282,6 +285,31 @@ public class Boss2 : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (damageTimer < damageDuration)
+        {
+            damageTimer += Time.fixedDeltaTime;
+
+            // 고정된 간격으로 데미지를 입히는 로직 수행
+            curHealth -= takedamagesit;
+
+            if (curHealth <= 0)
+            {
+                curHealth = 0;
+
+                if (isDead)
+                    return;
+
+                isChase = false;
+                isDead = true;
+                anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 1f;
+                audioSource.Play();
+
+                Victory.gameObject.SetActive(true);
+            }
+        }
         if (isChase && !isDead)
         {
             Targeting();
@@ -294,7 +322,7 @@ public class Boss2 : MonoBehaviour
         //Debug.Log(other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier);
         if (other.tag == "bullet")
         {
-            curHealth -= other.GetComponent<ParticleSystem>().forceOverLifetime.xMultiplier;
+            curHealth -= other.GetComponent<bulletStatus>().Damage;
 
             if (curHealth <= 0)
             {
@@ -317,9 +345,40 @@ public class Boss2 : MonoBehaviour
     }
     void OnTriggerEnter(Collider other)
     {
-        //Debug.Log(other.transform.rotation.eulerAngles.y);
-        // 2번 탄환 - 몬스터 피격
+        if (other.tag == "bullet")
+        {
+            curHealth -= other.GetComponent<bulletStatus>().Damage;
+
+            if (curHealth <= 0)
+            {
+                curHealth = 0;
+
+                if (isDead)
+                    return;
+
+                isChase = false;
+                isDead = true;
+                anim.SetTrigger("doDie");
+
+                audioSource.clip = die;
+                audioSource.volume = 1f;
+                audioSource.Play();
+
+                Victory.gameObject.SetActive(true);
+            }
+        }
+        
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.transform.tag == "spebullet")
+        {
+            damageTimer = 0f; // 충돌이 발생했을 때 타이머 초기화
+            takedamagesit = collision.transform.GetComponent<bulletStatus>().Damage;
+        }
+    }
+    
     void StopChasing()
     {
         isChase = false;

@@ -108,6 +108,7 @@ public class PlayerParent : MonoBehaviour
     int weaponIndex = 0;
     public GameObject  gunpos;
     public GameObject[] canvas;
+    public Image playerchangeimage;
     // Start is called before the first frame update
 
     //ȿ����
@@ -175,7 +176,7 @@ public class PlayerParent : MonoBehaviour
             */
         }
 
-        PlayerHPUI.text = PlayerHp.ToString();
+        PlayerHPUI.text = PlayerHp.ToString("F0");
     }
 
     public void SetSwitching(bool value)
@@ -391,6 +392,10 @@ public class PlayerParent : MonoBehaviour
            
            
         }
+        else if(other.tag == "EnermyFireMagic" && !isDamage)
+        {
+            takedamge(5);
+        }
      
     }
     private void OnTriggerEnter(Collider other)
@@ -412,9 +417,10 @@ public class PlayerParent : MonoBehaviour
             configreaders = new ConfigReader("Player");
             configreaders.UpdateData("Model", other.gameObject.name.ToLower());
             ModelType = configreaders.Search<int>("Model");
-            skinsetup(int.Parse(other.gameObject.name));
+            skinsetup(ModelType);
             modelsetup();
-           
+
+
         }
         if (other.tag == "Potal")
         {
@@ -428,11 +434,32 @@ public class PlayerParent : MonoBehaviour
         if (other.tag == "Potal")
         {
             potalDelay -= Time.deltaTime;
-            guidetext.text = "전송까지 앞으로 "+ potalDelay.ToString("F1") + " 초!";
+
+        }
+        if (other.gameObject.name =="1")
+        {
+            guidetext.text = " \"오크 전초 기지\" 전송까지 앞으로 " + potalDelay.ToString("F1") + " 초!";
+        }
+        else if(other.gameObject.name == "2")
+        {
+            guidetext.text = " \"죽음의 사막\" 전송까지 앞으로 " + potalDelay.ToString("F1") + " 초!";
         }
         if (potalDelay < 0)
         {
-            SceneManager.LoadScene("Stage1(JSH)");
+            //Debug.Log(other.gameObject.name);
+            if (other.gameObject.name == "1")
+            {
+                SceneManager.LoadScene("Stage1(JSH)");
+            }
+            else if (other.gameObject.name == "2")
+            {
+                SceneManager.LoadScene("Stage2");
+            }
+            else
+            {
+                Debug.Log("전송포탈에러 ");
+            }
+           
         }
     }
     private void OnTriggerExit(Collider other)
@@ -443,10 +470,7 @@ public class PlayerParent : MonoBehaviour
             guidetext.gameObject.SetActive(false);
         }
     }
-    private void OnCollisionEnter(Collision collision)
-    {
-       
-    }
+ 
     private void takedamge(float damage)
     {
 
@@ -747,24 +771,22 @@ public class PlayerParent : MonoBehaviour
                 }
                 else if (3 == weaponIndex)
                 {
+
                     if (isFourSkillReady)
                     {
                         GameObject temp;
                         temp = Instantiate(specialRockat[0]);
-                        temp.transform.position = gunpos.transform.position+ new Vector3(0,20,0);
+                        temp.transform.position = gunpos.transform.position + new Vector3(0, 15, 0);
                         Vector3 grefront = Mousepo.gettargetpostion() - gunpos.transform.position;
-                      
-                        temp.transform.forward = grefront + new Vector3(0, 20, 0); 
-                       
-                        StartCoroutine(endaniWithDelay("sitattack_doit", 0.2f));
 
-                        AudioManager.instance.Playsfx(AudioManager.Sfx.rifle3);
+                        temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
 
 
 
-                        aniter.SetBool("sitattack", true);
 
-                        ThirdSkillDelay_time = 0;
+
+
+                        FourSkillDelay_time = 0;
 
 
                     }
@@ -978,14 +1000,14 @@ public class PlayerParent : MonoBehaviour
                         GameObject temp = Instantiate(specialbullet[1]);
                         // temp.transform.position = gunpos.transform.position;
                         temp.GetComponent<movebullet_boom>().getvec(Mousepo.gettargetpostion(), gunpos.transform.position);
-
+                        temp.GetComponent<movebullet_boom>().setdamage(ThirdSkillDamage);
                         aniter.SetBool("onattack", true);
                         ThirdSkillDelay_time = 0;
                         weaponIndex = 0;
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 0.5f));
 
-                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper2);
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper3);
 
                     }
                     else
