@@ -782,7 +782,7 @@ public class PlayerParent : MonoBehaviour
                         temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
 
 
-
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.ultimate);
 
 
 
@@ -925,7 +925,7 @@ public class PlayerParent : MonoBehaviour
 
 
 
-
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.ultimate);
 
 
                         FourSkillDelay_time = 0;
@@ -1027,9 +1027,9 @@ public class PlayerParent : MonoBehaviour
 
                         temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
 
-                      
 
 
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.ultimate);
 
 
                         FourSkillDelay_time = 0;
