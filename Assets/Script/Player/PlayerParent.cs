@@ -62,7 +62,7 @@ public class PlayerParent : MonoBehaviour
     bool isdead;
     bool isBorder; // �� �浹 �÷��� bool ����
     bool isDamage; // ���� Ÿ���� ���� ����
-    bool ispause;
+    public bool ispause;
     bool healReady;
     bool isstaying;
     bool isfireaction =false;
@@ -324,7 +324,7 @@ public class PlayerParent : MonoBehaviour
         //itemDown = Input.GetButtonDown("Interation");
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
-        // pausedown = Input.GetButtonDown("Cancel");
+        pausedown = Input.GetButtonDown("Cancel");
         heal = Input.GetButtonDown("heal");
         swapDown3 = Input.GetButtonDown("Swap3");
         swapDown4 = Input.GetButtonDown("Swap4");
@@ -349,21 +349,7 @@ public class PlayerParent : MonoBehaviour
     
     void pause()
     {
-        if (pausedown)
-        {
-            if (!ispause)
-            {
-                Time.timeScale = 0;
-               
-            }
-            else
-            {
-                Time.timeScale = 1;
-            }
-            ispause = !ispause;
-            canvas[0].SetActive(ispause);
-            canvas[1].SetActive(ispause);
-        }
+    
     }
     void HpCheck()
     {
@@ -446,6 +432,7 @@ public class PlayerParent : MonoBehaviour
         }
         if (potalDelay < 0)
         {
+            //Debug.Log(other.gameObject.name);
             if (other.gameObject.name == "1")
             {
                 SceneManager.LoadScene("Stage1(JSH)");
@@ -781,7 +768,7 @@ public class PlayerParent : MonoBehaviour
                         temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
 
 
-
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.ultimate);
 
 
 
@@ -924,7 +911,7 @@ public class PlayerParent : MonoBehaviour
 
 
 
-
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.ultimate);
 
 
                         FourSkillDelay_time = 0;
@@ -1006,7 +993,7 @@ public class PlayerParent : MonoBehaviour
                         FirstSkillDelay_time = 0;
                         StartCoroutine(endaniWithDelay("onattack", 0.5f));
 
-                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper2);
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.sniper3);
 
                     }
                     else
@@ -1026,9 +1013,9 @@ public class PlayerParent : MonoBehaviour
 
                         temp.transform.forward = grefront;// + new Vector3(0, 20, 0);
 
-                      
 
 
+                        AudioManager.instance.Playsfx(AudioManager.Sfx.ultimate);
 
 
                         FourSkillDelay_time = 0;

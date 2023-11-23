@@ -8,8 +8,7 @@ public class changeplayer : MonoBehaviour
     public GameObject player;
     public void yesyesyes()
     {
-        player.GetComponent<PlayerParent>().skinsetup(modeltype);
-        player.GetComponent<PlayerParent>().modelsetup();
+      
         Time.timeScale = 1;
     }
     public void nonono()
