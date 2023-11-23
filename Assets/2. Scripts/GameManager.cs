@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     public RectTransform bossHealthBar;
 
     public PlayerParent player;
+    public GameObject players;
     public Text playerCurrentHealth;
 
     // 반투명 배경
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
 
     // 옵션
     public RectTransform option;
-    bool ispause;
+    bool ispause = false;
 
     // 사운드
     public RectTransform sound;
@@ -63,6 +64,8 @@ public class GameManager : MonoBehaviour
     public void OnClickContinue()
     {
         Time.timeScale = 1;
+        ispause = !ispause;
+      
         bg.gameObject.SetActive(false);
         option.gameObject.SetActive(false);
     }

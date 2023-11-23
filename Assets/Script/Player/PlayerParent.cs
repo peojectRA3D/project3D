@@ -62,7 +62,7 @@ public class PlayerParent : MonoBehaviour
     bool isdead;
     bool isBorder; // �� �浹 �÷��� bool ����
     bool isDamage; // ���� Ÿ���� ���� ����
-    bool ispause;
+    public bool ispause;
     bool healReady;
     bool isstaying;
     bool isfireaction =false;
@@ -324,7 +324,7 @@ public class PlayerParent : MonoBehaviour
         //itemDown = Input.GetButtonDown("Interation");
         swapDown1 = Input.GetButtonDown("Swap1");
         swapDown2 = Input.GetButtonDown("Swap2");
-        // pausedown = Input.GetButtonDown("Cancel");
+        pausedown = Input.GetButtonDown("Cancel");
         heal = Input.GetButtonDown("heal");
         swapDown3 = Input.GetButtonDown("Swap3");
         swapDown4 = Input.GetButtonDown("Swap4");
@@ -349,21 +349,7 @@ public class PlayerParent : MonoBehaviour
     
     void pause()
     {
-        if (pausedown)
-        {
-            if (!ispause)
-            {
-                Time.timeScale = 0;
-               
-            }
-            else
-            {
-                Time.timeScale = 1;
-            }
-            ispause = !ispause;
-            canvas[0].SetActive(ispause);
-            canvas[1].SetActive(ispause);
-        }
+    
     }
     void HpCheck()
     {

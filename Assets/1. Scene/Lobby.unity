@@ -913,7 +913,8 @@ MonoBehaviour:
   boss: {fileID: 0}
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
-  player: {fileID: 0}
+  player: {fileID: 1608202568}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 0}
   option: {fileID: 0}
@@ -2919,6 +2920,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 368161279}
   option: {fileID: 1743397100}
@@ -3871,6 +3873,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 368161279}
   option: {fileID: 1743397100}
@@ -7690,6 +7693,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 368161279}
   option: {fileID: 1743397100}
@@ -8018,6 +8022,18 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1690522832}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1608202568 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8431679619417009982, guid: 5654bca196eed6442ad24a12bb6979f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1690522832}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1608202565}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d42e792c78091e4eb8b8a2c05edb567, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1612341733
 GameObject:
   m_ObjectHideFlags: 0
@@ -8378,6 +8394,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1662823396564811522, guid: 5654bca196eed6442ad24a12bb6979f3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3498690740761817345, guid: 5654bca196eed6442ad24a12bb6979f3,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8597,6 +8618,7 @@ MonoBehaviour:
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
   player: {fileID: 0}
+  players: {fileID: 0}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 0}
   option: {fileID: 1743397100}
@@ -10383,7 +10405,8 @@ MonoBehaviour:
   boss: {fileID: 0}
   bossHealth: {fileID: 0}
   bossHealthBar: {fileID: 0}
-  player: {fileID: 0}
+  player: {fileID: 1608202568}
+  players: {fileID: 1608202565}
   playerCurrentHealth: {fileID: 0}
   bg: {fileID: 368161279}
   option: {fileID: 1743397100}
