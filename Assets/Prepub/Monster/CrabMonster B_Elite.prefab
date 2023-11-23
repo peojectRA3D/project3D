@@ -280,7 +280,8 @@ MonoBehaviour:
   attackArea: {fileID: 827372032144386278}
   isChase: 0
   isAttack: 0
-  crabThorn: {fileID: 4213720607080569106}
+  crabThorn: {fileID: 7943655594286133081, guid: 081ffc49871bb284ab81e346816f5aea,
+    type: 3}
   response: {fileID: 8300000, guid: e87f29bbd970e0349aed0447824e54d5, type: 3}
   attack1: {fileID: 8300000, guid: e87f29bbd970e0349aed0447824e54d5, type: 3}
   attack2: {fileID: 0}
@@ -5048,12 +5049,6 @@ PrefabInstance:
 --- !u!4 &3429753873005324525 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8925926396979535526, guid: 081ffc49871bb284ab81e346816f5aea,
-    type: 3}
-  m_PrefabInstance: {fileID: 6073012004363171403}
-  m_PrefabAsset: {fileID: 0}
---- !u!198 &4213720607080569106 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 7943655594286133081, guid: 081ffc49871bb284ab81e346816f5aea,
     type: 3}
   m_PrefabInstance: {fileID: 6073012004363171403}
   m_PrefabAsset: {fileID: 0}

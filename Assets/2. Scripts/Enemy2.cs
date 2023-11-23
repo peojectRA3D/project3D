@@ -179,7 +179,7 @@ public class Enemy2 : MonoBehaviour
             audioSource.Play();
         }
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.5f);
         attackArea.enabled = true;    
 
         yield return new WaitForSeconds(1f);

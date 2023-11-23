@@ -6234,6 +6234,53 @@ Transform:
   - {fileID: 419089017}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &982541550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 982541552}
+  - component: {fileID: 982541551}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &982541551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982541550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47b58a40a2caa8d44ad9e32e11aac8cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  musicSource: {fileID: 4592248081920730966}
+  playerSource: {fileID: 995712004}
+  monsterSource: {fileID: 0}
+--- !u!4 &982541552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982541550}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.203062, y: -0.7087619, z: 8.058404}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &994723398 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6197138667451596231, guid: 07e5f6b6100578d45accf8f5ba1050ed,
@@ -6255,6 +6302,12 @@ MonoBehaviour:
 --- !u!4 &995712003 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3498690740761817345, guid: 5654bca196eed6442ad24a12bb6979f3,
+    type: 3}
+  m_PrefabInstance: {fileID: 1690522832}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &995712004 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 5085255291238865613, guid: 5654bca196eed6442ad24a12bb6979f3,
     type: 3}
   m_PrefabInstance: {fileID: 1690522832}
   m_PrefabAsset: {fileID: 0}
@@ -12601,3 +12654,4 @@ SceneRoots:
   - {fileID: 1813549266}
   - {fileID: 1901099818}
   - {fileID: 1460082701}
+  - {fileID: 982541552}
