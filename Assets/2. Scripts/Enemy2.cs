@@ -130,7 +130,7 @@ public class Enemy2 : MonoBehaviour
         {
             StartCoroutine(Attack()); // 공격 코루틴 실행
         }
-        
+        /*
         if(enemyType == Type.C)
         {
             if (!isCooldownA)
@@ -150,6 +150,7 @@ public class Enemy2 : MonoBehaviour
                 }
             }
         }
+        */
     }
 
     IEnumerator Attack()
@@ -179,7 +180,7 @@ public class Enemy2 : MonoBehaviour
             audioSource.Play();
         }
 
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.7f);
         attackArea.enabled = true;    
 
         yield return new WaitForSeconds(1f);
